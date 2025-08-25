@@ -1,0 +1,107 @@
+version: "3.8"
+
+services:
+  # Back-end Express
+  back:
+    container_name: backend_codeurbase
+    build:
+      context: ./back
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./back:/app
+    networks:
+      - network-app
+    restart: always
+    env_file:
+      - .env
+
+  # Service base de données MySQL pour le back (si besoin)
+  db:
+    container_name: database_codeurbase
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    env_file:
+      - .env
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - network-app
+    restart: always
+
+  # PhpMyAdmin pour gérer la DB si besoin
+  phpmyadmin:
+    container_name: phpmyadmin_codeurbase
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      - network-app
+    restart: always
+
+  # PostgreSQL pour Umami
+  umami_db:
+    container_name: umami_database_codeurbase
+    image: postgres:13
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    env_file:
+      - .env
+    volumes:
+      - umami_db_data:/var/lib/postgresql/data
+    networks:
+      - network-app
+    restart: always
+
+  # Umami Analytics
+  umami:
+    container_name: umami_Codeurbase
+    image: docker.umami.is/umami-software/umami:postgresql-latest
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    env_file:
+      - .env
+    ports:
+      - "3001:3000"
+    depends_on:
+      - umami_db
+    networks:
+      - network-app
+    restart: always
+
+  # n8n workflow automation
+  n8n:
+    container_name: n8n_codeurbase
+    image: n8nio/n8n
+    ports:
+      - "5678:5678"
+    environment:
+      N8N_BASIC_AUTH_ACTIVE: "true"
+      N8N_BASIC_AUTH_USER: ${N8N_USER}
+      N8N_BASIC_AUTH_PASSWORD: ${N8N_PASSWORD}
+      N8N_HOST: localhost
+      N8N_PORT: 5678
+      N8N_PROTOCOL: https
+    volumes:
+      - n8n_data:/home/node/.n8n
+    restart: always
+    networks:
+      - network-app
+
+volumes:
+  db_data:
+  umami_db_data:
+  n8n_data:
+
+networks:
+  network-app:
+    driver: bridge

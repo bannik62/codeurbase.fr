@@ -1,0 +1,2 @@
+# This file ensures that the back/ directory is tracked by Git
+# even though it contains mostly ignored files
