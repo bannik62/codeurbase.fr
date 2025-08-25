@@ -20,7 +20,7 @@ app.use(cookieParser());
 
 // Define a simple route
 app.get('/', (req, res) => {
-  res.send('Hello, World!');
+  res.send('Hello, World! backend codeurbase');
 });
 
 // Route de test pour vérifier que tout fonctionne
