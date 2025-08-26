@@ -40,10 +40,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add front/dist
-          git commit -m "Création du dist pour preprod" || echo "Pas de changement"
-          git push origin preprod
+          git commit -m "Création du dist pour preprod" || echo "No changes to commit"
           git push https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git preprod
-
-          
-        env:
+          env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
