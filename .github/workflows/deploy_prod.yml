@@ -59,4 +59,5 @@ jobs:
             git reset --hard
             git clean -fd
             git pull origin prod
-            cp -r ./front/dist/* /var/www/html/
+
+  
