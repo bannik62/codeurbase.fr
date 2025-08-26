@@ -2,6 +2,9 @@
 node_modules/
 npm-debug.log*
 
+# front/.gitignore
+dist/
+
 # Logs
 logs
 *.log
