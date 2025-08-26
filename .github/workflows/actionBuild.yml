@@ -42,5 +42,8 @@ jobs:
           git add front/dist
           git commit -m "Création du dist pour preprod" || echo "Pas de changement"
           git push origin preprod
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git preprod
+
+          
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
