@@ -1,19 +1,21 @@
-name: Build & Deploy Prod Svelte
+name: Build & Deploy Prod
 
 on:
   push:
     branches:
-      - prod   # déclenche uniquement sur la branche prod
+      - prod   # déclenché uniquement quand tu pushes sur prod
 
 jobs:
-  build-and-deploy:
-    name: Build & Deploy Svelte Prod
+  build:
+    name: Build Svelte Prod
     runs-on: ubuntu-latest
 
     steps:
       # 1️⃣ Checkout
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          persist-credentials: false
 
       # 2️⃣ Installer Node.js
       - name: Setup Node.js
@@ -21,28 +23,46 @@ jobs:
         with:
           node-version: '20'
 
-      # 3️⃣ Installer les dépendances
+      # 3️⃣ Configurer le token npm (si tu utilises des packages privés)
+      - name: Setup npm auth
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
+      # 4️⃣ Installer les dépendances
       - name: Install dependencies
         run: npm ci
         working-directory: ./front
 
-      # 4️⃣ Build Svelte
+      # 5️⃣ Build Svelte
       - name: Build Svelte
         run: npm run build
         working-directory: ./front
 
-      # 5️⃣ Déploiement via SSH
-      - name: Deploy to VPS
+      # 6️⃣ Commit et push dist
+      - name: Commit and push dist
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f front/dist
+          git commit -m "Création du dist pour prod" || echo "No changes to commit"
+          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }} prod
+      
+  deploy:
+    name: Déploiement sur VPS
+    runs-on: ubuntu-latest
+    needs: build   # attend que le build soit fini
+
+    steps:
+      - name: Déploiement via SSH
         uses: appleboy/ssh-action@v0.1.8
         with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
+          host: ${{ secrets.PROD_SERVER_HOST }}
+          username: ${{ secrets.PROD_SERVER_USER }}
+          key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            cd /var/www/codeurbase
+            cd /var/www/html
             git reset --hard
             git clean -fd
             git pull origin prod
-            # Copie des fichiers build Svelte
-            cp -r ./front/dist/* /var/www/codeurbase/
+
+  
