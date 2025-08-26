@@ -6,8 +6,8 @@ on:
       - prod   # déclenché uniquement quand tu pushes sur prod
 
 jobs:
-  build-and-deploy:
-    name: Build & Deploy Svelte Prod
+  build:
+    name: Build Svelte Prod
     runs-on: ubuntu-latest
 
     steps:
@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: '20'
 
-      # 3️⃣ Configurer le token npm
+      # 3️⃣ Configurer le token npm (si tu utilises des packages privés)
       - name: Setup npm auth
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
