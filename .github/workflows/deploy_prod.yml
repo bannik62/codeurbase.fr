@@ -45,4 +45,4 @@ jobs:
             git clean -fd
             git pull origin prod
             # Copie des fichiers build Svelte
-            cp -r ./front/dist/* /var/www/codeurbase/
+            cp -r ./front/dist/* /var/www/
