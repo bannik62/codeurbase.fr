@@ -12,7 +12,7 @@ yarn-error.log*
 public/build/
 
 # Vite
-dist/
+
 .vite/
 
 # System files
