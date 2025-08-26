@@ -4,7 +4,7 @@ name: Build Preprod Svelte
 on:
   push:
     branches:
-      - preprod   # déclenche uniquement sur la branche preprod
+      - prod   # déclenche uniquement sur la branche preprod
 
 jobs:
   build:
