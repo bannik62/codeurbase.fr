@@ -31,18 +31,27 @@ jobs:
         run: npm run build
         working-directory: ./front
 
-      # 5️⃣ Déploiement via SSH
-      - name: Deploy to VPS
+      # 5️⃣ Déploiement des fichiers sur le VPS
+      - name: Copy Svelte build to VPS
+        uses: appleboy/scp-action@v0.1.6
+        with:
+          host: ${{ secrets.PROD_SERVER_HOST }}
+          username: ${{ secrets.PROD_SERVER_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY_NO_PHRASE }}
+          port: 22
+          source: "./front/dist/*"
+          target: "/var/www/codeurbase/front/"
+
+      # 6️⃣ Mettre à jour le dépôt sur le VPS
+      - name: Update Git repository on VPS
         uses: appleboy/ssh-action@v0.1.8
         with:
           host: ${{ secrets.PROD_SERVER_HOST }}
           username: ${{ secrets.PROD_SERVER_USER }}
-          key:  ${{ secrets.DEPLOY_SSH_KEY_NO_PHRASE }}
+          key: ${{ secrets.DEPLOY_SSH_KEY_NO_PHRASE }}
           port: 22
           script: |
             cd /var/www/codeurbase
             git reset --hard
             git clean -fd
             git pull origin prod
-            # Copie des fichiers build Svelte
-            cp -r ./front/dist/* /var/www/
