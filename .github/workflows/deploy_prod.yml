@@ -37,7 +37,7 @@ jobs:
         with:
           host: ${{ secrets.PROD_SERVER_HOST }}
           username: ${{ secrets.PROD_SERVER_USER }}
-          key: ${{ secrets.DEPLOY_SSH_KEY_NO_PHRASE }}
+          key:  ${{ secrets.DEPLOY_SSH_KEY_NO_PHRASE }}
           port: 22
           script: |
             cd /var/www/codeurbase
