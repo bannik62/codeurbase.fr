@@ -3,15 +3,14 @@ name: Build & Deploy Prod Svelte
 on:
   push:
     branches:
-      - prod   # déclenche uniquement sur la branche prod
+      - prod
 
 jobs:
   build-and-deploy:
-    name: Build & Deploy Svelte Prod
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout
+      # 1️⃣ Récupérer le dépôt
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -26,12 +25,12 @@ jobs:
         run: npm ci
         working-directory: ./front
 
-      # 4️⃣ Build Svelte
+      # 4️⃣ Builder l’app
       - name: Build Svelte
         run: npm run build
         working-directory: ./front
 
-      # 5️⃣ Déploiement des fichiers sur le VPS
+      # 5️⃣ Déploiement (copie du build)
       - name: Copy Svelte build to VPS
         uses: appleboy/scp-action@v0.1.6
         with:
@@ -41,17 +40,3 @@ jobs:
           port: 22
           source: "./front/dist/*"
           target: "/var/www/html/codeurbase/"
-
-      #6️⃣ Mettre à jour le dépôt sur le VPS
-      - name: Update Git repository on VPS
-        uses: appleboy/ssh-action@v0.1.8
-        with:
-          host: ${{ secrets.PROD_SERVER_HOST }}
-          username: ${{ secrets.PROD_SERVER_USER }}
-          key: ${{ secrets.DEPLOY_SSH_KEY_NO_PHRASE }}
-          port: 22
-          script: |
-            cd /var/www/html/codeurbase
-            git reset --hard
-            git clean -fd
-            git pull origin prod
