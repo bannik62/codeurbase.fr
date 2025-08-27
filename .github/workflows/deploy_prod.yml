@@ -40,9 +40,9 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY_NO_PHRASE }}
           port: 22
           source: "./front/dist/*"
-          target: "/var/www/codeurbase/front/"
+          target: "/var/www/html/codeurbase/"
 
-      # 6️⃣ Mettre à jour le dépôt sur le VPS
+      #6️⃣ Mettre à jour le dépôt sur le VPS
       - name: Update Git repository on VPS
         uses: appleboy/ssh-action@v0.1.8
         with:
@@ -51,7 +51,7 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY_NO_PHRASE }}
           port: 22
           script: |
-            cd /var/www/codeurbase
+            cd /var/www/html/codeurbase
             git reset --hard
             git clean -fd
             git pull origin prod
