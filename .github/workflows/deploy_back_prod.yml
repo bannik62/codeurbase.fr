@@ -1,4 +1,4 @@
-name: Build & Deploy Prod Backend
+name: Deploy Prod Backend
 
 on:
   push:
@@ -6,31 +6,22 @@ on:
       - prod
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Récupérer le dépôt
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Installer Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      # 3️⃣ Installer les dépendances
       - name: Install dependencies
         run: npm ci
         working-directory: ./back
 
-      # 4️⃣ Builder le backend si nécessaire
-      - name: Build Backend
-        run: npm run build
-        working-directory: ./back
-
-      # 5️⃣ Copier le backend sur le VPS
       - name: Copy Backend to VPS
         uses: appleboy/scp-action@v0.1.6
         with:
@@ -42,7 +33,6 @@ jobs:
           target: "/var/www/html/codeurbase/back/"
           rm: false
 
-      # 6️⃣ Copier le docker-compose.yml sur le VPS
       - name: Copy Docker Compose to VPS
         uses: appleboy/scp-action@v0.1.6
         with:

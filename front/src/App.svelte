@@ -56,7 +56,7 @@
   .content {
     text-align: center;
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(70px);
     transition: all 1s ease-out;
   }
 
