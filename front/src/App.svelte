@@ -72,7 +72,7 @@
   .title {
     font-size: 4.5rem;
     font-weight: 800;
-    color: white;
+    color: rgb(207, 18, 18);
     margin: 0;
     text-shadow: 20px -10px 20px rgba(0, 0, 0, 0.674);
     animation: slideInLeft 1.5s ease-out 0.3s both;
