@@ -19,7 +19,7 @@
 <div class="container" bind:this={container}>
   <div class="content {isVisible ? 'visible' : ''}">
     <div class="text-container">
-      <h1 class="title">CodeurBase</h1>
+      <h1 class="title">CodeurBase.fr</h1>
       <div class="separator"></div>
       <h2 class="subtitle">Coming Soon</h2>
     </div>
@@ -74,9 +74,14 @@
     font-weight: 800;
     color: white;
     margin: 0;
-    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    text-shadow: 20px -10px 20px rgba(0, 0, 0, 0.674);
     animation: slideInLeft 1.5s ease-out 0.3s both;
     transform: translateX(-100vw);
+    text-decoration: underline;
+    text-decoration-color: #d9e0e4;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 30px;
+    text-decoration-skip-ink: auto;
   }
 
   .subtitle {
