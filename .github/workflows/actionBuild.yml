@@ -27,7 +27,7 @@ jobs:
       # 3️⃣ Installer les dépendances
       - name: Install dependencies
         run: npm ci
-        working-directory: ./front
+        working-directory: ./back
 
       # 4️⃣ Compiler le projet Svelte pour preprod
       - name: Build Svelte
