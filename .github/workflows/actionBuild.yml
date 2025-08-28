@@ -1,47 +1,23 @@
-# .github/workflows/build-preprod.yml
-name: Build Preprod Svelte
-
+name: Copy Back to VPS
 on:
   push:
-    branches:
-      - prod   # déclenche uniquement sur la branche preprod
+    branches: [prod]
 
 jobs:
-  build:
-    name: Build Svelte Preprod
+  copy-back:
     runs-on: ubuntu-latest
-
     steps:
-      # 1️⃣ Récupérer le code
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          persist-credentials: false  # on utilisera un token pour push
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      # 2️⃣ Installer Node.js
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
-      # 3️⃣ Installer les dépendances
-      - name: Install dependencies
-        run: npm ci
-        working-directory: ./back
-
-      # 4️⃣ Compiler le projet Svelte pour preprod
-      - name: Build Svelte
-        run: npm run build
-        working-directory: ./back
-
-          # 5️⃣ Déploiement (copie du build)
-      - name: Copy Svelte build to VPS
+      - name: Copy ./back to VPS
         uses: appleboy/scp-action@v0.1.6
         with:
           host: ${{ secrets.PROD_SERVER_HOST }}
           username: ${{ secrets.PROD_SERVER_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY_NO_PHRASE }}
           port: 22
-          source: "./back"
-          target: "/var/www/html/codeurbase/"
+          source: "back/**"
+          target: "/var/www/html/codeurbase/back"
+          strip_components: 1
           rm: false
