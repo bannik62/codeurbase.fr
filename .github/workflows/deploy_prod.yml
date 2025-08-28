@@ -30,6 +30,7 @@ jobs:
         run: npm run build
         working-directory: ./front
 
+
       # 5️⃣ Déploiement (copie du build)
       - name: Copy Svelte build to VPS
         uses: appleboy/scp-action@v0.1.6
@@ -40,4 +41,4 @@ jobs:
           port: 22
           source: "./front/dist/*"
           target: "/var/www/html/codeurbase/"
-          rm: true
+          rm: false
