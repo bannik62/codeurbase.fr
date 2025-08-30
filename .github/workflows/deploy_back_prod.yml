@@ -33,13 +33,4 @@ jobs:
           target: "/var/www/html/codeurbase/back/"
           rm: false
 
-      - name: Copy Docker Compose to VPS
-        uses: appleboy/scp-action@v0.1.6
-        with:
-          host: ${{ secrets.PROD_SERVER_HOST }}
-          username: ${{ secrets.PROD_SERVER_USER }}
-          key: ${{ secrets.DEPLOY_SSH_KEY_NO_PHRASE }}
-          port: 22
-          source: "docker-compose.yml"
-          target: "/var/www/html/codeurbase/"
-          rm: false
+
