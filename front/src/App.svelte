@@ -12,6 +12,23 @@
   });
 </script>
 
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/contact">Contact</a></li>
+  </ul>
+  <div class="backend-power">
+   
+    <div class="backend-power-title">Back-end</div>
+   
+    <div class="backend-power-content">
+      <div class="backend-power-content-item">💻</div>
+    </div>
+
+  </div>
+  
+</nav>
 <svelte:head>
   <title>CodeurBase - Coming Soon</title>
 </svelte:head>
@@ -42,6 +59,73 @@
   </div>
 </section>
 <style>
+  nav {
+    position: fixed;
+    top: 0px;
+    left: 0;
+    width: 99vw;
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #333;
+    z-index: 1000;
+  }
+
+  .backend-power {
+    width: 400px;
+    height: 70%;
+    background-color: #333;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #fff;
+    padding: 10px;
+  }
+  .backend-power-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #fff;
+    background-color: #555;
+    width: 50%;
+    height: 100%;
+    border-radius: 10px, 10px, 10px, 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #fff;
+  }
+  .backend-power-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: #555;
+    width: 50%;
+    height: 100%;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #fff;
+  }
+  .backend-power-content-item {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #fff;
+    background-color: #555;
+    width: 0px;
+    height: 100%;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .container {
     width: 100vw;
     height: 100vh;
