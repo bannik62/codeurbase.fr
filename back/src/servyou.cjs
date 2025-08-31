@@ -11,27 +11,21 @@ const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
   credentials: true
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Define a simple route
-app.get('/', (req, res) => {
-  res.send('Hello, World! backend codeurbase');
-});
-
 // Route de test pour vérifier que tout fonctionne
-app.get('/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
-    message: 'Server is running',
-    timestamp: new Date().toISOString()
-  });
+app.get('/', (req, res) => {
+  res.json(true);
 });
 
+app.get('/n8n', (req, res) => {
+  res.json(false);
+});
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
