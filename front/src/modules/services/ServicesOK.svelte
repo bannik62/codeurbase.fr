@@ -3,8 +3,8 @@
     import axios from "axios";
 
     const BACKEND_URL =
-        import.meta.env.VITE_BACKEND_URL || "http://localhost:3000/";
-    const N8N_URL = import.meta.env.VITE_N8N_URL || "http://localhost:3000/n8n";
+        import.meta.env.VITE_BACKEND_URL ;
+    const N8N_URL = import.meta.env.VITE_N8N_URL ;
 
     let backgroundOK = "#05c605";
     let backgroundKO = "#e66841";
