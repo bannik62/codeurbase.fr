@@ -28,17 +28,17 @@
                     itsOkBackend = false;
                 });
 
-            axios
-                .get(N8N_URL)
-                .then((response) => {
-                    itsOkN8n = response.data;
-                    console.log("itsOkN8n", itsOkN8n);
-                })
-                .catch((error) => {
-                    console.log(error);
-                    itsOkN8n = false;
-                });
-        }, 3000);
+            // axios
+            //     .get(N8N_URL)
+            //     .then((response) => {
+            //         itsOkN8n = response.data;
+            //         console.log("itsOkN8n", itsOkN8n);
+            //     })
+            //     .catch((error) => {
+            //         console.log(error);
+            //         itsOkN8n = false;
+            //     });
+        }, 7000);
     });
 </script>
 
