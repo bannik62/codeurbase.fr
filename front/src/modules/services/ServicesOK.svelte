@@ -1,45 +1,51 @@
 <script>
     import { onMount } from "svelte";
     import axios from "axios";
-
-    const BACKEND_URL =
-        import.meta.env.VITE_BACKEND_URL ;
-    const N8N_URL = import.meta.env.VITE_N8N_URL ;
-
+    import { config, loadConfig } from "../../stores/env";
+  
     let backgroundOK = "#05c605";
     let backgroundKO = "#e66841";
     let zero = 0;
     let widthTotal = 100;
     let widthMin = 50;
-
+  
     let itsOkBackend = false;
     let itsOkN8n = false;
-    onMount(() => {
-        setInterval(() => {
-            axios
-                .get(BACKEND_URL)
-                .then((response) => {
-                    itsOkBackend = response.data;
-                    console.log(itsOkBackend);
-                })
-                .catch((error) => {
-                    console.log(error);
-                    itsOkBackend = false;
-                });
-
-            axios
-                .get(N8N_URL)
-                .then((response) => {
-                    itsOkN8n = response.data;
-                    console.log("itsOkN8n", itsOkN8n);
-                })
-                .catch((error) => {
-                    console.log(error);
-                    itsOkN8n = false;
-                });
-        }, 3000);
+  
+    // Svelte réactif : $config contient automatiquement la valeur actuelle du store
+    $: console.log("Config actuelle :", $config);
+  
+    onMount(async () => {
+      await loadConfig(); // charge le config.json avant le setInterval
+  
+      setInterval(() => {
+        if (!$config?.BACKEND_URL || !$config?.N8N_URL) {
+          console.warn("Config pas encore chargée");
+          return;
+        }
+  
+        axios
+          .get($config.BACKEND_URL + "/health")
+          .then((response) => {
+            itsOkBackend = !!response.data;
+          })
+          .catch(() => {
+            itsOkBackend = false;
+          });
+  
+        axios
+          .get($config.N8N_URL + "/health")
+          .then((response) => {
+            itsOkN8n = !!response.data;
+          })
+          .catch(() => {
+            itsOkN8n = false;
+          });
+      }, 3000);
     });
-</script>
+  </script>
+  
+  
 <div class="services-ok">
 
 <div class="backend-power">
