@@ -18,7 +18,6 @@
         
 
         setInterval(() => {
-            loadConfig();
 
             axios
                 .get(BACKEND_URL)
