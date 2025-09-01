@@ -20,7 +20,7 @@
         setInterval(() => {
 
             axios
-                .get(BACKEND_URL)
+                .get(VITE_BACKEND_URL)
                 .then((response) => {
                     itsOkBackend = response.data;
                     console.log(itsOkBackend);
@@ -31,7 +31,7 @@
                 });
 
             axios
-                .get(N8N_URL)
+                .get(secrets.VITE_N8N_URL)
                 .then((response) => {
                     itsOkN8n = response.data;
                     console.log("itsOkN8n", itsOkN8n);
