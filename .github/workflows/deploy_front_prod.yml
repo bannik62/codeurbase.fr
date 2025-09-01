@@ -42,5 +42,5 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY_NO_PHRASE }}
           port: 22
           source: "./front/dist/**"
-          target: "/var/www/html/codeurbase/front/"
+          target: "/var/www/html/codeurbase/"
           rm: false
