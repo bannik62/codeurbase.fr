@@ -8,8 +8,10 @@ services:
       context: ./back
     ports:
       - "3000:3000"
+      - "3443:3443"  # port HTTPS exposé
     volumes:
       - ./back:/app
+      - /opt/certs/back/:/certs:ro
     networks:
       - network-app
     restart: always
