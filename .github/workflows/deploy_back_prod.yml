@@ -1,4 +1,4 @@
-name: Deploy Prod Backend
+name: Deploy Prod
 
 on:
   push:
@@ -18,7 +18,8 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
+      # === BACKEND ===
+      - name: Install backend dependencies
         run: npm ci
         working-directory: ./back
 
@@ -33,4 +34,24 @@ jobs:
           target: "/var/www/html/codeurbase/back/"
           rm: false
 
+      # === FRONTEND ===
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: ./front
 
+      - name: Build frontend with env
+        run: npm run build
+        working-directory: ./front
+        env:
+          VITE_BACKEND_URL: ${{ secrets.VITE_BACKEND_URL }}
+
+      - name: Copy Frontend to VPS
+        uses: appleboy/scp-action@v0.1.6
+        with:
+          host: ${{ secrets.PROD_SERVER_HOST }}
+          username: ${{ secrets.PROD_SERVER_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY_NO_PHRASE }}
+          port: 22
+          source: "./front/dist/*"
+          target: "/var/www/html/codeurbase/front/"
+          rm: true
