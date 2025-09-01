@@ -44,3 +44,4 @@ jobs:
           source: "./front/dist/**"
           target: "/var/www/html/codeurbase/"
           rm: false
+        

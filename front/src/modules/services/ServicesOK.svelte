@@ -1,7 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import axios from "axios";
-    import { loadConfig } from "../../stores/env";
+    // import { loadConfig } from "../../stores/env";
     // const BACKEND_URL = import.meta.env.VITE_BACKEND_URL ;
     //  const N8N_URL    = import.meta.env.VITE_N8N_URL ;
 
