@@ -29,8 +29,8 @@ jobs:
           username: ${{ secrets.PROD_SERVER_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY_NO_PHRASE }}
           port: 22
-          source: "./back/*"
-          target: "/var/www/html/codeurbase/back/"
+          source: "./back/**"
+          target: "/var/www/html/codeurbase/"
           rm: false
 
 
