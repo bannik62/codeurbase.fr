@@ -1,9 +1,10 @@
 <script>
     import { onMount } from "svelte";
     import axios from "axios";
-    // import { loadConfig } from "../../stores/env";
-    // const BACKEND_URL = import.meta.env.VITE_BACKEND_URL ;
-    //  const N8N_URL    = import.meta.env.VITE_N8N_URL ;
+
+    // ⚡ Variables d'environnement Vite
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+    const N8N_URL     = import.meta.env.VITE_N8N_URL;
 
     let backgroundOK = "#05c605";
     let backgroundKO = "#e66841";
@@ -13,14 +14,11 @@
 
     let itsOkBackend = false;
     let itsOkN8n = false;
+
     onMount(() => {
-
-        
-
         setInterval(() => {
-
             axios
-                .get(VITE_BACKEND_URL)
+                .get(BACKEND_URL)
                 .then((response) => {
                     itsOkBackend = response.data;
                     console.log(itsOkBackend);
@@ -31,7 +29,7 @@
                 });
 
             axios
-                .get(secrets.VITE_N8N_URL)
+                .get(N8N_URL)
                 .then((response) => {
                     itsOkN8n = response.data;
                     console.log("itsOkN8n", itsOkN8n);
@@ -43,6 +41,7 @@
         }, 3000);
     });
 </script>
+
 <div class="services-ok">
 
 <div class="backend-power">
