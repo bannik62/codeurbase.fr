@@ -24,9 +24,11 @@
 <style>
 
 nav {
+  position:absolute;
+  top: 0;
     left: 0;
-    width: 99vw;
-    height: 100px;
+    width: 100%;
+    height: 10vh;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -45,7 +47,7 @@ nav {
 
   @media (max-width: 415px) {
   nav {
-    position: fixed;
+    position: absolute;
     top: auto;   /* annule la position top */
     bottom: 0;   /* fixe en bas */
   }
