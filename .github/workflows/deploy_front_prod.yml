@@ -25,11 +25,13 @@ jobs:
         run: npm ci
         working-directory: ./front
 
-      # 4️⃣ Builder l’app
+      # 4️⃣ Builder l’app avec les variables d’env
       - name: Build Svelte
         run: npm run build
         working-directory: ./front
-
+        env:
+          VITE_BACKEND_URL: ${{ secrets.VITE_BACKEND_URL }}
+          VITE_N8N_URL: ${{ secrets.VITE_N8N_URL }}
 
       # 5️⃣ Déploiement (copie du build)
       - name: Copy Svelte build to VPS
@@ -39,6 +41,7 @@ jobs:
           username: ${{ secrets.PROD_SERVER_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY_NO_PHRASE }}
           port: 22
-          source: "./front/dist/*"
+          source: "./front/dist/**"
           target: "/var/www/html/codeurbase/"
           rm: false
+        
