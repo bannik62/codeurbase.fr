@@ -8,7 +8,7 @@
 
 </script>
 
-
+<div class="app_wrapper">
 {#if $currentPage === 'acceuil'}
   <Acceuil />
 {:else if $currentPage === 'about'}
@@ -18,9 +18,14 @@
 {:else}
   <div>Page inconnue</div>
 {/if}
+</div>
 
 
 
 <style>
- 
+  .app_wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
 </style>
