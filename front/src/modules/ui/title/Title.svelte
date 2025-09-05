@@ -15,7 +15,7 @@
 
 <div class="codeurbase-container">
     {#each visibleLetters as letter, i}
-        <span class="codeurbase-text" style="animation-delay: {i * 0.2}s;">{letter}</span>
+         <span class="codeurbase-text" style="animation-delay: {i * 0.2}s;">{letter}</span>
     {/each}
 </div>
 
