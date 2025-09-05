@@ -2,13 +2,13 @@
     import { onMount } from "svelte";
 
     let visibleLetters = [];
-    const text = "codeurbase.fr".split("");
+    const text = "Codeurbase.fr".split("");
 
     onMount(() => {
         text.forEach((letter, index) => {
             setTimeout(() => {
                 visibleLetters = [...visibleLetters, letter];
-            }, index * 200); // Delay each letter by 200ms
+            }, index * 100); // Delay each letter by 200ms
         });
     });
 </script>
@@ -21,10 +21,16 @@
 
 <style>
     .codeurbase-container {
+        position: stiky;
+        top: 100px;
+        left: 0;
+        width: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
         height: 100vh;
+        padding: 0px 20px;
+
     }
 
     .codeurbase-text {
