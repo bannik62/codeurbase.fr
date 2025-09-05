@@ -26,7 +26,7 @@
     
     // Fonction pour générer une vitesse aléatoire (minimum 0.6s)
     function getRandomSpeed() {
-        return Math.random() * 0.4 + 0.6; // Entre 0.6 et 1.0 secondes
+        return Math.random() * 0.1 + 0.3; // Entre 0.6 et 1.0 secondes
     }
     
     // Fonction pour animer les lettres une par une
@@ -233,7 +233,7 @@
                             <div class="loading-progress" style="width: {loaderProgress}%"></div>
                         </div>
                         {#if succes}
-                            <div class="success-message">✓ Recherche terminée avec succès!</div>
+                            <div class="success-message"><span >✓</span> Recherche terminée avec succès!</div>
                         {/if}
                     </div>  
                 {/if}
@@ -246,7 +246,7 @@
 
             <!-- Vous pouvez ajouter autant d'enfants que vous voulez -->
         </div>
-        <button class="action-button">Action</button>
+        <!-- <button class="action-button">Action</button> -->
     {/if}
 </div>
 
@@ -257,23 +257,51 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 100%;
+        height: 99%;
         z-index: 10;
-        backdrop-filter: blur(10px);
-        transition: backdrop-filter 3s ease-in-out;
         transform-origin: left center;
         overflow: hidden;
+        /* background: rgba(0, 0, 0, 0.1); */
+        animation: cloudAppear 7s forwards;
     }
 
-    .sky {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        /* background-color: #598ab4c9; */
-        /* transition: background-color 3s ease-in-out; */
+
+
+    @keyframes cloudAppear {
+        0% {
+            opacity: 0;
+            background : rgba(48, 145, 57, 0);
+            backdrop-filter: blur(0px);
+            border-radius: 50%;
+        }
+        25% {
+            opacity: 0.25;
+            background : rgba(48, 145, 57, 0);
+            backdrop-filter: blur(2.5px);
+            border-radius: 40%;
+        }
+        50% {
+            opacity: 0.5;
+            background : rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+            border-radius: 30%;
+        }
+        75% {
+            background : rrgba(48, 145, 57, 0);
+            opacity: 0.75;
+            backdrop-filter: blur(7.5px);
+            border-radius: 20%;
+        }
+        100% {
+            opacity: 1;
+            background : rgba(48, 145, 58, 0.450);
+            backdrop-filter: blur(20px);
+            border-radius: 0%;
+        }
     }
+
+
+
 
     .child-div {
         display: flex;
@@ -281,65 +309,82 @@
         align-items: center;
         justify-content: space-around;
         position: absolute;
-        top: 0;
-        left: 0;
+        top: 1px;
+        left:0;
         width: 100%;
         height: 100%;
-        background-color: rgba(54, 51, 51, 0.391);
+        margin: 0 auto;
+        /* background-color: rgba(67, 182, 54, 0.391); */
         border-radius: 8px;
         color: white;
         font-weight: bold;
         z-index: -1;
-        transform-origin: bottom center;
-        animation: appear 1s forwards;
+        transform-origin: right center -1000px;
+        animation: boardAppear 1s forwards;
         margin: 0 auto;
         /* Perspective 3D pour le container parent */
         perspective: 1000px;
         transform-style: preserve-3d;
+        z-index: 9;
+        clip-path: polygon(49% 5%, 100% 0, 100% 100%, 0 100%, 0 0);
+
     }
 
-    @keyframes appear {
+    @keyframes boardAppear {
         0% {
             opacity: 0;
-            transform: scale(0.8);
+            transform: scale(0);
+            border-radius: 50%;
         }
         25% {
             opacity: 0.5;
-            transform: scale(0.9);
+            transform: scale(0.3);
+            top: 10px;
+            border-radius: 40%;
         }
         50% {
             opacity: 0.8;
-            transform: scale(1.1);
+            transform: scale(0.6);
+            top: 20px;
+            border-radius: 30%;
         }
         75% {
             opacity: 0.9;
-            transform: scale(1.2);
+            transform: scale(0.9);
+            top: 30px;
+            border-radius: 20%;
         }
         100% {
             opacity: 1;
             transform: scale(1);
+            top: 40px;
+            border-radius: 0;
         }
     }
 
     .dashboard-section-one {
+        position: relative;
+        top: -5%;
         width: 30%;
-        height: 80%;
+        height: fit-content;
         margin: 20px 0;
         padding: 25px;
-        background-color: rgba(42, 40, 40, 0.877);
+        background-color: rgba(42, 40, 40, 0.76);
         border-top: 4px solid green;
         border-bottom: 3px solid green;
         border-left: 8px solid green;
         border-right: 3px solid green;
         border-radius: 5px;
+    
         /* Effets de perspective 3D */
         transform: rotateY(13deg) translateZ(50px);
         transition: transform 0.3s ease;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.828);
+        z-index: 9999;
     }
     .dashboard-section-one ul {
         font-family: 'Orbitron', sans-serif;
-        font-size:0.9rem;
+        font-size:clamp(0.5rem, 3vw, 1rem);
         font-weight: bold;
         color: white;
         margin: 0;
@@ -348,10 +393,11 @@
         text-align: center;
         transform: rotateY(15deg) translateZ(50px);
         list-style-type: none;
-        line-height: 5;
+        line-height: 2;
         letter-spacing: 1px;
     }
     .dashboard-section-one h2 {
+        font-family: 'Orbitron', sans-serif;
         font-size: 1.2rem;
         font-weight: bold;
         color: white;
@@ -373,7 +419,7 @@
 
     .dashboard-section-two {
         width: 30%;
-        height: 80%;
+        height: auto;
         margin: 20px 0;
         padding: 15px;
         background-color: rgba(42, 40, 40, 0.877);
@@ -386,7 +432,8 @@
         transform: rotateY(-13deg) translateZ(50px);
         transition: transform 0.3s ease;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
+        z-index: 9999;
+        }
     .dashboard-section-two p {
         font-size: 1.2rem;
         font-weight: bold;
@@ -411,7 +458,7 @@
     }
     
     .loading-label {
-        color: #4CAF50;
+        color: crimson;
         font-family: 'Orbitron', sans-serif;
         font-size: 0.9rem;
         font-weight: bold;
@@ -423,7 +470,7 @@
     
     .loading-bar {
         width: 100%;
-        height: 8px;
+        height: 15px;
         background-color: rgba(255, 255, 255, 0.2);
         border-radius: 4px;
         overflow: hidden;
@@ -432,7 +479,7 @@
     
     .loading-progress {
         height: 100%;
-        background: linear-gradient(90deg, #4CAF50, #8BC34A, #4CAF50);
+        background: linear-gradient(90deg, orange, crimson, orange);
         background-size: 200% 100%;
         border-radius: 4px;
         transition: width 0.1s ease-out;
@@ -449,13 +496,20 @@
     }
     
     .success-message {
-        color: #4CAF50;
+        color: crimson;
         font-family: 'Orbitron', sans-serif;
         font-size: 0.8rem;
         font-weight: bold;
         text-align: center;
-        margin-top: 10px;
+        /* margin-top: 5px; */
         animation: fadeIn 0.5s ease-in;
+    }
+    .success-message span {
+        color: green;
+        font-size: 1.7rem;
+        font-weight: bold;
+        margin-right: 10px;
+        filter: drop-shadow(0 0 10px rgba(213, 30, 30, 0.5));
     }
     
     @keyframes fadeIn {

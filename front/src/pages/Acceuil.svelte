@@ -1,6 +1,16 @@
 <script>
     import { onMount } from "svelte";
     import Cloud from "../modules/ui/clouds/Cloud.svelte";
+    import planet from "../assets/Planet-No-Background.png";
+    import Detector from "../modules/ui/detection/Detector.svelte";
+    import {
+        detectionStore,
+        detectionActions,
+        statusMessage,
+        statusColor,
+        checkDetection,
+    } from "../stores/detection.js";
+    import Cockpit from "../modules/ui/cockpit/Cockpit.svelte";
     let canvas;
     let ctx;
     let atmoOne;
@@ -12,7 +22,6 @@
     const baseSpeed = 2;
     let currentSpeed = baseSpeed;
     let curve = 0;
-
 
     // Scroll‑zoom
     let startScroll = 0;
@@ -67,13 +76,15 @@
     function isInViewport(selector) {
         const element = document.querySelector(selector);
         if (!element) return false;
-        
+
         const rect = element.getBoundingClientRect();
         return (
             rect.top >= 0 &&
             rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            rect.bottom <=
+                (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <=
+                (window.innerWidth || document.documentElement.clientWidth)
         );
     }
 
@@ -84,27 +95,57 @@
         startScroll = rect ? rect.top + window.scrollY : 0;
 
         // calcul du facteur : quand le haut de atmo-one arrive en haut de l'écran jusqu'à ce qu'elle soit sortie
-        let factor = 0.5 - Math.min(Math.max(rect.top / window.innerHeight, 0), 1);
+        let factor =
+            0.5 - Math.min(Math.max(rect.top / window.innerHeight, 0), 1);
         let scale = 3 + factor * (maxZoom - 1);
         atmoOne.style.transform = `scale(${scale})`;
 
         // Vérifier si l'élément atmo-one est visible et mettre à jour showCloud
         showCloud = rect && rect.top < window.innerHeight && rect.bottom > 0;
-        
+
         // Calculer l'échelle du nuage en fonction de la position de scroll
         if (showCloud && rect) {
             // Calculer le pourcentage de visibilité avec une courbe plus douce
-            const rawRatio = (window.innerHeight - rect.top) / window.innerHeight;
+            const rawRatio =
+                (window.innerHeight - rect.top) / window.innerHeight;
             // Appliquer une courbe d'easing pour ralentir l'animation
-            const visibilityRatio = Math.max(0, Math.min(1, rawRatio * rawRatio * rawRatio));
-            
+            const visibilityRatio = Math.max(
+                0,
+                Math.min(1, rawRatio * rawRatio * rawRatio)
+            );
+
             // Échelle de 0.1 (initial) à 1.0 (plein écran) avec progression plus lente
-            cloudScale = 0.1 + (0.9 * visibilityRatio);
+            cloudScale = 0.1 + 0.9 * visibilityRatio;
         } else {
             cloudScale = 0.1; // Retour à la taille initiale
         }
-        
-        console.log('showCloud:', showCloud, 'cloudScale:', cloudScale);
+
+        console.log("showCloud:", showCloud, "cloudScale:", cloudScale);
+
+        // Détection : calculer le pourcentage de visibilité de space-three
+        const spaceThreeElement = document.querySelector(".space-three");
+        if (spaceThreeElement) {
+            const spaceThreeRect = spaceThreeElement.getBoundingClientRect();
+
+            // Calculer la hauteur visible de la section
+            const visibleTop = Math.max(0, spaceThreeRect.top);
+            const visibleBottom = Math.min(
+                window.innerHeight,
+                spaceThreeRect.bottom
+            );
+            const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+
+            // Calculer le pourcentage de visibilité
+            const totalHeight = spaceThreeRect.height;
+            const visibilityPercentage = (visibleHeight / totalHeight) * 100;
+
+            // Mettre à jour le store et vérifier la détection
+            detectionActions.updateVisibility(
+                visibilityPercentage,
+                window.scrollY
+            );
+            checkDetection(visibilityPercentage);
+        }
 
         // continuer le calcul des étoiles
         const scrollPos = window.scrollY;
@@ -143,32 +184,44 @@
 <section>
     <div class="content_space">
         <div class="video-container">
-            <canvas bind:this={canvas}></canvas>
+            <canvas bind:this={canvas} ></canvas>
         </div>
 
         <div class="space-one"><p>test0</p></div>
         <div class="space-two"><p>test1</p></div>
-        <div class="space-three"><p>test3</p></div>
+        <div class="space-three">
+            {#if $detectionStore.showMessage}
+                <div class="container-detection ">
+                    <div class="container-status">
+                        <p style="color: {$statusColor};">
+                            Status: {$statusMessage}
+                        </p>
+                    </div>
+                </div>
+            {/if}
+            {#if $detectionStore.showDetector}
+                <Detector
+                    on:finished={() => {
+                        detectionActions.finishSequence();
+                    }}
+                />
+            {/if}
+        </div>
         <div class="atmo-one">
-            <p>atmo</p>
-            <div class="nuages-one" style=" width: {10 + (cloudScale - 0.1) * 100}vw; height: {8 + (cloudScale - 0.1) * 100}vh;">
+            <div
+                class="nuages-one"
+                style=" width: {10 + (cloudScale - 0.1) * 100}vw; height: {8 +
+                    (cloudScale - 0.1) * 100}vh;"
+            >
                 {#if showCloud}
                     <Cloud />
                 {/if}
-            </div>  
-            <img
-                bind:this={atmoOne}
-                src="../../public/Planet-No-Background.png"
-                alt="planet"
-            />
+            </div>
+            <img bind:this={atmoOne} src={planet} alt="planet" />
         </div>
     </div>
 
-    <div class="cockpit">
-        <div class="cockpit-left"></div>
-        <div class="cockpit-center"></div>
-        <div class="cockpit-right"></div>
-    </div>
+    <Cockpit />
 </section>
 
 <style>
@@ -219,22 +272,31 @@
         height: 110dvh;
     }
     .space-three {
-        border: 1px solid green;
-        height: 100vh;
+        height: 100dvh;
+        /* background: rgba(0, 255, 0, 0.05); */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
     }
+
+    /* .container-detection {
+        width: auto;
+        height: auto;
+        background: rgba(23, 187, 53, 0.816);
+        padding: 10px;
+        border-radius: 5px;
+        z-index: 1000;
+    } */
 
     .atmo-one {
         display: flex;
         justify-content: center;
         align-items: center;
         position: relative;
-        border: 1px solid blue;
-        background-size: cover;
-        background-repeat: no-repeat;
         width: 100vw;
         height: 100vh;
         z-index: 1;
-   
     }
 
     .atmo-one img {
@@ -247,7 +309,7 @@
         transform-origin: right center;
         transition: transform 1s linear;
         z-index: 5;
-        filter: drop-shadow(50px 0px 10px rgba(240, 239, 239, 0.5));
+        filter: drop-shadow(50px 0px 10px rgba(230, 220, 128, 0.5));
     }
     .nuages-one {
         display: flex;
@@ -257,53 +319,47 @@
         bottom: 0%;
         right: 0%;
         z-index: 6;
-        transition: width 0.3s ease-out, height 0.3s ease-out; /* Animation fluide sur les dimensions */
+        transition: width 0.1s ease-out, height 0.6s ease-out; /* Animation fluide sur les dimensions */
     }
 
-    .cockpit {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        position: fixed;
-        bottom: 0;
+    .container-detection {
+        position: relative;
+        background: rgba(28, 173, 105, 0.219);
+        width: auto;
+        height: auto;
+        padding: 20px;
+        border-radius: 15px;
+        filter: drop-shadow(0px -80px 15px rgba(110, 239, 34, 0.5));
+
+    }
+    .container-detection:after {
+        content: "";
+        position: absolute;
+        top: 0;
         left: 0;
         width: 100%;
-        height: 15%;
-        border: 1px solid blue;
-        background: #bbb;
-        clip-path: polygon(50% 0%, 100% 38%, 100% 100%, 0 100%, 0% 38%);
-        z-index: 1;
-    }
-    .cockpit-left {
-        width: 50%;
         height: 100%;
-        background: linear-gradient(
-            to left,
-            #333,
-            #4d4d4d,
-            #666,
-            #888, /* Corrected color from #808 to #888 for a more suitable gray */
-            #999,
-            #b3b3b3
-        );
+        border-radius: 15px;
+        z-index: 1000;
+        border-left: 1px solid rgb(28, 173, 105);
+        border-right: 1px solid rgba(28, 173, 105);
+        border-top: 1px solid rgba(28, 173, 105, 0.219);
+        border-bottom: 1px solid rgba(28, 173, 105, 0.219);
+
     }
-    .cockpit-center {
-        width: 5px;
-        height: 100%;
-        background: #2d2d2d;
-        border-top: 5px solid #2c2b2b;
+
+    .container-status {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center; 
+        min-width: auto;
+        min-height: 90px;
+        height: auto;
+        font-family: "Orbitron", sans-serif;
+        font-size: clamp(1rem, 4vw, 1.2rem);
+        font-weight: bold;
+        filter: drop-shadow(10px 0 10px rgba(110, 239, 34, 0.5));
     }
-    .cockpit-right {
-        width: 50%;
-        height: 100%;
-        background: linear-gradient(
-            to right,
-            #333,
-            #4d4d4d,
-            #666,
-            #888, /* Corrected color from #808 to #888 for a more suitable gray */
-            #999,
-            #b3b3b3
-        );
-    }
+
 </style>
