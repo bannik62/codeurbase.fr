@@ -59,6 +59,44 @@ h1 {
   flex-direction: column;
   text-align: center;
 }
+.blink-slow {
+  animation: blink-slow 2s infinite;
+}
+
+.blink-normal {
+  animation: blink-normal 1s infinite;
+}
+
+.blink-fast {
+  animation: blink-fast 0.5s infinite;
+}
+
+@keyframes blink-slow {
+  0%, 50%, 100% {
+    opacity: 1;
+  }
+  25%, 75% {
+    opacity: 0;
+  }
+}
+
+@keyframes blink-normal {
+  0%, 50%, 100% {
+    opacity: 1;
+  }
+  25%, 75% {
+    opacity: 0;
+  }
+}
+
+@keyframes blink-fast {
+  0%, 50%, 100% {
+    opacity: 1;
+  }
+  25%, 75% {
+    opacity: 0;
+  }
+}
 
 button {
   border-radius: 8px;
