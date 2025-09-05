@@ -50,7 +50,7 @@
 <div class="detection" transition:fade={{ duration: 1000 }}>
     {#if showContent}
     <div class="detection-content" transition:scale={{ duration: 500, start: 0.2 }}>
-        <h1>Detection</h1>
+        <h1>Detection Rapport </h1>
         
         {#if showLoader}
         <Radar />
@@ -118,7 +118,6 @@
     }
 
     .loading-bar-radar-container {
-        border: 1px solid red;
         display: flex;
         flex-direction: column;
         /* position: absolute;

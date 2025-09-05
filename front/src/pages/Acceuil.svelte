@@ -3,6 +3,7 @@
     import Cloud from "../modules/ui/clouds/Cloud.svelte";
     import planet from "../assets/Planet-No-Background.png";
     import Detector from "../modules/ui/detection/Detector.svelte";
+    import Title from "../modules/ui/title/Title.svelte";
     import {
         detectionStore,
         detectionActions,
@@ -187,7 +188,9 @@
             <canvas bind:this={canvas} ></canvas>
         </div>
 
-        <div class="space-one"><p>test0</p></div>
+        <div class="space-one">
+            <Title />
+        </div>
         <div class="space-two"><p>test1</p></div>
         <div class="space-three">
             {#if $detectionStore.showMessage}
