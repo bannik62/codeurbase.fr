@@ -18,7 +18,7 @@
             setTimeout(() => {
                 showContent = true;
                 showLoader = true;
-            }, 200);
+            }, 400);
 
             const timer = setTimeout(() => {
                 showLoader = false;
@@ -28,8 +28,8 @@
                 setTimeout(() => {
                     dispatch('finished');
                     console.log("Detector component - loader finished, custom content shown");
-                }, 3000); // Augmenté de 500ms à 3000ms (3 secondes)
-            }, 6000);
+                }, 4000); // Augmenté de 500ms à 3000ms (3 secondes)
+            }, 5000);
 
             // Fonction de nettoyage
             cleanupFunction = () => {
@@ -47,7 +47,7 @@
 </script>
 
 {#if isVisible}
-<div class="detection" transition:fade={{ duration: 1000 }}>
+<div class="detection" transition:fade={{ duration: 100 }}>
     {#if showContent}
     <div class="detection-content" transition:scale={{ duration: 500, start: 0.2 }}>
         <h1>Detection Rapport </h1>
@@ -66,7 +66,7 @@
         {#if showCustomContent}
         <div class="custom-content">
             <!-- Ici vous pouvez ajouter votre HTML personnalisé -->
-            <p class="blink-slow" style="color: orange;">Life detected</p>
+            <p class="blink-slow p-life" >Life Detected</p>
            <div class="blink-normal">
                <svg width="150" height="150" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                    <path d="M12 16L6 10H18L12 16Z" fill="crimson"/>
@@ -147,11 +147,11 @@
         text-align: center;
     }
     
-    .custom-content p {
-        font-size: 1.2rem;
+    .p-life {
+        font-size:clamp(1rem, 3vw, 3.2rem);
         margin-bottom: 1rem;
-        color: white;
-    }
+        color: orange;   
+     }
     
 
     @keyframes loading {
