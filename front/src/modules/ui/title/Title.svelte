@@ -23,13 +23,12 @@
     .codeurbase-container {
         position: stiky;
         top: 100px;
-        left: 0;
+        left: -10px;
         width: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
-        padding: 0px 20px;
+        height: 15dvh;
 
     }
 
@@ -39,7 +38,7 @@
         font-weight: bold;
         color: crimson;
         opacity: 0;
-        width: 100%;
+        width: 50%;
         animation: fadeIn 1s forwards;
     }
 
