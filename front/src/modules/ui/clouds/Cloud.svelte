@@ -26,7 +26,7 @@
     
     // Fonction pour générer une vitesse aléatoire (minimum 0.6s)
     function getRandomSpeed() {
-        return Math.random() * 0.1 + 0.3; // Entre 0.6 et 1.0 secondes
+        return Math.random() * 0.1 + 0.1; // Entre 0.6 et 1.0 secondes
     }
     
     // Fonction pour animer les lettres une par une
@@ -67,7 +67,7 @@
                 
                 animationTimeouts.push(timeout);
             });
-            totalDelay += letters.length * 100; // Petit délai entre les lignes
+            totalDelay += letters.length * 10; // Petit délai entre les lignes
         });
         
         // Marquer l'animation comme terminée après un délai
@@ -75,7 +75,7 @@
             isAnimating = false;
             // Démarrer le loader après la fin de l'animation
             startLoader();
-        }, totalDelay + 2000);
+        }, totalDelay + 1500);
     }
     
     // Fonction pour démarrer le loader

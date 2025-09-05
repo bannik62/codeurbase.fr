@@ -94,7 +94,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba(0, 0, 0, 0.5);
     
     }
     
@@ -119,11 +118,7 @@
 
     .loading-bar-radar-container {
         display: flex;
-        flex-direction: column;
-        /* position: absolute;
-        top: 0;
-        left: 0; */
-       
+        flex-direction: column;       
         height: auto;
         gap: 20px;
     }
@@ -132,8 +127,7 @@
     
     .loading-bar {
         width: 300px;
-        height: 4px;
-        /* background: rgb(227, 203, 49); */
+        height: 8px;
         border-radius: 2px;
         overflow: hidden;
         margin: 0 auto;
@@ -167,18 +161,16 @@
         }
         10%{
             transform: scaleX(0.1);
-            opacity: 0;
+        
         }
         20%{
             transform: scaleX(0.2);
         }
         30%{
             transform: scaleX(0.3);
-            opacity: 0;
         }
         40%{
             transform: scaleX(0.4);
-            opacity: 0;
         }
         50%{
             transform: scaleX(0.5);
@@ -191,11 +183,9 @@
         }
         80%{
             transform: scaleX(0.8);
-            opacity: 0;
         }
         90%{
             transform: scaleX(0.9);
-            opacity: 0;
         }
         100%{
             transform: scaleX(1);
