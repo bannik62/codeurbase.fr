@@ -179,7 +179,20 @@
         });
 
         window.addEventListener("scroll", handleScroll);
-    });
+    
+        const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          nuagesOne.classList.add("in-view");
+          observer.unobserve(nuagesOne); // animation une seule fois
+        }
+      },
+      { threshold: 0.1 } // déclenche quand 10% du container est visible
+    );
+
+    observer.observe(nuagesOne);
+  });
+    ;
 </script>
 
 <section>
@@ -319,10 +332,60 @@
         align-items: center;
         justify-content: center;
         position: absolute;
-        bottom: 0%;
+        bottom: 2%;
         right: 0%;
         z-index: 6;
         transition: width 0.1s ease-out, height 0.6s ease-out; /* Animation fluide sur les dimensions */
+    }
+     /* .nuages-one:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10vh;
+    clip-path: polygon(50% 100%, 100% 62%, 100% 0, 0 0, 0% 62%);
+    background: linear-gradient(
+        to right,
+        #333,
+        #4d4d4d,
+        #666,
+        #888,
+        #999,
+        #b3b3b3,
+        #b3b3b3,
+        #999,
+        #888,
+        #666,
+        #4d4d4d,
+        #333
+    );
+    opacity: 1;
+     z-index: 1000; 
+ } */
+
+
+
+@keyframes toInvisible {
+    0% {
+        top: -10vh;
+        opacity: 1;
+    }
+    100% {
+        top: 0;
+        opacity: 0;
+    }
+}
+
+    @keyframes toInvisible {
+        0% {
+            top: -10vh;
+            opacity: 1;
+        }
+        100% {
+            top: 0;
+            opacity: 0;
+        }
     }
 
     .container-detection {
