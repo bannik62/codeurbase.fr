@@ -32,6 +32,7 @@
             #888, /* Corrected color from #808 to #888 for a more suitable gray */
             #999,
             #b3b3b3
+            
         );
     }
     .cockpit-center {

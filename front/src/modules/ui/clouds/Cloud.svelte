@@ -12,64 +12,69 @@
     let showChildDiv = false;
     let createTimeout;
     let removeTimeout;
-    
+
     // Variables pour l'animation des lettres
     let showH2 = false;
     let visibleLetters = [];
     let animationTimeouts = [];
     let isAnimating = false;
-    
+
     // Variables pour le loader
     let showLoader = false;
     let loaderProgress = 0;
     let succes = false;
-    
+
     // Fonction pour générer une vitesse aléatoire (minimum 0.6s)
     function getRandomSpeed() {
         return Math.random() * 0.1 + 0.1; // Entre 0.6 et 1.0 secondes
     }
-    
+
     // Fonction pour animer les lettres une par une
     function animateLetters() {
         // Éviter les animations multiples
         if (isAnimating) return;
-        
+
         isAnimating = true;
         // Nettoyer l'état précédent
         clearAnimationTimeouts();
-        
+
         const textElements = [
             "environ 510 millions de km²",
-            "environ 148 millions de km²", 
+            "environ 148 millions de km²",
             "environ 362 millions de km²",
             "environ 7,9 milliards",
-            "environ 1,2 milliards"
+            "environ 1,2 milliards",
         ];
-        
+
         let totalDelay = 0;
-        
+
         textElements.forEach((text, textIndex) => {
-            const letters = text.split('');
+            const letters = text.split("");
             letters.forEach((letter, letterIndex) => {
                 const speed = getRandomSpeed();
-                const delay = totalDelay + (letterIndex * speed * 100); // Convertir en ms
-                
+                const delay = totalDelay + letterIndex * speed * 100; // Convertir en ms
+
                 const timeout = setTimeout(() => {
                     // Vérifier si la lettre n'existe pas déjà
-                    const letterExists = visibleLetters.some(l => 
-                        l.textIndex === textIndex && l.letterIndex === letterIndex
+                    const letterExists = visibleLetters.some(
+                        (l) =>
+                            l.textIndex === textIndex &&
+                            l.letterIndex === letterIndex
                     );
-                    
+
                     if (!letterExists) {
-                        visibleLetters = [...visibleLetters, { textIndex, letterIndex, letter }];
+                        visibleLetters = [
+                            ...visibleLetters,
+                            { textIndex, letterIndex, letter },
+                        ];
                     }
                 }, delay);
-                
+
                 animationTimeouts.push(timeout);
             });
             totalDelay += letters.length * 10; // Petit délai entre les lignes
         });
-        
+
         // Marquer l'animation comme terminée après un délai
         setTimeout(() => {
             isAnimating = false;
@@ -77,18 +82,18 @@
             startLoader();
         }, totalDelay + 1500);
     }
-    
+
     // Fonction pour démarrer le loader
     function startLoader() {
         showLoader = true;
         loaderProgress = 0;
         succes = false;
-        
+
         // Animation de la progress bar sur 3 secondes
         const duration = 3000; // 3 secondes
         const interval = 50; // Mise à jour toutes les 50ms
         const increment = 100 / (duration / interval);
-        
+
         const progressInterval = setInterval(() => {
             loaderProgress += increment;
             if (loaderProgress >= 100) {
@@ -99,11 +104,11 @@
             }
         }, interval);
     }
-    
+
     // Fonction pour nettoyer les timeouts d'animation
     function clearAnimationTimeouts() {
         // Nettoyer tous les timeouts
-        animationTimeouts.forEach(timeout => clearTimeout(timeout));
+        animationTimeouts.forEach((timeout) => clearTimeout(timeout));
         animationTimeouts = [];
         // Réinitialiser l'état des lettres
         visibleLetters = [];
@@ -178,67 +183,86 @@
 
 <!-- Div container focusable -->
 <div class="intro-cloud-container" bind:this={introContainer}>
-
     <!-- Div enfant réactive -->
     {#if showChildDiv}
-        <h2>Board</h2>
         <div class="child-div">
             <!-- Exemple d'enfants -->
             <div class="dashboard-section-one">
                 <h2 class:h2-visible={showH2}>Planéte Terre</h2>
                 <ul>
                     <li>
-                        <span style="color: green;">Superficie totale:</span> 
+                        <span style="color: green;">Superficie totale:</span>
                         <span style="color: crimson;">
-                            {#each visibleLetters.filter(l => l.textIndex === 0).sort((a, b) => a.letterIndex - b.letterIndex) as letterObj}
+                            {#each visibleLetters
+                                .filter((l) => l.textIndex === 0)
+                                .sort((a, b) => a.letterIndex - b.letterIndex) as letterObj}
                                 {letterObj.letter}
                             {/each}
                         </span>
                     </li>
                     <li>
-                        <span style="color: green;">Superficie terrestre:</span> 
+                        <span style="color: green;">Superficie terrestre:</span>
                         <span style="color: crimson;">
-                            {#each visibleLetters.filter(l => l.textIndex === 1).sort((a, b) => a.letterIndex - b.letterIndex) as letterObj}
+                            {#each visibleLetters
+                                .filter((l) => l.textIndex === 1)
+                                .sort((a, b) => a.letterIndex - b.letterIndex) as letterObj}
                                 {letterObj.letter}
                             {/each}
                         </span>
                     </li>
                     <li>
-                        <span style="color: green;">Superficie maritime:</span> 
+                        <span style="color: green;">Superficie maritime:</span>
                         <span style="color: crimson;">
-                            {#each visibleLetters.filter(l => l.textIndex === 2).sort((a, b) => a.letterIndex - b.letterIndex) as letterObj}
+                            {#each visibleLetters
+                                .filter((l) => l.textIndex === 2)
+                                .sort((a, b) => a.letterIndex - b.letterIndex) as letterObj}
                                 {letterObj.letter}
                             {/each}
                         </span>
                     </li>
                     <li>
-                        <span style="color: green;">Nombre d'habitants:</span> 
+                        <span style="color: green;">Nombre d'habitants:</span>
                         <span style="color: crimson;">
-                            {#each visibleLetters.filter(l => l.textIndex === 3).sort((a, b) => a.letterIndex - b.letterIndex) as letterObj}
+                            {#each visibleLetters
+                                .filter((l) => l.textIndex === 3)
+                                .sort((a, b) => a.letterIndex - b.letterIndex) as letterObj}
                                 {letterObj.letter}
                             {/each}
                         </span>
-                        <span style="color: green;"> <br> Nombres de dévéloppeurs:</span>
+                        <span style="color: green;">
+                            <br /> Nombres de dévéloppeurs:</span
+                        >
                         <span style="color: crimson;">
-                            {#each visibleLetters.filter(l => l.textIndex === 4).sort((a, b) => a.letterIndex - b.letterIndex) as letterObj}
+                            {#each visibleLetters
+                                .filter((l) => l.textIndex === 4)
+                                .sort((a, b) => a.letterIndex - b.letterIndex) as letterObj}
                                 {letterObj.letter}
                             {/each}
                         </span>
                     </li>
                 </ul>
                 {#if showLoader}
-                    <div class="loading-container"> 
-                        <div class="loading-label">Recherche développeur...</div>
+                    <div class="loading-container">
+                        <div class="loading-label">
+                            Recherche développeur...
+                        </div>
                         <div class="loading-bar">
-                            <div class="loading-progress" style="width: {loaderProgress}%"></div>
+                            <div
+                                class="loading-progress"
+                                style="width: {loaderProgress}%"
+                            />
                         </div>
                         {#if succes}
-                            <div class="success-message"><span >✓</span> Recherche terminée avec succès!</div>
+                            <div class="success-message">
+                                <span>✓</span> Recherche terminée avec succès!
+                            </div>
                         {/if}
-                    </div>  
+                    </div>
                 {/if}
             </div>
-
+            <div class="separator">
+                <div class="separator-line" />
+            </div>
             <div class="dashboard-section-two">
                 <h3>Section 2</h3>
                 <p>Contenu de la section 2</p>
@@ -251,57 +275,50 @@
 </div>
 
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+    @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
     .intro-cloud-container {
         position: relative;
         top: 0;
         left: 0;
         width: 100%;
-        height: 99%;
-        z-index: 10;
+        height: 100%;
         transform-origin: left center;
         overflow: hidden;
-        /* background: rgba(0, 0, 0, 0.1); */
-        animation: cloudAppear 7s forwards;
+        animation: cloudAppear 1s forwards;
     }
-
-
 
     @keyframes cloudAppear {
         0% {
             opacity: 0;
-            background : rgba(48, 145, 57, 0);
+            background: rgba(48, 145, 57, 0);
             backdrop-filter: blur(0px);
             border-radius: 50%;
         }
         25% {
             opacity: 0.25;
-            background : rgba(48, 145, 57, 0);
+            background: rgba(48, 145, 57, 0);
             backdrop-filter: blur(2.5px);
             border-radius: 40%;
         }
         50% {
             opacity: 0.5;
-            background : rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.5);
             backdrop-filter: blur(5px);
             border-radius: 30%;
         }
         75% {
-            background : rrgba(48, 145, 57, 0);
+            background: rrgba(48, 145, 57, 0);
             opacity: 0.75;
             backdrop-filter: blur(7.5px);
             border-radius: 20%;
         }
         100% {
             opacity: 1;
-            background : rgba(48, 145, 58, 0.450);
+            background: rgba(34, 87, 39, 0.45);
             backdrop-filter: blur(20px);
             border-radius: 0%;
         }
     }
-
-
-
 
     .child-div {
         display: flex;
@@ -310,7 +327,7 @@
         justify-content: space-around;
         position: absolute;
         top: 1px;
-        left:0;
+        left: 0;
         width: 100%;
         height: 100%;
         margin: 0 auto;
@@ -326,8 +343,33 @@
         perspective: 1000px;
         transform-style: preserve-3d;
         z-index: 9;
-        clip-path: polygon(49% 5%, 100% 0, 100% 100%, 0 100%, 0 0);
-
+    }
+    .child-div:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 10vh;
+        clip-path: polygon(50% 100%, 100% 62%, 100% 0, 0 0, 0% 62%);
+        background: linear-gradient(
+            to right,
+            #333,
+            #4d4d4d,
+            #666,
+            #888,
+            #999,
+            #b3b3b3,
+            #b3b3b3,
+            #999,
+            #888,
+            #666,
+            #4d4d4d,
+            #333
+        );
+        opacity: 0; /* invisible au départ */
+        z-index: 9999;
+        animation: toInvisible 0.5s ease-in 0.5s forwards;
     }
 
     @keyframes boardAppear {
@@ -375,7 +417,7 @@
         border-left: 8px solid green;
         border-right: 3px solid green;
         border-radius: 5px;
-    
+
         /* Effets de perspective 3D */
         transform: rotateY(13deg) translateZ(50px);
         transition: transform 0.3s ease;
@@ -383,8 +425,8 @@
         z-index: 9999;
     }
     .dashboard-section-one ul {
-        font-family: 'Orbitron', sans-serif;
-        font-size:clamp(0.5rem, 3vw, 1rem);
+        font-family: "Orbitron", sans-serif;
+        font-size: clamp(0.5rem, 3vw, 1rem);
         font-weight: bold;
         color: white;
         margin: 0;
@@ -397,25 +439,35 @@
         letter-spacing: 1px;
     }
     .dashboard-section-one h2 {
-        font-family: 'Orbitron', sans-serif;
-        font-size: 1.2rem;
+        font-family: "Orbitron", sans-serif;
+        font-size: clamp(1rem, 3vw, 1.5rem);
         font-weight: bold;
         color: white;
-        margin: 0 0 10px 0;
+        margin: 0 0 0px 0;
         transform: rotateY(25deg) translateZ(50px);
         opacity: 0;
         transition: opacity 0.8s ease-in-out;
     }
-    
+
     .dashboard-section-one h2.h2-visible {
         opacity: 0.8;
     }
-    
+
     .loading-container {
         transform: rotateY(25deg) translateZ(50px);
         transform-origin: left bottom;
     }
 
+    .separator {
+        position: relative;
+        width: 1%;
+        height: 100%;
+        left: -0.6%;
+        background-color: rgba(96, 94, 94, 0.166);
+        outline: 1px solid rgba(96, 94, 94, 0.497);
+        border-radius: 0px;
+        overflow: hidden;
+    }
 
     .dashboard-section-two {
         width: 30%;
@@ -433,7 +485,7 @@
         transition: transform 0.3s ease;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         z-index: 9999;
-        }
+    }
     .dashboard-section-two p {
         font-size: 1.2rem;
         font-weight: bold;
@@ -447,19 +499,19 @@
         color: white;
         margin: 0 0 10px 0;
     }
-    
+
     /* Styles pour le loader */
     .loading-container {
         margin-top: 20px;
         padding: 15px;
         background-color: rgba(0, 0, 0, 0.3);
         border-radius: 8px;
-        border: 2px solid #4CAF50;
+        border: 2px solid #4caf50;
     }
-    
+
     .loading-label {
         color: crimson;
-        font-family: 'Orbitron', sans-serif;
+        font-family: "Orbitron", sans-serif;
         font-size: 0.9rem;
         font-weight: bold;
         text-align: center;
@@ -467,7 +519,7 @@
         text-transform: uppercase;
         letter-spacing: 1px;
     }
-    
+
     .loading-bar {
         width: 100%;
         height: 15px;
@@ -476,7 +528,7 @@
         overflow: hidden;
         position: relative;
     }
-    
+
     .loading-progress {
         height: 100%;
         background: linear-gradient(90deg, orange, crimson, orange);
@@ -485,7 +537,7 @@
         transition: width 0.1s ease-out;
         animation: shimmer 2s infinite;
     }
-    
+
     @keyframes shimmer {
         0% {
             background-position: -200% 0;
@@ -494,10 +546,10 @@
             background-position: 200% 0;
         }
     }
-    
+
     .success-message {
         color: crimson;
-        font-family: 'Orbitron', sans-serif;
+        font-family: "Orbitron", sans-serif;
         font-size: 0.8rem;
         font-weight: bold;
         text-align: center;
@@ -511,7 +563,7 @@
         margin-right: 10px;
         filter: drop-shadow(0 0 10px rgba(213, 30, 30, 0.5));
     }
-    
+
     @keyframes fadeIn {
         from {
             opacity: 0;

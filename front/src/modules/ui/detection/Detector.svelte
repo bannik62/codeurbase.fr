@@ -114,6 +114,7 @@
         margin: 0 0 2rem 0;
         text-align: center;
         text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        filter: drop-shadow(0 10px 20px rgba(220, 20, 60, 0.3));
     }
 
     .loading-bar-radar-container {
