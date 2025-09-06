@@ -181,7 +181,7 @@
 
     <!-- Div enfant réactive -->
     {#if showChildDiv}
-        <h2>Tableau de bord</h2>
+        <h2>Board</h2>
         <div class="child-div">
             <!-- Exemple d'enfants -->
             <div class="dashboard-section-one">
