@@ -362,7 +362,7 @@
     }
     .contain-rond-rectangle-top-left .rectangle {
         position: absolute;
-        top:200%;
+        top:280%;
         left: 40%;
         width: 395%;
         height: 49%;
@@ -371,7 +371,7 @@
         /* box-shadow: 0px -10px 20px rgba(39, 130, 84, 0.5) ;
         filter: drop-shadow(0px 30px 15px  crimson); */
         z-index: 1003;
-        animation: alternateboxshadow 3s alternate-reverse infinite;
+        animation: alternateboxshadow 1s alternate-reverse infinite;
         animation-delay: 5s;
     }
     @keyframes alternateboxshadow {
@@ -384,7 +384,7 @@
         100% {
             border-bottom-left-radius: 50%;
             border-bottom-right-radius: 50%;
-             box-shadow: 0px 10px 20px rgba(39, 130, 84, 0.5) ;
+             box-shadow: 0px 10px -20px rgba(39, 130, 84, 0.5) ;
             filter: drop-shadow(0px -30px 5px  crimson); 
         }
     }
@@ -415,13 +415,13 @@
 
     .rectangle.bottom-left .vertical-rectangle {
         position: absolute;
-        top: 20%;
+        top: 35%;
         left: 10%;
         width: 12%;
         height: 205%;
         border: 1px solid rgb(28, 173, 105);
         box-shadow: 0 0 20px rgba(28, 173, 105, 0.5) ;
-        filter: drop-shadow(20px 0 20px rgba(4, 10, 7, 0.5));
+        filter: drop-shadow(20px 0 20px rgba(49, 166, 107, 0.5));
         background: rgba(28, 173, 105, 0.088);
         backdrop-filter: blur(50px);
         z-index: 1005;
@@ -434,8 +434,9 @@
         left: 0;
         width: 100%;
         height: 100%;
-        animation: jauger-rectangle 13s reverse 
-        infinite;
+        animation: jauger-rectangle 13s forwards normal;
+        transform: rotateX(180deg);
+        z-index: 1005;
     }   
 
     @keyframes jauger-rectangle {
@@ -443,8 +444,7 @@
             height: 0%;
         }
         100% {
-            height: 
-            100%;
+            height: 100%;
         }
     }
 
