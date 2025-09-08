@@ -286,8 +286,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: clamp(250px, 55vw, 100vw);
-        height: clamp(180px, 25dvh, 380px);
+        width: clamp(400px, 55vw, 100vw);
+        height: clamp(180px, 15dvh, 380px);
         /* padding: 5px; */
         /* isolation: isolate; */
         z-index: 1000;
@@ -415,7 +415,7 @@
 
     .rectangle.bottom-left .vertical-rectangle {
         position: absolute;
-        top: 35%;
+        top: 30%;
         left: 10%;
         width: 12%;
         height: 205%;
@@ -469,11 +469,10 @@
     }
     .title {
         position: absolute;
-        font-size: clamp(1rem, 4vw, 4.5rem);
+        font-size: clamp(1rem, 6.5vw, 4rem);
         letter-spacing: 0.1em;
         font-weight: bold;
         color: crimson;
-        /* text-shadow: 0 0 10px rgba(0, 0, 0, 0.5); */
         text-align: center;
         text-transform: uppercase;
         font-family: "Bungee Shade", "Orbitron", cursive;
@@ -482,7 +481,7 @@
         background-color: transparent;
         isolation: isolate;
     }
-    
+
     .title::before,
     .title::after {
         --top: 0;
