@@ -17,9 +17,10 @@
     let atmoOne;
     let showCloud = false;
     let cloudScale = 0.1; // Échelle initiale du nuage
+    let nuagesOne;
 
     const stars = [];
-    const numStars = 2400;
+    const numStars = 1400;
     const baseSpeed = 2;
     let currentSpeed = baseSpeed;
     let curve = 0;
@@ -228,6 +229,8 @@
                 class="nuages-one"
                 style=" width: {10 + (cloudScale - 0.1) * 100}vw; height: {8 +
                     (cloudScale - 0.1) * 100}vh;"
+                    bind:this={nuagesOne}
+
             >
                 {#if showCloud}
                     <Cloud />
