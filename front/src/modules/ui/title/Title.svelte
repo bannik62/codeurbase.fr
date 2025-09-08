@@ -208,7 +208,10 @@
             </div>
 
             <div class="rectangle bottom-left">
-                <div class="vertical-rectangle"></div>
+                <div class="vertical-rectangle">
+                    <div class="jauger-rectangle">
+                    </div>
+                </div>
 
             </div>
        
@@ -338,10 +341,10 @@
     .contain-rond-rectangle-top-left .rond {
         position: absolute;
         top: 30%;
-        left: 5%;
+        left: 4.5%;
         width: clamp(10px, 25%, 25%);
         height: clamp(10px, 60%, 60%);
-        /* border: 1px solid rgb(103, 152, 19); */
+        border: 1px solid red;
         box-shadow: 0 0 10px crimson ;
         filter: drop-shadow(0px 0 20px crimson);
         background: rgba(220, 20, 60, 0.328);
@@ -423,6 +426,27 @@
         backdrop-filter: blur(50px);
         z-index: 1005;
     }
+    .rectangle.bottom-left .vertical-rectangle .jauger-rectangle {
+        position: absolute;
+        background: rgba(28, 173, 105, 0.236);
+        backdrop-filter: blur(50px);
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        animation: jauger-rectangle 13s reverse 
+        infinite;
+    }   
+
+    @keyframes jauger-rectangle {
+        0% {
+            height: 0%;
+        }
+        100% {
+            height: 
+            100%;
+        }
+    }
 
     .cadre.bottom-left {
         width: 99%;
@@ -488,12 +512,12 @@
     
     .title::before {
         z-index: 1002;
-        animation: glitch-b 1s infinite alternate-reverse;
+        animation: glitch-b 3s infinite alternate-reverse;
     }
     
     .title::after {
-        z-index: 1005;
-        animation: glitch-a 1s infinite alternate;
+        z-index: 1003;
+        animation: glitch-a 4s infinite alternate;
     }
     .contain-balayage {
         position: relative;
@@ -568,15 +592,13 @@
 
     }
     /* *
-    {
-       outline: 1px solid red;
-    } */
+ 
     
     /* Animations de glitch */
     @keyframes glitch-p {
         17% { 
             transform: scaleX(.95);
-            opacity: 0.8;
+            opacity: 0.9;
         }
         31% { 
             transform: scaleX(1.05);
@@ -606,27 +628,27 @@
             
         }
         20% {
-            --left: .001;
+            --left: .003;
         }
         40% {
-            --left: .003;
+            --left: .008;
             --v-height: 20%;
-            --top: 1;
+            --top: 2;
         }
         60% {
-            --left: .008;
+            --left: .015;
             --v-height: 25%;
-            --top: 2;
+            --top: 3;
         }
         80% {
-            --left: .018;
+            --left: .025;
             --v-height: 5%;
-            --top: 2;
+            --top: 3;
         }
         100% {
-            --left: .02;
+            --left: .03;
             --v-height: 30%;
-            --top: 1;
+            --top: 2;
         }
     }
 
@@ -640,27 +662,27 @@
             --top: 10;
         }
         20% {
-            --left: -.001;
+            --left: -.003;
         }
         40% {
-            --left: -.003;
+            --left: -.008;
             --v-height: 17%;
-            --top: 1;
+            --top: 2;
         }
         60% {
-            --left: -.008;
+            --left: -.015;
             --v-height: 35%;
-            --top: 2;
+            --top: 3;
         }
         80% {
-            --left: -.018;
+            --left: -.025;
             --v-height: 5%;
-            --top: 2;
+            --top: 3;
         }
         100% {
-            --left: -.02;
+            --left: -.03;
             --v-height: 30%;
-            --top: 1;
+            --top: 2;
         }
     }
 
