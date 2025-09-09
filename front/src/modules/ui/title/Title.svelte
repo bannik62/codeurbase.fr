@@ -161,32 +161,30 @@
     onMount(() => {
         // Animation GSAP - maintenant que l'élément .title existe dans le DOM
         gsap.to('.container-title-screen-and-balayage', { 
-            y: -500,
-            x: 200,
+            yPercent: -500,
+            xPercent: 200,
             opacity: 0,
             duration: 0.4,
             scrollTrigger: {
                 trigger: '.container-title-screen-and-balayage',
-                start: 'top 50%',
+                start: 'top 30%',
                 end: 'bottom 10%',
                 scrub: true,
             },
-            
-
-            ease: 'power2.inOut',
+            // ease: 'power2.inOut',
             onStart: () => {
                 console.log('Animation GSAP démarrée')
             }
         });
         gsap.to('.text-bienvenue', { 
-            y: "200%",
-            x: "150%",
+            y: "320%",
+            x: "200%",
             duration: 0.7,
             opacity: 1,
             scrollTrigger: {
                 trigger: '.container-title-screen-and-balayage',
                 start: 'top 50%',
-                end: 'bottom 10%',
+                end: 'bottom 0%',
                 scrub: true,
             },
         });
@@ -293,28 +291,7 @@
 
 <style>
     @import url('https://fonts.googleapis.com/css?family=Bungee+Shade');
-   
-    .text-bienvenue {
-        position: absolute;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        top: -150%;
-        left: -150%;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-    }
-    .text-bienvenue h2 {
-        font-family:  "Orbitron", cursive;
-        text-transform: uppercase;
-        color: crimson !important;
-        font-size: clamp(1rem, 6.5vw, 4rem);
-        font-weight: 800;
-        margin: 0;
-    }
-    
+       
     :root {
         --f-size: 15;
         --f-unit: 1vmin;
@@ -329,9 +306,32 @@
         display: flex;
         width:  100%;
         height: 100%;
+        display: flex;
         justify-content: center;
         align-items: center;
         /* overflow: hidden; */
+    }
+
+    .text-bienvenue {
+        border: 1px solid red;
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        top: -220%;
+        left: -200%;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+    }
+    .text-bienvenue h2 {
+        font-family:  "Orbitron", cursive;
+        text-transform: uppercase;
+        color: crimson !important;
+        font-size: clamp(1rem, 6.5vw, 4rem);
+        font-weight: 800;
+        margin: 0;
     }
 
     .container-title-screen-and-balayage {
