@@ -205,7 +205,7 @@
         <div class="space-one">
             <Title />
         </div>
-        <div class="space-two"><p>test1</p></div>
+        <div class="space-two"></div>
         <div class="space-three">
             {#if $detectionStore.showMessage}
                 <div class="container-detection ">

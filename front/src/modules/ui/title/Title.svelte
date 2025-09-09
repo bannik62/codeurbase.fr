@@ -1,6 +1,11 @@
 <script>
     import screen from "../../../assets/sl_021821_40890_09.jpg";
     import { onMount } from 'svelte';
+    import { gsap } from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    
+    // Enregistrer le plugin ScrollTrigger
+    gsap.registerPlugin(ScrollTrigger);
     
     let titleValue = "CodeurBase.fr";
     let titleZIndex = 1004;
@@ -32,6 +37,8 @@
     
     // Zone de détection avant collision (en pourcentage)
     const collisionBuffer = 15; // 15% de marge avant les bords
+
+    // Animation GSAP déplacée dans onMount
     
     // Fonction pour générer une position initiale aléatoire
     function getRandomPosition() {
@@ -152,6 +159,38 @@
     }
     
     onMount(() => {
+        // Animation GSAP - maintenant que l'élément .title existe dans le DOM
+        gsap.to('.container-title-screen-and-balayage', { 
+            y: -500,
+            x: 200,
+            opacity: 0,
+            duration: 0.4,
+            scrollTrigger: {
+                trigger: '.container-title-screen-and-balayage',
+                start: 'top 50%',
+                end: 'bottom 10%',
+                scrub: true,
+            },
+            
+
+            ease: 'power2.inOut',
+            onStart: () => {
+                console.log('Animation GSAP démarrée')
+            }
+        });
+        gsap.to('.text-bienvenue', { 
+            y: "200%",
+            x: "150%",
+            duration: 0.7,
+            opacity: 1,
+            scrollTrigger: {
+                trigger: '.container-title-screen-and-balayage',
+                start: 'top 50%',
+                end: 'bottom 10%',
+                scrub: true,
+            },
+        });
+        
         // Positions initiales
         topRightPosition = getRandomPosition();
         bottomLeftPosition = getRandomPosition();
@@ -192,9 +231,19 @@
 </script>
 
 <div class="container">
-
+ 
+    <div class="text-bienvenue">
+            <h2>Bienvenue</h2>
+            <div class="content-text-bienvenue">
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.</p>
+           <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.</p>
+                <h3 style="font-size: clamp(1rem, 6.5vw, 4rem);color: crimson;">en cours de construction</h3>
+        </div>
+        </div>
  
     <div class="container-title-screen-and-balayage">
+       
+    
   
         <div class="cadre top-left">
      
@@ -244,6 +293,27 @@
 
 <style>
     @import url('https://fonts.googleapis.com/css?family=Bungee+Shade');
+   
+    .text-bienvenue {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        top: -150%;
+        left: -150%;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+    }
+    .text-bienvenue h2 {
+        font-family:  "Orbitron", cursive;
+        text-transform: uppercase;
+        color: crimson !important;
+        font-size: clamp(1rem, 6.5vw, 4rem);
+        font-weight: 800;
+        margin: 0;
+    }
     
     :root {
         --f-size: 15;
@@ -255,9 +325,10 @@
     }
 
     .container {
+        position: relative;
         display: flex;
-        width: clamp(300px, 100%, 100%);
-        height: clamp(100px, 90vh, 90vh);
+        width:  100%;
+        height: 100%;
         justify-content: center;
         align-items: center;
         /* overflow: hidden; */
