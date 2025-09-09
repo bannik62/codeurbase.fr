@@ -294,7 +294,7 @@
         /* overflow: hidden; */
         perspective: 1000px;
         transform-style: preserve-3d;
-        filter: brightness(1.5);
+        filter: brightness(2);
         animation: brightness 6s linear forwards;
     }
     @keyframes brightness {
@@ -329,7 +329,7 @@
             filter: brightness(1.5);
         }
         100% {
-            filter: brightness(2.3);
+            filter: brightness(2.5);
         }
     }
     .container-title-screen-and-balayage::after {
@@ -438,8 +438,8 @@
         left: 0;
         width:2%;
         height: 10%;
-        background: radial-gradient(circle, rgba(28, 173, 105, 0.5) 90%, rgba(212, 61, 44, 1) 100%);
-        filter: drop-shadow(0 0 50px rgba(28, 173, 105, 0.5));
+        background: radial-gradient(circle, rgba(28, 173, 105, 0.14) 90%, rgba(212, 61, 44, 1) 100%);
+        filter: drop-shadow(0 0 50px rgb(28, 173, 105));
         border-radius: 50%;
         backdrop-filter: blur(10px);
         background-position: top right;
@@ -487,21 +487,21 @@
 
     .cadre.bottom-left {
         width: 99%;
-        height: 50%;
-        bottom: 20%;
+        height: 30%;
+        top: 10%;
         left: 0;
     }
     .cadre.bottom-right {
         width: 99%;
-        height: 50%;
-        bottom: 30px0;
+        height: 30%;
+        bottom: 10px;
         right: 0;
     }
     .cadre.top-right {
         position: absolute;
-        top: 0%;
-        right: 30%;
-        width: 30%;
+        top: 10%;
+        right: 5%;
+        width: 10%;
         height: 60%;
     }
     .title {
@@ -589,10 +589,11 @@
     }
     .balayage-content {
         animation-delay: 5s;
-        animation: balayage 0.3s reverse infinite;
+        animation: balayage 0.6s reverse infinite;
         border-bottom: 1px solid rgba(28, 173, 105, 0.236);
         background: rgba(28, 173, 105, 0.083);
         backdrop-filter: blur(10px);
+        filter: drop-shadow(0 10px 20px rgba(28, 173, 105, 0.069));
         position: absolute;
         top: 0;
         left: 0;
@@ -606,16 +607,20 @@
         }
         100% {
             /* top:20%; */
-            transform: translateY(10%) rotate(3deg);
+            transform: translateY(10%) rotate(5deg);
         }
     }
 
     @keyframes balayage {
     0% {
         top: 0;
+        transform: translateY(10%) rotate(3deg);
+
     }
     20% {
-        top: 150%;    }
+        top: 150%;   
+        transform: translateY(10%) rotate(3deg);
+    }
     90% {
         display: none;
         top: 150;
