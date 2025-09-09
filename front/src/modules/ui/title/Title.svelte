@@ -175,7 +175,7 @@
             updatePositions();
             
             // Changement aléatoire du z-index du titre
-            if (Math.random() < 0.1) { // 1% de chance à chaque frame
+            if (Math.random() < 0.5) { // 1% de chance à chaque frame
                 titleZIndex = Math.random() < 0.5 ? 1003 : 1004;
             }
             
@@ -286,7 +286,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: clamp(400px, 55vw, 100vw);
+        width: clamp(400px, 63.1vw, 100vw);
         height: clamp(180px, 15dvh, 380px);
         /* padding: 5px; */
         /* isolation: isolate; */
@@ -294,6 +294,43 @@
         /* overflow: hidden; */
         perspective: 1000px;
         transform-style: preserve-3d;
+        filter: brightness(1.5);
+        animation: brightness 6s linear forwards;
+    }
+    @keyframes brightness {
+        0% {
+            filter: brightness(1.5);
+        }
+        10% {
+            filter: brightness(1.5);
+        }
+        20% {
+            filter: brightness(2.8.7);
+        }
+        30% {
+            filter: brightness(1.5);
+        }
+        40% {
+            filter: brightness(1.5);
+        }
+        50% {
+            filter: brightness(2.5);
+        }
+        60% {
+            filter: brightness(2.5);
+        }
+        70% {
+            filter: brightness(2.5);
+        }
+        80% {
+            filter: brightness(1.5);
+        }
+        90% {
+            filter: brightness(1.5);
+        }
+        100% {
+            filter: brightness(2.3);
+        }
     }
     .container-title-screen-and-balayage::after {
         content: "";
@@ -317,7 +354,7 @@
     }
     .cadre.top-left {
         position: absolute;
-        top: 5%;
+        top: 10%;
         left: 2%;
         display: flex;
         justify-content: center;
@@ -333,8 +370,9 @@
         left: 0;
         width: 100%;
         height: 50%;
-        z-index: 1004;
+        z-index: 100;
         display: flex;
+        z-index: 1004;
         
         
     }
@@ -362,9 +400,9 @@
     }
     .contain-rond-rectangle-top-left .rectangle {
         position: absolute;
-        top:280%;
-        left: 40%;
-        width: 395%;
+        top:-100%;
+        left: -50%;
+        width: 600%;    
         height: 49%;
         /* outline:1px solid red; */
         /* border: 1px solid rgb(28, 173, 105); */
@@ -376,16 +414,15 @@
     }
     @keyframes alternateboxshadow {
         0% {
-            border-top-left-radius: 50%;
-            border-top-right-radius: 50%;
-            box-shadow: 0 -10px 20px rgba(39, 130, 84, 0.5) ;
-            filter: drop-shadow(0 20px 10px crimson);
+           
+            box-shadow: 0px 10px 20px rgba(39, 130, 85, 0.242) ;
+            filter: drop-shadow(0 0px 10px crimson);
         }
         100% {
+            box-shadow: 0px 10px 10px rgba(39, 130, 84, 0.242) ;
+            filter: drop-shadow(0 20px 10px crimson);
             border-bottom-left-radius: 50%;
-            border-bottom-right-radius: 50%;
-             box-shadow: 0px 10px -20px rgba(39, 130, 84, 0.5) ;
-            filter: drop-shadow(0px -30px 5px  crimson); 
+         
         }
     }
     .rectangle.bottom-left {
@@ -477,7 +514,7 @@
         text-transform: uppercase;
         font-family: "Bungee Shade", "Orbitron", cursive;
         transform: scaleX(1);
-        animation: glitch-p 25s linear;
+        animation: glitch-p 5s linear 3 forwards;
         background-color: transparent;
         isolation: isolate;
     }
@@ -486,7 +523,7 @@
     .title::after {
         --top: 0;
         --left: 0;
-        --v-height: 30%;
+        --v-height: 50%;
         
         --n-tenth: calc(var(--f-size) * .1 * var(--top));
         --t-cut: calc(var(--n-tenth) / var(--f-size) * 100%);
@@ -510,13 +547,11 @@
     }
     
     .title::before {
-        z-index: 1002;
-        animation: glitch-b 3s infinite alternate-reverse;
+        animation: glitch-b 5s 3 forwards;
     }
     
     .title::after {
-        z-index: 1003;
-        animation: glitch-a 4s infinite alternate;
+        animation: glitch-a 5s 3 forwards;
     }
     .contain-balayage {
         position: relative;
@@ -534,12 +569,13 @@
 
     .contain-balayage img {
         position: absolute;
-        top: -20%;
+        top: -25%;
         left: -5%;
         width: 110%;
         height: 150%;
         object-fit: fill;
         opacity: 0.5;
+        filter: brightness(0.3);
         animation:  moveSnow 0.1s alternate-reverse infinite;
     }
     .balayage {
@@ -555,7 +591,7 @@
         animation-delay: 5s;
         animation: balayage 0.3s reverse infinite;
         border-bottom: 1px solid rgba(28, 173, 105, 0.236);
-        background: rgba(28, 173, 105, 0.171);
+        background: rgba(28, 173, 105, 0.083);
         backdrop-filter: blur(10px);
         position: absolute;
         top: 0;
@@ -595,6 +631,10 @@
     
     /* Animations de glitch */
     @keyframes glitch-p {
+        0% {
+            transform: scaleX(1);
+            opacity: 1;
+        }
         17% { 
             transform: scaleX(.95);
             opacity: 0.9;
@@ -612,6 +652,10 @@
             opacity: 0.85;
         }
         87% { 
+            transform: scaleX(1);
+            opacity: 1;
+        }
+        100% {
             transform: scaleX(1);
             opacity: 1;
         }
@@ -645,9 +689,9 @@
             --top: 3;
         }
         100% {
-            --left: .03;
-            --v-height: 30%;
-            --top: 2;
+            --left: 0;
+            --v-height: 0%;
+            --top: 0;
         }
     }
 
@@ -679,9 +723,9 @@
             --top: 3;
         }
         100% {
-            --left: -.03;
-            --v-height: 30%;
-            --top: 2;
+            --left: 0;
+            --v-height: 0%;
+            --top: 0;
         }
     }
 
