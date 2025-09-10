@@ -1,6 +1,8 @@
 {
   "dependencies": {
-    "@studio-freight/lenis": "^1.0.42",
     "gsap": "^3.13.0"
+  },
+  "devDependencies": {
+    "@studio-freight/lenis": "^1.0.42"
   }
 }
