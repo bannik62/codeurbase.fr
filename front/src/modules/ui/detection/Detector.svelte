@@ -86,14 +86,15 @@
 <style>
     .detection {
         position: absolute;
-        top: 20%;
+        top: 40%;
         left: 50%;
         transform: translateX(-50%);
         width: 50%;
-        height: 50%;
+        height: 30%;
         display: flex;
         align-items: center;
         justify-content: center;
+        z-index: 1010;
     
     }
     
