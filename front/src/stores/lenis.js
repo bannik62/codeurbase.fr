@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import Lenis from '@studio-freight/lenis';
+import Lenis from 'lenis';
 
 let lenisInstance = null;
 
