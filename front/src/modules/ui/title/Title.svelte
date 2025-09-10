@@ -1,13 +1,14 @@
 <script>
     import screen from "../../../assets/sl_021821_40890_09.jpg";
     import { onMount } from 'svelte';
+    import Bienvenues from "../header/Bienvenues.svelte";
     import { gsap } from 'gsap';
     import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
     
     // Enregistrer le plugin ScrollTrigger
     gsap.registerPlugin(ScrollTrigger);
     
-    let titleValue = "CodeurBase.fr";
     let titleZIndex = 1004;
     
     // Variables pour les positions et propriétés des cercles
@@ -161,33 +162,23 @@
     onMount(() => {
         // Animation GSAP - maintenant que l'élément .title existe dans le DOM
         gsap.to('.container-title-screen-and-balayage', { 
-            yPercent: -500,
+            yPercent: -200,
             xPercent: 200,
-            opacity: 0,
-            duration: 0.4,
+            opacity: 1,
+            duration: 1,
             scrollTrigger: {
-                trigger: '.container-title-screen-and-balayage',
-                start: 'top 30%',
-                end: 'bottom 10%',
+                trigger: '.container',
+                start: 'top 10%',
+                end: 'bottom 20%',
                 scrub: true,
             },
-            // ease: 'power2.inOut',
+            ease: 'power2.inOut',
             onStart: () => {
                 console.log('Animation GSAP démarrée')
             }
+ 
         });
-        gsap.to('.text-bienvenue', { 
-            y: "320%",
-            x: "200%",
-            duration: 0.7,
-            opacity: 1,
-            scrollTrigger: {
-                trigger: '.container-title-screen-and-balayage',
-                start: 'top 50%',
-                end: 'bottom 0%',
-                scrub: true,
-            },
-        });
+     
         
         // Positions initiales
         topRightPosition = getRandomPosition();
@@ -229,15 +220,9 @@
 </script>
 
 <div class="container">
- 
-    <div class="text-bienvenue">
-            <h2>Bienvenue</h2>
-            <div class="content-text-bienvenue">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.</p>
-           <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.</p>
-                <h3 style="font-size: clamp(1rem, 6.5vw, 4rem);color: crimson;">en cours de construction</h3>
-        </div>
-        </div>
+ <!-- <div class="repéres" style="position: absolute; top: 0; left: 0; z-index: 1000; color: blue;">title top</div>   
+ <div class="repéres" style="position: absolute; bottom: 0; left: 0; z-index: 1000; color: blue;">title bottom</div>    -->
+
  
     <div class="container-title-screen-and-balayage">
        
@@ -283,7 +268,9 @@
             </div>
         </div>
 
-        <h1 class="title glitch-base" data-text="{titleValue}" style="z-index: {titleZIndex}">{titleValue}</h1>
+        <h1 class="title glitch-base" data-text="CodeurBase.fr" style="z-index: {titleZIndex}">
+            <span class="title-part1">Codeur</span><span class="title-part2">Base.fr</span>
+        </h1>
     </div>
 
 
@@ -302,36 +289,15 @@
     }
 
     .container {
+        /* border: 1px solid blue; */
         position: relative;
         display: flex;
+        justify-content: center;
+        align-items: center;
+        
         width:  100%;
         height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         /* overflow: hidden; */
-    }
-
-    .text-bienvenue {
-        border: 1px solid red;
-        position: absolute;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        top: -220%;
-        left: -200%;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-    }
-    .text-bienvenue h2 {
-        font-family:  "Orbitron", cursive;
-        text-transform: uppercase;
-        color: crimson !important;
-        font-size: clamp(1rem, 6.5vw, 4rem);
-        font-weight: 800;
-        margin: 0;
     }
 
     .container-title-screen-and-balayage {
@@ -357,8 +323,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: clamp(400px, 63.1vw, 100vw);
-        height: clamp(180px, 15dvh, 380px);
+        width: clamp(500px, 85dvw, 95dvw);
+        height: clamp(10em, 30dvh, 50dvh);
         /* padding: 5px; */
         /* isolation: isolate; */
         z-index: 1000;
@@ -577,7 +543,7 @@
     }
     .title {
         position: absolute;
-        font-size: clamp(1rem, 6.5vw, 4rem);
+        font-size: clamp(1.5rem, 6vw, 10rem);
         letter-spacing: 0.1em;
         font-weight: bold;
         color: crimson;
@@ -588,6 +554,23 @@
         animation: glitch-p 5s linear 3 forwards;
         background-color: transparent;
         isolation: isolate;
+        max-width: 100%;
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+        line-height: 1.2;
+    }
+
+    .title-part1, .title-part2 {
+        white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+        .title {
+            flex-wrap: wrap;
+            gap: 0.2em;
+        }
     }
 
     .title::before,

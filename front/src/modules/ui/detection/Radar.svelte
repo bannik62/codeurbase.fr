@@ -86,5 +86,6 @@
         border-radius: 50%;
         margin-top: 20px;
         margin-bottom: 20px;
+        z-index: 1010;
     }
 </style>

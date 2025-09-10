@@ -11,6 +11,9 @@
         statusColor,
         checkDetection,
     } from "../stores/detection.js";
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+    import Bienvenues from "../modules/ui/header/Bienvenues.svelte";
     import Cockpit from "../modules/ui/cockpit/Cockpit.svelte";
     let canvas;
     let ctx;
@@ -204,8 +207,12 @@
 
         <div class="space-one">
             <Title />
+            <Bienvenues />
         </div>
-        <div class="space-two"></div>
+        <div class="space-two">
+            <!-- <div class="repéres" style="position: absolute; top: 0; left: 0; z-index: 1000; color: yellow;">space-two top</div>   
+            <div class="repéres" style="position: absolute; bottom: 0; left: 0; z-index: 1000; color: yellow;">space-two bottom</div>    -->
+        </div>
         <div class="space-three">
             {#if $detectionStore.showMessage}
                 <div class="container-detection ">
@@ -279,7 +286,7 @@
     .space-two,
     .space-three {
         position: relative;
-        width: 100vw;
+        width: 100dvw;
         height: 100dvh;
     }
     .space-one {
