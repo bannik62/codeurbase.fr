@@ -69,7 +69,7 @@
 <div class="container-global-text-bienvenue">
  <!-- <div class="repéres" style="position: absolute; top: 0; left: 0; z-index: 1000; color: red;">bienvenue top</div>   
  <div class="repéres" style="position: absolute; bottom: 0; left: 0; z-index: 1000; color: red;">bienvenue bottom</div>    -->
-    <h2>Bienvenues</h2>
+    <h2>Welcome</h2>
     <div class="content-text-bienvenue">
         <p class="p-bienvenue" data-splitting>
             👋 Bienvenue sur Codeur Base.<br><br>

@@ -189,58 +189,61 @@
             <!-- Exemple d'enfants -->
             <div class="dashboard-section-one">
                 <h2 class:h2-visible={showH2}>Planéte Terre</h2>
-                <ul>
-                    <li>
-                        <span style="color: green;">Superficie totale:</span>
-                        <span style="color: crimson;">
-                            {#each visibleLetters
-                                .filter((l) => l.textIndex === 0)
-                                .sort((a, b) => a.letterIndex - b.letterIndex) as letterObj}
-                                {letterObj.letter}
-                            {/each}
-                        </span>
-                    </li>
-                    <li>
-                        <span style="color: green;">Superficie terrestre:</span>
-                        <span style="color: crimson;">
-                            {#each visibleLetters
-                                .filter((l) => l.textIndex === 1)
-                                .sort((a, b) => a.letterIndex - b.letterIndex) as letterObj}
-                                {letterObj.letter}
-                            {/each}
-                        </span>
-                    </li>
-                    <li>
-                        <span style="color: green;">Superficie maritime:</span>
-                        <span style="color: crimson;">
-                            {#each visibleLetters
-                                .filter((l) => l.textIndex === 2)
-                                .sort((a, b) => a.letterIndex - b.letterIndex) as letterObj}
-                                {letterObj.letter}
-                            {/each}
-                        </span>
-                    </li>
-                    <li>
-                        <span style="color: green;">Nombre d'habitants:</span>
-                        <span style="color: crimson;">
-                            {#each visibleLetters
-                                .filter((l) => l.textIndex === 3)
-                                .sort((a, b) => a.letterIndex - b.letterIndex) as letterObj}
-                                {letterObj.letter}
-                            {/each}
-                        </span>
-                        <span style="color: green;">
-                            <br /> Nombres de dévéloppeurs:</span
-                        >
-                        <span style="color: crimson;">
-                            {#each visibleLetters
-                                .filter((l) => l.textIndex === 4)
-                                .sort((a, b) => a.letterIndex - b.letterIndex) as letterObj}
-                                {letterObj.letter}
-                            {/each}
-                        </span>
-                    </li>
-                </ul>
+                
+                <p>
+                    <span style="color: green;">Superficie totale:</span>
+                    <span style="color: crimson;">
+                        {#each visibleLetters
+                            .filter((l) => l.textIndex === 0)
+                            .sort((a, b) => a.letterIndex - b.letterIndex) as letterObj}
+                            {letterObj.letter}
+                        {/each}
+                    </span>
+                </p>
+                
+                <p>
+                    <span style="color: green;">Superficie terrestre:</span>
+                    <span style="color: crimson;">
+                        {#each visibleLetters
+                            .filter((l) => l.textIndex === 1)
+                            .sort((a, b) => a.letterIndex - b.letterIndex) as letterObj}
+                            {letterObj.letter}
+                        {/each}
+                    </span>
+                </p>
+                
+                <p>
+                    <span style="color: green;">Superficie maritime:</span>
+                    <span style="color: crimson;">
+                        {#each visibleLetters
+                            .filter((l) => l.textIndex === 2)
+                            .sort((a, b) => a.letterIndex - b.letterIndex) as letterObj}
+                            {letterObj.letter}
+                        {/each}
+                    </span>
+                </p>
+                
+                <p>
+                    <span style="color: green;">Nombre d'habitants:</span>
+                    <span style="color: crimson;">
+                        {#each visibleLetters
+                        .filter((l) => l.textIndex === 3)
+                        .sort((a, b) => a.letterIndex - b.letterIndex) as letterObj}
+                        {letterObj.letter}
+                    {/each}
+                    </span>
+                </p>
+                
+                <p>
+                    <span style="color: green;">Nombres de développeurs:</span>
+                    <span style="color: crimson;">
+                        {#each visibleLetters
+                            .filter((l) => l.textIndex === 4)
+                            .sort((a, b) => a.letterIndex - b.letterIndex) as letterObj}
+                            {letterObj.letter}
+                        {/each}
+                    </span>
+                </p>
                 {#if showLoader}
                     <div class="loading-container">
                         <div class="loading-label">
@@ -281,41 +284,76 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 100%;
+        height: 110%;
         transform-origin: left center;
         overflow: hidden;
-        animation: cloudAppear 1s forwards;
+        animation: cloudAppear 0.2s forwards;
+        border-radius: 8px;
+        opacity: 0; /* Ajouter l'opacité initiale */
+    }
+    
+    .intro-cloud-container::before {
+        content: '';
+        position: absolute;
+        top: 3%;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        backdrop-filter: blur(15px);
+        border-radius: 8px;
+        z-index: -1;
+        opacity: 0.7;
+        animation: cloudBackgroundAppear 2s forwards;
+        border: 2px solid #39FF14; 
+        box-shadow: 0 0 10px #39FF14, 0 0 20px #39FF14, 0 0 30px #39FF14; 
+        padding: 10px;
     }
 
     @keyframes cloudAppear {
         0% {
             opacity: 0;
-            background: rgba(48, 145, 57, 0);
-            backdrop-filter: blur(0px);
-            border-radius: 50%;
         }
         25% {
             opacity: 0.25;
-            background: rgba(48, 145, 57, 0);
-            backdrop-filter: blur(2.5px);
-            border-radius: 40%;
         }
         50% {
             opacity: 0.5;
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(5px);
-            border-radius: 30%;
         }
         75% {
-            background: rrgba(48, 145, 57, 0);
             opacity: 0.75;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+    
+    @keyframes cloudBackgroundAppear {
+        0% {
+            background: radial-gradient(circle, rgba(48, 145, 57, 0) 0%, rgba(48, 145, 57, 0.1) 10%);
+            backdrop-filter: blur(0px);
+            border-radius: 50%;
+            opacity: 0;
+        }
+        25% {
+            background: radial-gradient(circle, rgba(48, 145, 57, 0) 0%, rgba(48, 145, 57, 0.2) 20%);
+            backdrop-filter: blur(2.5px);
+            border-radius: 40%;
+            opacity: 0.5;
+        }
+        50% {
+            background: radial-gradient(circle, rgba(76, 175, 80, 0) 0%, rgba(76, 175, 80, 0) 30%);
+            backdrop-filter: blur(5px);
+            border-radius: 30%;
+            opacity: 1;
+        }
+        75% {
+            background: radial-gradient(circle, rgba(48, 145, 57, 0) 0%, rgba(48, 145, 57, 0.6) 40%);
             backdrop-filter: blur(7.5px);
             border-radius: 20%;
         }
         100% {
-            opacity: 1;
-            background: rgba(34, 87, 39, 0.45);
-            backdrop-filter: blur(20px);
+            background: radial-gradient(circle, rgba(34, 87, 39, 0) 0%, rgba(34, 87, 39, 0.7) 50%);
+            backdrop-filter: blur(15px);
             border-radius: 0%;
         }
     }
@@ -347,10 +385,10 @@
     .child-div:after {
         content: "";
         position: absolute;
-        top: 0;
+        top: 0%;
         left: 0;
         width: 100%;
-        height: 10vh;
+        height: 15vh;
         clip-path: polygon(50% 100%, 100% 62%, 100% 0, 0 0, 0% 62%);
         background: linear-gradient(
             to right,
@@ -407,8 +445,8 @@
     .dashboard-section-one {
         position: relative;
         top: -5%;
-        width: 30%;
-        height: fit-content;
+        width: clamp(110px, 30%, 500px);
+        height: clamp(110px, 60%, 500px);
         margin: 20px 0;
         padding: 25px;
         background-color: rgba(42, 40, 40, 0.76);
@@ -417,37 +455,30 @@
         border-left: 8px solid green;
         border-right: 3px solid green;
         border-radius: 5px;
+        overflow: scroll;
 
         /* Effets de perspective 3D */
-        transform: rotateY(13deg) translateZ(50px);
+        transform: rotateY(13deg) translateZ(50px) ;
         transition: transform 0.3s ease;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.828);
         z-index: 9999;
-    }
-    .dashboard-section-one ul {
-        font-family: "Orbitron", sans-serif;
-        font-size: clamp(0.5rem, 3vw, 1rem);
-        font-weight: bold;
-        color: white;
-        margin: 0;
-        padding: 10px 0;
-        list-style-type: none;
-        text-align: center;
-        transform: rotateY(15deg) translateZ(50px);
-        list-style-type: none;
-        line-height: 2;
-        letter-spacing: 1px;
-    }
-    .dashboard-section-one h2 {
-        font-family: "Orbitron", sans-serif;
-        font-size: clamp(1rem, 3vw, 1.5rem);
-        font-weight: bold;
-        color: white;
-        margin: 0 0 0px 0;
-        transform: rotateY(25deg) translateZ(50px);
+        
+        /* Animation d'arrivée fondu */
         opacity: 0;
-        transition: opacity 0.8s ease-in-out;
+        animation: fadeIn 2s ease-in-out 1.5s forwards;
     }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: rotateY(13deg) translateZ(50px) translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: rotateY(13deg) translateZ(50px) translateY(0);
+        }
+    }
+
 
     .dashboard-section-one h2.h2-visible {
         opacity: 0.8;
@@ -502,6 +533,9 @@
 
     /* Styles pour le loader */
     .loading-container {
+        position: relative;
+        top: 0;
+        left: -12%;
         margin-top: 20px;
         padding: 15px;
         background-color: rgba(0, 0, 0, 0.3);
@@ -512,8 +546,9 @@
     .loading-label {
         color: crimson;
         font-family: "Orbitron", sans-serif;
-        font-size: 0.9rem;
+        font-size: clamp(0.5rem, 2.4vw, 1rem);
         font-weight: bold;
+        display: flex;
         text-align: center;
         margin-bottom: 10px;
         text-transform: uppercase;
@@ -550,7 +585,7 @@
     .success-message {
         color: crimson;
         font-family: "Orbitron", sans-serif;
-        font-size: 0.8rem;
+        font-size: clamp(0.5rem, 3vw, 1rem);
         font-weight: bold;
         text-align: center;
         /* margin-top: 5px; */
@@ -558,7 +593,7 @@
     }
     .success-message span {
         color: green;
-        font-size: 1.7rem;
+        font-size: clamp(0.5rem, 3vw, 1rem);
         font-weight: bold;
         margin-right: 10px;
         filter: drop-shadow(0 0 10px rgba(213, 30, 30, 0.5));
