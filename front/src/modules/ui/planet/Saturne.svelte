@@ -63,7 +63,6 @@
         position: relative;
         top: 90%;
         left: 0;
-        border: 1px solid green;
         aspect-ratio: 1/1;
         /* width: ); */
         height: 0;
