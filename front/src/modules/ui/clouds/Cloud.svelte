@@ -287,13 +287,13 @@
         height: 110%;
         transform-origin: left center;
         overflow: hidden;
-        animation: cloudAppear 3s forwards;
         animation-delay: 0s;
         border-radius: 8px;
         opacity: 0; /* Ajouter l'opacité initiale */
         /* Perspective 3D */
         perspective: 1000px;
         transform-style: preserve-3d;
+        animation: cloudAppear 3s forwards;
     }
     
     .intro-cloud-container::before {
@@ -423,31 +423,31 @@
         0% {
             opacity: 0;
             transform: scale(0);
-            border-radius: 50%;
+            /* border-radius: 50%; */
         }
         25% {
             opacity: 0.5;
-            transform: scale(0.3);
+            /* transform: scale(0.3); */
             top: 10px;
-            border-radius: 40%;
+            /* border-radius: 40%; */
         }
         50% {
             opacity: 0.8;
-            transform: scale(0.6);
+            /* transform: scale(0.6); */
             top: 20px;
-            border-radius: 30%;
+            border-radius: 50%;
         }
         75% {
             opacity: 0.9;
-            transform: scale(0.9);
+            /* transform: scale(0.9); */
             top: 30px;
-            border-radius: 20%;
+            border-radius: 25%;
         }
         100% {
             opacity: 1;
             transform: scale(1);
-            top: 40px;
-            border-radius: 0;
+            top: 30px;
+            border-radius: 50%;
         }
     }
 
@@ -601,6 +601,7 @@
         text-align: center;
         /* margin-top: 5px; */
         animation: fadeInText 0.5s ease-in;
+        margin-top: 2%
     }
     .success-message span {
         color: green;
