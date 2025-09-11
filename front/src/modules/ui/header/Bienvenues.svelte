@@ -16,10 +16,10 @@
         let selection = Splitting();
         
         gsap.to(".container-global-text-bienvenue h2", {
-            yPercent: 50,
-            xPercent: 275,
-            duration: 2,
-            opacity: 1,
+            yPercent: 90,
+            xPercent: -300,
+            duration: 5,
+            // opacity: 1,
             onStart: () => {
                 console.log("Animation GSAP démarrée GLOBAL");
             },
@@ -108,14 +108,14 @@
     .container-global-text-bienvenue h2 {
         position: absolute;
         top: 0;
-        left: -100%;
+        left: 200%;
         font-family: "Orbitron", cursive;
         text-transform: uppercase;
         color: crimson !important;
-        font-size: clamp(2rem, 6vw, 10rem);
+        font-size: clamp(2rem, 30vw, 12rem);
         font-weight: 800;
         margin: 0;
-        opacity: 0;
+        /* opacity: 0.5; */
         
         
     }

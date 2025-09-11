@@ -4,6 +4,7 @@
     import planet from "../assets/Planet-No-Background.png";
     import Detector from "../modules/ui/detection/Detector.svelte";
     import Title from "../modules/ui/title/Title.svelte";
+    import Saturne from "../modules/ui/planet/Saturne.svelte";
     import {
         detectionStore,
         detectionActions,
@@ -207,6 +208,7 @@
 
         <div class="space-one">
             <Title />
+            <Saturne />
             <Bienvenues />
         </div>
         <div class="space-two">
