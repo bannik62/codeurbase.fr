@@ -24,7 +24,7 @@
                 start: "top 10%",
                 end: "bottom 20%",
                 scrub: true,
-                markers: true,
+                // markers: true,
             }
         });
 
@@ -33,8 +33,8 @@
 
 <div class="saturne-container">
     <div class="saturne-container-inner">
-    <div class="repere" style="position: absolute; top: 0; left: 0; z-index: 1000; color: blue;">repere saturne top</div>
-    <div class="repere" style="position: absolute; bottom: 0; left: 0; z-index: 1000; color: blue;">repere saturne bottom</div>
+    <!-- <div class="repere" style="position: absolute; top: 0; left: 0; z-index: 1000; color: blue;">repere saturne top</div>
+    <div class="repere" style="position: absolute; bottom: 0; left: 0; z-index: 1000; color: blue;">repere saturne bottom</div> -->
         <img src={saturne} alt="saturne">
     </div>
 </div>
@@ -42,7 +42,6 @@
 <style>
     .saturne-container {
         position: relative;
-        border: 1px solid red;
         width: 100%;
         height: 100%;
         z-index: 0;
@@ -52,7 +51,6 @@
         position: absolute;
         top: -20%;
         left: 0;
-        border: 1px solid blue;
         width: clamp(100px, 100%, 100%);
         height: 100%;
         /* opacity: 0; */
