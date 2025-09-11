@@ -386,10 +386,9 @@
         perspective: 1000px;
         transform-style: preserve-3d;
         z-index: 9;
-    }
-    .child-div {
         filter: drop-shadow(0 50px 15px rgba(100, 174, 122, 0.515));
     }
+  
     
     .child-div:after {
         content: "";
