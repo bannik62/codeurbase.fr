@@ -9,7 +9,7 @@
     // Variables réactives Svelte
     let introContainer;
     let isVisible = false;
-    let showChildDiv = false;
+    let showChildDiv = true; // TEST - Force l'affichage
     let createTimeout;
     let removeTimeout;
 
@@ -121,61 +121,28 @@
     }
 
     onMount(() => {
-        // Observer pour détecter quand le container est visible
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        isVisible = true;
-                        // Annuler le timeout de suppression s'il existe
-                        if (removeTimeout) {
-                            clearTimeout(removeTimeout);
-                            removeTimeout = null;
-                        }
-                        // Créer la div après 2 secondes
-                        createTimeout = setTimeout(() => {
-                            showChildDiv = true;
-                            // Démarrer l'animation du H2 après 500ms
-                            setTimeout(() => {
-                                showH2 = true;
-                                // Démarrer l'animation des lettres après 1s
-                                setTimeout(() => {
-                                    animateLetters();
-                                }, 1000);
-                            }, 500);
-                        }, 2000);
-                    } else {
-                        isVisible = false;
-                        // Annuler le timeout de création s'il existe
-                        if (createTimeout) {
-                            clearTimeout(createTimeout);
-                            createTimeout = null;
-                        }
-                        // Supprimer la div après 2 secondes
-                        removeTimeout = setTimeout(() => {
-                            showChildDiv = false;
-                            showH2 = false;
-                            clearAnimationTimeouts();
-                        }, 2000);
-                    }
-                });
-            },
-            {
-                threshold: 0.7, // Se déclenche quand 50% du container est visible
-            }
-        );
-
-        if (introContainer) {
-            observer.observe(introContainer);
-        }
-
+        // Animation simplifiée - démarre directement
+        isVisible = true;
+        
+        // Créer la div après 1 seconde (plus rapide)
+        createTimeout = setTimeout(() => {
+            showChildDiv = true;
+            // Démarrer l'animation du H2 après 500ms
+            setTimeout(() => {
+                showH2 = true;
+                // Démarrer l'animation des lettres après 1s
+                setTimeout(() => {
+                    animateLetters();
+                }, 1000);
+            }, 500);
+        }, 1000);
+        
+        // Nettoyer les timeouts au démontage
         return () => {
-            if (introContainer) {
-                observer.unobserve(introContainer);
+            if (createTimeout) {
+                clearTimeout(createTimeout);
+                createTimeout = null;
             }
-            // Nettoyer les timeouts
-            if (createTimeout) clearTimeout(createTimeout);
-            if (removeTimeout) clearTimeout(removeTimeout);
             clearAnimationTimeouts();
         };
     });
@@ -620,5 +587,14 @@
             opacity: 1;
             transform: translateY(0);
         }
+    }
+    @media (max-width: 475px) {
+         .intro-cloud-container {
+            height: 57%;
+        }
+
+        .child-div {
+            height: 70%;
+        } 
     }
 </style>

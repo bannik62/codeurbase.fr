@@ -1,217 +1,395 @@
 <script>
     import screen from "../../../assets/sl_021821_40890_09.jpg";
-    import { onMount } from 'svelte';
+    import { onMount } from "svelte";
     import Bienvenues from "../header/Bienvenues.svelte";
-    import { gsap } from 'gsap';
-    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+    import { 
+        initMediaQuery, 
+        isSmallMobile,
+        isMediumMobile, 
+        isMobile, 
+        isTablet, 
+        isDesktop, 
+        isLargeDesktop,
+        screenWidth,
+        screenHeight
+    } from "../../../stores/mediaQuery.js";
 
-    
     // Enregistrer le plugin ScrollTrigger
     gsap.registerPlugin(ScrollTrigger);
-    
+
     let titleZIndex = 1004;
-    
+
     // Variables pour les positions et propriétés des cercles
     let topRightPosition = { x: 0, y: 0, z: 0, zIndex: 1002 };
     let bottomLeftPosition = { x: 0, y: 0, z: 0, zIndex: 1002 };
     let bottomRightPosition = { x: 0, y: 0, z: 0, zIndex: 1002 };
-    
+
     // Variables pour les vitesses et directions
     let topRightVelocity = { x: 0.3, y: 0.2, z: 0.1 };
     let bottomLeftVelocity = { x: -0.25, y: 0.35, z: -0.08 };
     let bottomRightVelocity = { x: 0.2, y: -0.3, z: 0.25 };
-    
+
     // Variables pour les accélérations (changements de direction fluides)
     let topRightAcceleration = { x: 0, y: 0 };
     let bottomLeftAcceleration = { x: 0, y: 0 };
     let bottomRightAcceleration = { x: 0, y: 0 };
-    
+
     // Variables pour les cibles (nouvelles directions)
     let topRightTarget = { x: 0, y: 0 };
     let bottomLeftTarget = { x: 0, y: 0 };
     let bottomRightTarget = { x: 0, y: 0 };
-    
+
     // Variables pour les limites
     const maxX = 90; // 100% - 10% (largeur du cercle)
     const maxY = 90; // 100% - 10% (hauteur du cercle)
     const maxZ = 20; // Limite pour l'axe Z
-    
+
     // Zone de détection avant collision (en pourcentage)
     const collisionBuffer = 15; // 15% de marge avant les bords
 
     // Animation GSAP déplacée dans onMount
-    
+
     // Fonction pour générer une position initiale aléatoire
     function getRandomPosition() {
         return {
             x: Math.random() * maxX,
             y: Math.random() * maxY,
             z: (Math.random() - 0.5) * maxZ,
-            zIndex: 1005 + Math.floor(Math.random() * 3) // Entre 1005 et 1007
+            zIndex: 1005 + Math.floor(Math.random() * 3), // Entre 1005 et 1007
         };
     }
-    
+
     // Fonction pour générer une nouvelle direction aléatoire
     function getRandomDirection() {
         const angle = Math.random() * Math.PI * 2;
         const speed = 0.1 + Math.random() * 0.3; // Vitesse entre 0.1 et 0.4
         return {
             x: Math.cos(angle) * speed,
-            y: Math.sin(angle) * speed
+            y: Math.sin(angle) * speed,
         };
     }
-    
+
     // Fonction pour mettre à jour les positions avec changements de direction fluides
     function updatePositions() {
         // Top Right - Mouvement avec courbes
         topRightPosition.x += topRightVelocity.x;
         topRightPosition.y += topRightVelocity.y;
         topRightPosition.z += topRightVelocity.z;
-        
+
         // Bottom Left - Mouvement avec courbes
         bottomLeftPosition.x += bottomLeftVelocity.x;
         bottomLeftPosition.y += bottomLeftVelocity.y;
         bottomLeftPosition.z += bottomLeftVelocity.z;
-        
+
         // Bottom Right - Mouvement avec courbes
         bottomRightPosition.x += bottomRightVelocity.x;
         bottomRightPosition.y += bottomRightVelocity.y;
         bottomRightPosition.z += bottomRightVelocity.z;
-        
+
         // Gestion des rebonds avec changements de direction fluides
-        [topRightPosition, bottomLeftPosition, bottomRightPosition].forEach((pos, index) => {
-            const velocities = [topRightVelocity, bottomLeftVelocity, bottomRightVelocity][index];
-            const accelerations = [topRightAcceleration, bottomLeftAcceleration, bottomRightAcceleration][index];
-            
-            // Détection précoce des bords X (avant collision)
-            if (pos.x <= collisionBuffer || pos.x >= maxX - collisionBuffer) {
-                // Nouvelle direction qui évite le bord
-                const newDir = getRandomDirection();
-                // Forcer la direction vers l'intérieur si trop proche du bord
-                if (pos.x <= collisionBuffer) {
-                    newDir.x = Math.abs(newDir.x); // Direction positive (vers la droite)
-                } else if (pos.x >= maxX - collisionBuffer) {
-                    newDir.x = -Math.abs(newDir.x); // Direction négative (vers la gauche)
+        [topRightPosition, bottomLeftPosition, bottomRightPosition].forEach(
+            (pos, index) => {
+                const velocities = [
+                    topRightVelocity,
+                    bottomLeftVelocity,
+                    bottomRightVelocity,
+                ][index];
+                const accelerations = [
+                    topRightAcceleration,
+                    bottomLeftAcceleration,
+                    bottomRightAcceleration,
+                ][index];
+
+                // Détection précoce des bords X (avant collision)
+                if (
+                    pos.x <= collisionBuffer ||
+                    pos.x >= maxX - collisionBuffer
+                ) {
+                    // Nouvelle direction qui évite le bord
+                    const newDir = getRandomDirection();
+                    // Forcer la direction vers l'intérieur si trop proche du bord
+                    if (pos.x <= collisionBuffer) {
+                        newDir.x = Math.abs(newDir.x); // Direction positive (vers la droite)
+                    } else if (pos.x >= maxX - collisionBuffer) {
+                        newDir.x = -Math.abs(newDir.x); // Direction négative (vers la gauche)
+                    }
+                    accelerations.x = (newDir.x - velocities.x) * 0.05; // Transition plus rapide
+                    accelerations.y = (newDir.y - velocities.y) * 0.05;
                 }
-                accelerations.x = (newDir.x - velocities.x) * 0.05; // Transition plus rapide
-                accelerations.y = (newDir.y - velocities.y) * 0.05;
-            }
-            
-            // Détection précoce des bords Y (avant collision)
-            if (pos.y <= collisionBuffer || pos.y >= maxY - collisionBuffer) {
-                // Nouvelle direction qui évite le bord
-                const newDir = getRandomDirection();
-                // Forcer la direction vers l'intérieur si trop proche du bord
-                if (pos.y <= collisionBuffer) {
-                    newDir.y = Math.abs(newDir.y); // Direction positive (vers le bas)
-                } else if (pos.y >= maxY - collisionBuffer) {
-                    newDir.y = -Math.abs(newDir.y); // Direction négative (vers le haut)
+
+                // Détection précoce des bords Y (avant collision)
+                if (
+                    pos.y <= collisionBuffer ||
+                    pos.y >= maxY - collisionBuffer
+                ) {
+                    // Nouvelle direction qui évite le bord
+                    const newDir = getRandomDirection();
+                    // Forcer la direction vers l'intérieur si trop proche du bord
+                    if (pos.y <= collisionBuffer) {
+                        newDir.y = Math.abs(newDir.y); // Direction positive (vers le bas)
+                    } else if (pos.y >= maxY - collisionBuffer) {
+                        newDir.y = -Math.abs(newDir.y); // Direction négative (vers le haut)
+                    }
+                    accelerations.x = (newDir.x - velocities.x) * 0.05; // Transition plus rapide
+                    accelerations.y = (newDir.y - velocities.y) * 0.05;
                 }
-                accelerations.x = (newDir.x - velocities.x) * 0.05; // Transition plus rapide
-                accelerations.y = (newDir.y - velocities.y) * 0.05;
+
+                // Sécurité : rebond sur les bords X (si malgré tout ils touchent)
+                if (pos.x <= 0 || pos.x >= maxX) {
+                    velocities.x *= -0.8;
+                    pos.x = Math.max(0, Math.min(maxX, pos.x));
+                }
+
+                // Sécurité : rebond sur les bords Y (si malgré tout ils touchent)
+                if (pos.y <= 0 || pos.y >= maxY) {
+                    velocities.y *= -0.8;
+                    pos.y = Math.max(0, Math.min(maxY, pos.y));
+                }
+
+                // Rebond sur les bords Z
+                if (pos.z <= -maxZ || pos.z >= maxZ) {
+                    velocities.z *= -1;
+                    pos.z = Math.max(-maxZ, Math.min(maxZ, pos.z));
+                }
+
+                // Changement aléatoire de z-index
+                if (Math.random() < 0.009) {
+                    // 0.5% de chance à chaque frame
+                    pos.zIndex = 1005 + Math.floor(Math.random() * 3);
+                }
+
+                // Changement aléatoire de direction (plus fréquent pour plus de mouvement)
+                if (Math.random() < 0.0001) {
+                    // 1% de chance à chaque frame
+                    const newDir = getRandomDirection();
+                    accelerations.x = (newDir.x - velocities.x) * 0.09; // Transition plus rapide
+                    accelerations.y = (newDir.y - velocities.y) * 0.03;
+                }
+
+                // Application des accélérations pour des changements fluides
+                velocities.x += accelerations.x;
+                velocities.y += accelerations.y;
+
+                // Limitation des vitesses
+                const maxSpeed = 0.9;
+                const speed = Math.sqrt(
+                    velocities.x * velocities.x + velocities.y * velocities.y
+                );
+                if (speed > maxSpeed) {
+                    velocities.x = (velocities.x / speed) * maxSpeed;
+                    velocities.y = (velocities.y / speed) * maxSpeed;
+                }
+
+                // Réduction progressive des accélérations
+                accelerations.x *= 1;
+                accelerations.y *= 1;
             }
-            
-            // Sécurité : rebond sur les bords X (si malgré tout ils touchent)
-            if (pos.x <= 0 || pos.x >= maxX) {
-                velocities.x *= -0.8;
-                pos.x = Math.max(0, Math.min(maxX, pos.x));
-            }
-            
-            // Sécurité : rebond sur les bords Y (si malgré tout ils touchent)
-            if (pos.y <= 0 || pos.y >= maxY) {
-                velocities.y *= -0.8;
-                pos.y = Math.max(0, Math.min(maxY, pos.y));
-            }
-            
-            // Rebond sur les bords Z
-            if (pos.z <= -maxZ || pos.z >= maxZ) {
-                velocities.z *= -1;
-                pos.z = Math.max(-maxZ, Math.min(maxZ, pos.z));
-            }
-            
-            // Changement aléatoire de z-index
-            if (Math.random() < 0.009) { // 0.5% de chance à chaque frame
-                pos.zIndex = 1005 + Math.floor(Math.random() * 3);
-            }
-            
-            // Changement aléatoire de direction (plus fréquent pour plus de mouvement)
-            if (Math.random() < 0.0001) { // 1% de chance à chaque frame
-                const newDir = getRandomDirection();
-                accelerations.x = (newDir.x - velocities.x) * 0.09; // Transition plus rapide
-                accelerations.y = (newDir.y - velocities.y) * 0.03;
-            }
-            
-            // Application des accélérations pour des changements fluides
-            velocities.x += accelerations.x;
-            velocities.y += accelerations.y;
-            
-            // Limitation des vitesses
-            const maxSpeed = 0.9;
-            const speed = Math.sqrt(velocities.x * velocities.x + velocities.y * velocities.y);
-            if (speed > maxSpeed) {
-                velocities.x = (velocities.x / speed) * maxSpeed;
-                velocities.y = (velocities.y / speed) * maxSpeed;
-            }
-            
-            // Réduction progressive des accélérations
-            accelerations.x *= 1;
-            accelerations.y *= 1;
-        });
+        );
     }
-    
+
     onMount(() => {
-        // Animation GSAP - maintenant que l'élément .title existe dans le DOM
-        gsap.to('.container-title-screen-and-balayage', { 
-            yPercent: -200,
-            xPercent: 200,
-            opacity: 1,
-            duration: 1,
-            scrollTrigger: {
-                trigger: '.container',
-                start: 'top 10%',
-                end: 'bottom 20%',
-                scrub: true,
-            },
-            ease: 'power2.inOut',
-            onStart: () => {
-                console.log('Animation GSAP démarrée')
-            }
- 
-        });
-     
+        // Initialiser le store media query
+        const cleanupMediaQuery = initMediaQuery();
         
+        // Variables pour stocker les valeurs des stores
+        let currentIsSmallMobile, currentIsMediumMobile, currentIsMobile, currentIsTablet, currentIsDesktop, currentIsLargeDesktop;
+        
+        // S'abonner aux stores pour obtenir les valeurs actuelles
+        const unsubscribeSmallMobile = isSmallMobile.subscribe(value => currentIsSmallMobile = value);
+        const unsubscribeMediumMobile = isMediumMobile.subscribe(value => currentIsMediumMobile = value);
+        const unsubscribeMobile = isMobile.subscribe(value => currentIsMobile = value);
+        const unsubscribeTablet = isTablet.subscribe(value => currentIsTablet = value);
+        const unsubscribeDesktop = isDesktop.subscribe(value => currentIsDesktop = value);
+        const unsubscribeLargeDesktop = isLargeDesktop.subscribe(value => currentIsLargeDesktop = value);
+
+        console.log("Taille d'écran détectée dans Title:", {
+            isSmallMobile: currentIsSmallMobile,
+            isMediumMobile: currentIsMediumMobile,
+            isMobile: currentIsMobile,
+            isTablet: currentIsTablet,
+            isDesktop: currentIsDesktop,
+            isLargeDesktop: currentIsLargeDesktop,
+            width: window.innerWidth,
+            height: window.innerHeight
+        });
+
+        // Animation de la bordure selon la taille d'écran
+        let bordureAnimation;
+
+        // Déterminer la taille d'écran actuelle
+        let currentSize;
+        if (currentIsSmallMobile) currentSize = 'smallMobile';
+        else if (currentIsMediumMobile) currentSize = 'mediumMobile';
+        else if (currentIsMobile) currentSize = 'mobile';
+        else if (currentIsTablet) currentSize = 'tablet';
+        else if (currentIsDesktop) currentSize = 'desktop';
+        else if (currentIsLargeDesktop) currentSize = 'largeDesktop';
+
+        switch (currentSize) {
+            case 'smallMobile':
+                // Très petits écrans (≤ 475px)
+                bordureAnimation = gsap.to(".bordure", {
+                    yPercent: 1000,
+                    xPercent: 200,
+                    scale: 0.5,
+                    rotation: -360,
+                    opacity: 1,
+                    duration: 1.8,
+                    scrollTrigger: {
+                        trigger: ".container",
+                        start: "top 5%",
+                        end: "bottom 70%",
+                        scrub: 0.8,
+                    },
+                    ease: "power2.inOut",
+                    onStart: () => console.log("Animation très petit mobile bordure démarrée"),
+                });
+                break;
+
+            case 'mediumMobile':
+                // Medium mobile (476px - 767px)
+                bordureAnimation = gsap.to(".bordure", {
+                    yPercent: 0,
+                    xPercent: 100,
+                    opacity: 1,
+                    duration: 2,
+                    scrollTrigger: {
+                        trigger: ".container",
+                        start: "top 10%",
+                        end: "bottom 10%",
+                        scrub: 1,
+                    },
+                    ease: "power2.inOut",
+                    onStart: () => console.log("Animation medium mobile bordure démarrée"),
+                });
+                break;
+
+            case 'mobile':
+                // Mobile (768px - 1023px)
+                bordureAnimation = gsap.to(".bordure", {
+                    yPercent: -150,
+                    xPercent: 150,
+                    scale: 1.2,
+                    rotation: 55,
+                    opacity: 1,
+                    duration: 2.5,
+                    scrollTrigger: {
+                        trigger: ".container",
+                        start: "top 15%",
+                        end: "top 35%",
+                        scrub: 1.5,
+                    },
+                    ease: "power2.inOut",
+                    onStart: () => console.log("Animation mobile bordure démarrée"),
+                });
+                break;
+
+            case 'tablet':
+                // Tablette (1024px - 1399px)
+                bordureAnimation = gsap.to(".bordure", {
+                    yPercent: -100,
+                    xPercent: 100,
+                    opacity: 1,
+                    duration: 3,
+                    scrollTrigger: {
+                        trigger: ".container",
+                        start: "top 20%",
+                        end: "bottom 20%",
+                        scrub: 2,
+                    },
+                    ease: "power2.inOut",
+                    onStart: () => console.log("Animation tablette bordure démarrée"),
+                });
+                break;
+
+            case 'desktop':
+                // Desktop (1400px+)
+                bordureAnimation = gsap.to(".bordure", {
+                    yPercent: -80,
+                    xPercent: 80,
+                    opacity: 1,
+                    duration: 3.5,
+                    scrollTrigger: {
+                        trigger: ".container",
+                        start: "top 25%",
+                        end: "bottom 25%",
+                        scrub: 2.5,
+                    },
+                    ease: "power2.inOut",
+                    onStart: () => console.log("Animation desktop bordure démarrée"),
+                });
+                break;
+
+            case 'largeDesktop':
+                // Large Desktop (1400px+)
+                bordureAnimation = gsap.to(".bordure", {
+                    yPercent: -60,
+                    xPercent: 60,
+                    opacity: 1,
+                    duration: 4,
+                    scrollTrigger: {
+                        trigger: ".container",
+                        start: "top 30%",
+                        end: "bottom 30%",
+                        scrub: 3,
+                    },
+                    ease: "power2.inOut",
+                    onStart: () => console.log("Animation large desktop bordure démarrée"),
+                });
+                break;
+        }
+
+
         // Positions initiales
         topRightPosition = getRandomPosition();
         bottomLeftPosition = getRandomPosition();
         bottomRightPosition = getRandomPosition();
-        
+
         // Directions initiales
         const topRightDir = getRandomDirection();
         const bottomLeftDir = getRandomDirection();
         const bottomRightDir = getRandomDirection();
-        
+
         topRightVelocity.x = topRightDir.x;
         topRightVelocity.y = topRightDir.y;
         bottomLeftVelocity.x = bottomLeftDir.x;
         bottomLeftVelocity.y = bottomLeftDir.y;
         bottomRightVelocity.x = bottomRightDir.x;
         bottomRightVelocity.y = bottomRightDir.y;
-        
+
         // Animation continue avec requestAnimationFrame
         let animationId;
         function animate() {
             updatePositions();
-            
+
             // Changement aléatoire du z-index du titre
-            if (Math.random() < 0.5) { // 1% de chance à chaque frame
+            if (Math.random() < 0.5) {
+                // 1% de chance à chaque frame
                 titleZIndex = Math.random() < 0.5 ? 1003 : 1004;
             }
-            
+
             animationId = requestAnimationFrame(animate);
         }
         animate();
-        
+
         return () => {
+            // Nettoyer les abonnements aux stores
+            unsubscribeSmallMobile();
+            unsubscribeMediumMobile();
+            unsubscribeMobile();
+            unsubscribeTablet();
+            unsubscribeDesktop();
+            unsubscribeLargeDesktop();
+            
+            // Nettoyer le store media query
+            cleanupMediaQuery();
+            
+            // Tuer l'animation
+            if (bordureAnimation) bordureAnimation.kill();
+            
+            // Nettoyer l'animation continue
             if (animationId) {
                 cancelAnimationFrame(animationId);
             }
@@ -220,60 +398,69 @@
 </script>
 
 <div class="container">
- <!-- <div class="repéres" style="position: absolute; top: 0; left: 0; z-index: 1000; color: blue;">title top</div>   
+    <!-- <div class="repéres" style="position: absolute; top: 0; left: 0; z-index: 1000; color: blue;">title top</div>   
  <div class="repéres" style="position: absolute; bottom: 0; left: 0; z-index: 1000; color: blue;">title bottom</div>    -->
 
- 
-    <div class="container-title-screen-and-balayage">
-       
-    
-  
-        <div class="cadre top-left">
+    <div class="bordure">
      
-            <div class="contain-rond-rectangle-top-left">
-            <div  class="relative"></div>
-                <div class="rond">
+        <div class="container-title-screen-and-balayage">
+     
+            <div class="cadre top-left">
+       
+                <div class="contain-rond-rectangle-top-left">
+                    <div class="relative" />
+                    <div class="rond" />
+                    <div class="rectangle" />
                 </div>
-                <div class="rectangle">     
-                </div>
-            
-            </div>
 
-            <div class="rectangle bottom-left">
-                <div class="vertical-rectangle">
-                    <div class="jauger-rectangle">
+                <div class="rectangle bottom-left">
+                    <div class="vertical-rectangle">
+                        <div class="jauger-rectangle" />
                     </div>
                 </div>
-
             </div>
-       
-        </div>
-   
-    <div class="cadre top-right">
-        <div class="rond-move rond-1" style="left: {topRightPosition.x}%; top: {topRightPosition.y}%; transform: translateZ({topRightPosition.z}px); z-index: {topRightPosition.zIndex};"></div>
-    </div>      
-   
-    <div class="cadre bottom-left">
-        <div class="rond-move rond-2" style="left: {bottomLeftPosition.x}%; top: {bottomLeftPosition.y}%; transform: translateZ({bottomLeftPosition.z}px); z-index: {bottomLeftPosition.zIndex};"></div>
-    </div>  
-   
-    <div class="cadre bottom-right">
-        <div class="rond-move rond-3" style="left: {bottomRightPosition.x}%; top: {bottomRightPosition.y}%; transform: translateZ({bottomRightPosition.z}px); z-index: {bottomRightPosition.zIndex};"></div>
-    </div> 
 
-        <div class="contain-balayage">
-            <img src={screen} alt="screen" />
-            <div class="balayage">
-                <div class="balayage-content"></div>
+            <div class="cadre top-right">
+                <div
+                    class="rond-move rond-1"
+                    style="left: {topRightPosition.x}%; top: {topRightPosition.y}%; transform: translateZ({topRightPosition.z}px); z-index: {topRightPosition.zIndex};"
+                />
             </div>
-        </div>
 
-        <h1 class="title glitch-base" data-text="CodeurBase.fr" style="z-index: {titleZIndex}">
-            <span class="title-part1">Codeur</span><span class="title-part2">Base.fr</span>
-        </h1>
+            <div class="cadre bottom-left">
+                <div
+                    class="rond-move rond-2"
+                    style="left: {bottomLeftPosition.x}%; top: {bottomLeftPosition.y}%; transform: translateZ({bottomLeftPosition.z}px); z-index: {bottomLeftPosition.zIndex};"
+                />
+            </div>
+
+            <div class="cadre bottom-right">
+                <div
+                    class="rond-move rond-3"
+                    style="left: {bottomRightPosition.x}%; top: {bottomRightPosition.y}%; transform: translateZ({bottomRightPosition.z}px); z-index: {bottomRightPosition.zIndex};"
+                />
+            </div>
+
+            <div class="contain-balayage">
+                <img src={screen} alt="screen" />
+                <div class="balayage">
+                    <div class="balayage-content" />
+                </div>
+            </div>
+
+            <h1
+                class="title glitch-base"
+                data-text="CodeurBase.fr"
+                style="z-index: {titleZIndex}"
+            >
+                <span class="title-part1">Codeur</span><span class="title-part2"
+                    >Base.fr</span
+                >
+            </h1>
+        </div>
+        <div class="gyroscope">
+        </div>
     </div>
-
-
 </div>
 
 <style>
@@ -289,19 +476,25 @@
     }
 
     .container {
-        /* border: 1px solid blue; */
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;  
+        width:  100%;
+        height: 100%;
+        perspective: 1000px;
+        transform-style: preserve-3d;
+        /* overflow: hidden; */
+    }
+    .bordure {
         position: relative;
         display: flex;
         justify-content: center;
         align-items: center;
-        
-        width:  100%;
-        height: 100%;
-        /* overflow: hidden; */
-    }
-
-    .container-title-screen-and-balayage {
-        position: relative;
+        top: 0%;
+        left: 0%;
+        z-index: 1000;
+        transform-style: preserve-3d;
         clip-path: polygon(
             7% 1%,
             89% 0,
@@ -312,27 +505,137 @@
             0 93%,
             0 16%
         );
-        background: radial-gradient(
-            circle,
-            rgba(0, 0, 0, 1) 0%,
-            rgba(52, 117, 79, 0.5) 90%,
-            rgba(0, 0, 0, 1) 100%
+        padding: 10px;
+        
+    }
+
+    .bordure::before {
+        content: 'DevOps';
+        font-family: "Orbitron", cursive;
+        font-weight: 900;
+        letter-spacing: 0.5em;
+        color: crimson;
+        position: absolute;
+        top: -3%;
+        left: 0;
+        width: 100%;
+        clip-path: polygon(
+            7% 1%,
+            89% 0,
+            100% 12%,
+            100% 92%,
+            91% 100%,
+            8% 100%,
+            0 93%,
+            0 16%
         );
+      
+        z-index: 100;
+        
+    }
+    .bordure::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        /* background: rgba(189, 9, 9, 0.389); */
+        clip-path: polygon(
+            7% 1%,
+            89% 0,
+            100% 12%,
+            100% 92%,
+            91% 100%,
+            8% 100%,
+            0 93%,
+            0 16%
+        );
+        width: 100%;
+        filter: drop-shadow(0 20px 50px rgba(69, 115, 66, 0.389));
+        z-index: 1005;
+    }
+     .gyroscope {
+         position: absolute;
+         margin: 0 auto;
+         background: conic-gradient(
+             from 0deg,
+             transparent 0deg,
+             rgba(0, 255, 0, 0.8) 30deg,
+             rgba(0, 255, 0, 0.2) 60deg,
+             transparent 60deg
+         );
+         width: 600%;
+         height: 500%;
+         top: -200%;
+         left: -250%;
+         clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+         animation: gyroscope 10s linear infinite, pulse 2s ease-in-out infinite, neonGlow 3s ease-in-out infinite alternate;
+         z-index: 1001;
+         filter: drop-shadow(0 0 20px rgba(0, 255, 0, 0.8)) 
+                 drop-shadow(0 0 40px rgba(0, 255, 0, 0.6)) 
+                 drop-shadow(0 0 60px rgba(0, 255, 0, 0.4));
+     }
+     @keyframes gyroscope {
+         0% {
+             transform: rotate(0deg);
+         }
+         100% {
+             transform: rotate(360deg);
+         }
+     }
+     
+     @keyframes pulse {
+         0%, 100% { 
+             opacity: 0.3; 
+         }
+         50% { 
+             opacity: 0.8; 
+         }
+     }
+     
+     @keyframes neonGlow {
+         0% {
+             filter: drop-shadow(0 0 20px rgba(0, 255, 0, 0.8)) 
+                     drop-shadow(0 0 40px rgba(0, 255, 0, 0.6)) 
+                     drop-shadow(0 0 60px rgba(0, 255, 0, 0.4));
+         }
+         100% {
+             filter: drop-shadow(0 0 30px rgba(0, 255, 0, 1)) 
+                     drop-shadow(0 0 60px rgba(0, 255, 0, 0.8)) 
+                     drop-shadow(0 0 90px rgba(0, 255, 0, 0.6))
+                     drop-shadow(0 0 120px rgba(0, 255, 0, 0.4));
+         }
+     }
+    .container-title-screen-and-balayage {
+        position: relative;
+        top: 0%;
+        left: 0;
+        clip-path: polygon(
+            7% 1%,
+            89% 0,
+            100% 12%,
+            100% 92%,
+            91% 100%,
+            8% 100%,
+            0 93%,
+            0 16%
+        );
+        background-color: rgb(0, 0, 0);
         background-image: url({screen});
         border-width: 5px;
         display: flex;
         justify-content: center;
         align-items: center;
-        width: clamp(500px, 85dvw, 95dvw);
-        height: clamp(10em, 30dvh, 50dvh);
+        width: clamp(100px, 90dvw, 95dvw);
+        height: clamp(100px, 15dvh, 31dvh);
         /* padding: 5px; */
         /* isolation: isolate; */
-        z-index: 1000;
+        z-index: 1002;
         /* overflow: hidden; */
         perspective: 1000px;
         transform-style: preserve-3d;
         filter: brightness(2);
         animation: brightness 6s linear forwards;
+        box-shadow: 0 20px 10px rgba(141, 109, 109, 0.368) inset;
     }
     @keyframes brightness {
         0% {
@@ -342,7 +645,7 @@
             filter: brightness(1.5);
         }
         20% {
-            filter: brightness(2.8.7);
+            filter: brightness(2.87);
         }
         30% {
             filter: brightness(1.5);
@@ -378,7 +681,7 @@
         height: 100%;
         background-color: rgba(22, 112, 70, 0.250);
         backdrop-filter: blur(1px);
-        z-index: 1003;
+        z-index: 1004;
     }
     .cadre {
         position: absolute;
@@ -420,19 +723,19 @@
         width: clamp(10px, 25%, 25%);
         height: clamp(10px, 60%, 60%);
         border: 1px solid red;
-        box-shadow: 0 0 10px crimson ;
-        filter: drop-shadow(0px 0 20px crimson);
+        /* box-shadow: 0 0 10px crimson ; */
+        filter: drop-shadow(0px 0 1px crimson);
         background: rgba(220, 20, 60, 0.328);
         transition: background 0.5s ease-in;
         border-radius: 50%;
-        z-index: 1005;
+        z-index: 1002;
         animation: blink-slow 3s alternate-reverse infinite;
     }
     @keyframes blink-slow {
         0% {
-            background: rgba(220, 20, 60, 0.328);           }
+            background: rgba(220, 20, 60, 0.105);           }
         50% {
-            background: rgba(220, 20, 60, 0.473);
+            background: rgba(100, 141, 87, 0.056);
         }
     }
     .contain-rond-rectangle-top-left .rectangle {
@@ -493,12 +796,12 @@
         left: 10%;
         width: 12%;
         height: 205%;
-        border: 1px solid rgb(28, 173, 105);
-        box-shadow: 0 0 20px rgba(28, 173, 105, 0.5) ;
+        /* border: 1px solid rgb(28, 173, 105); */
+        /* box-shadow: 0 0 20px rgba(28, 173, 105, 0.5) ; */
         filter: drop-shadow(20px 0 20px rgba(49, 166, 107, 0.5));
-        background: rgba(28, 173, 105, 0.088);
+        /* background: rgba(28, 173, 105, 0.088); */
         backdrop-filter: blur(50px);
-        z-index: 1005;
+        z-index: 100;
     }
     .rectangle.bottom-left .vertical-rectangle .jauger-rectangle {
         position: absolute;
@@ -510,7 +813,7 @@
         height: 100%;
         animation: jauger-rectangle 13s forwards normal;
         transform: rotateX(180deg);
-        z-index: 1005;
+        z-index: 100;
     }   
 
     @keyframes jauger-rectangle {
@@ -543,7 +846,7 @@
     }
     .title {
         position: absolute;
-        font-size: clamp(1.5rem, 6vw, 10rem);
+        font-size: clamp(1.6em, 6vw, 10rem);
         letter-spacing: 0.1em;
         font-weight: bold;
         color: crimson;
@@ -566,10 +869,51 @@
         white-space: nowrap;
     }
 
-    @media (max-width: 768px) {
+    /* Media queries basées sur le store centralisé */
+    
+    /* Très petits écrans (jusqu'à 475px) */
+    @media (max-width: 475px) {
+        .bordure {
+            top: -40%;
+            left: 0%;
+            transform-origin: center center;
+        }
+
+        .title {
+            flex-wrap: wrap;
+            gap: 0.5em;
+        }
+    }
+    
+    /* Medium Mobile (476px à 767px) */
+    @media (min-width: 476px) and (max-width: 767px) {
         .title {
             flex-wrap: wrap;
             gap: 0.2em;
+        }
+    }
+    
+    /* Mobile (768px à 1023px) */
+    @media (min-width: 768px) and (max-width: 1023px) {
+        .title {
+            flex-wrap: wrap;
+            gap: 0.3em;
+        }
+    }
+    
+    /* Tablette (1024px à 1399px) */
+    @media (min-width: 1024px) and (max-width: 1399px) {
+        .title {
+            flex-wrap: nowrap;
+            gap: 0.4em;
+        }
+    }
+    
+    /* Desktop (1400px et plus) */
+    @media (min-width: 1400px) {
+        .title {
+            flex-wrap: nowrap;
+            gap: 0.5em;
         }
     }
 
@@ -656,31 +1000,31 @@
     }
     @keyframes moveSnow {
         0% {
-            transform: translateY(5%) rotate(-2deg);
+            transform: translateY(0%) rotate(-2deg);
             transform-origin: bottom;
         }
         100% {
-            /* top:20%; */
-            transform: translateY(10%) rotate(5deg);
+            transform: translateY(2%) rotate(3deg);
         }
     }
 
     @keyframes balayage {
     0% {
         top: 0;
-        transform: translateY(10%) rotate(3deg);
-
+        transform: translateY(0%) rotate(3deg);
+        opacity: 1;
     }
     20% {
         top: 150%;   
-        transform: translateY(10%) rotate(3deg);
+        transform: translateY(0%) rotate(3deg);
+        opacity: 1;
     }
     90% {
-        display: none;
-        top: 150;
+        opacity: 0;
+        top: 150%;
     }
     100% {
-        display: block;
+        opacity: 1;
         top: 0;
     }
 
