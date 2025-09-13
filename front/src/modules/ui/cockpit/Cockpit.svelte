@@ -19,7 +19,7 @@
         height: 15%;
         background: #bbb;
         clip-path: polygon(50% 0%, 100% 38%, 100% 100%, 0 100%, 0% 38%);
-        z-index: 3;
+        z-index: 3000;
     }
     .cockpit-left {
         width: 50%;

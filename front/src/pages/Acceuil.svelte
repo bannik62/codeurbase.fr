@@ -5,35 +5,38 @@
     import Detector from "../modules/ui/detection/Detector.svelte";
     import Title from "../modules/ui/title/Title.svelte";
     import Saturne from "../modules/ui/planet/Saturne.svelte";
-    import {
-        detectionStore,
-        detectionActions,
-        statusMessage,
-        statusColor,
-        checkDetection,
-    } from "../stores/detection.js";
     import { gsap } from "gsap";
     import { ScrollTrigger } from "gsap/ScrollTrigger";
     import Bienvenues from "../modules/ui/header/Bienvenues.svelte";
     import Cockpit from "../modules/ui/cockpit/Cockpit.svelte";
+    import { 
+        initMediaQuery, 
+        isSmallMobile,
+        isMediumMobile, 
+        isMobile, 
+        isTablet, 
+        isDesktop, 
+        isLargeDesktop,
+        screenWidth,
+        screenHeight
+    } from "../stores/mediaQuery.js";
+    import { initLenis } from "../stores/lenis.js";
     let canvas;
     let ctx;
     let atmoOne;
-    let showCloud = false;
-    let cloudScale = 0.1; // Échelle initiale du nuage
     let nuagesOne;
 
+    // Variables pour la détection étape par étape
+    let showDetector = false;
+    let status = "";
+
+    // Variables pour les étoiles
     const stars = [];
-    const numStars = 1400;
+    const numStars = 400;
     const baseSpeed = 2;
     let currentSpeed = baseSpeed;
     let curve = 0;
-
-    // Scroll‑zoom
-    let startScroll = 0;
-    let endScroll = 0;
-    let zoomFactor = 0;
-    const maxZoom = 2; // zoom max x2
+    let showDetctector = false;
 
     function initStars() {
         stars.length = 0;
@@ -79,81 +82,8 @@
         }
         requestAnimationFrame(drawStars);
     }
-    function isInViewport(selector) {
-        const element = document.querySelector(selector);
-        if (!element) return false;
-
-        const rect = element.getBoundingClientRect();
-        return (
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <=
-                (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <=
-                (window.innerWidth || document.documentElement.clientWidth)
-        );
-    }
-
-    function handleScroll() {
-        const rect = document.body
-            .querySelector(".atmo-one")
-            ?.getBoundingClientRect();
-        startScroll = rect ? rect.top + window.scrollY : 0;
-
-        // calcul du facteur : quand le haut de atmo-one arrive en haut de l'écran jusqu'à ce qu'elle soit sortie
-        let factor =
-            0.5 - Math.min(Math.max(rect.top / window.innerHeight, 0), 1);
-        let scale = 3 + factor * (maxZoom - 1);
-        atmoOne.style.transform = `scale(${scale})`;
-
-        // Vérifier si l'élément atmo-one est visible et mettre à jour showCloud
-        showCloud = rect && rect.top < window.innerHeight && rect.bottom > 0;
-
-        // Calculer l'échelle du nuage en fonction de la position de scroll
-        if (showCloud && rect) {
-            // Calculer le pourcentage de visibilité avec une courbe plus douce
-            const rawRatio =
-                (window.innerHeight - rect.top) / window.innerHeight;
-            // Appliquer une courbe d'easing pour ralentir l'animation
-            const visibilityRatio = Math.max(
-                0,
-                Math.min(1, rawRatio * rawRatio * rawRatio)
-            );
-
-            // Échelle de 0.1 (initial) à 1.0 (plein écran) avec progression plus lente
-            cloudScale = 0.1 + 0.9 * visibilityRatio;
-        } else {
-            cloudScale = 0.1; // Retour à la taille initiale
-        }
-
-        console.log("showCloud:", showCloud, "cloudScale:", cloudScale);
-
-        // Détection : calculer le pourcentage de visibilité de space-three
-        const spaceThreeElement = document.querySelector(".space-three");
-        if (spaceThreeElement) {
-            const spaceThreeRect = spaceThreeElement.getBoundingClientRect();
-
-            // Calculer la hauteur visible de la section
-            const visibleTop = Math.max(0, spaceThreeRect.top);
-            const visibleBottom = Math.min(
-                window.innerHeight,
-                spaceThreeRect.bottom
-            );
-            const visibleHeight = Math.max(0, visibleBottom - visibleTop);
-
-            // Calculer le pourcentage de visibilité
-            const totalHeight = spaceThreeRect.height;
-            const visibilityPercentage = (visibleHeight / totalHeight) * 100;
-
-            // Mettre à jour le store et vérifier la détection
-            detectionActions.updateVisibility(
-                visibilityPercentage,
-                window.scrollY
-            );
-            checkDetection(visibilityPercentage);
-        }
-
-        // continuer le calcul des étoiles
+    // Fonction simplifiée pour les étoiles
+    function updateStars() {
         const scrollPos = window.scrollY;
         const maxScroll = document.body.scrollHeight - window.innerHeight;
         currentSpeed = baseSpeed * (1 - (scrollPos / maxScroll) * 0.1);
@@ -161,6 +91,25 @@
     }
 
     onMount(() => {
+        // Initialiser Lenis
+        const lenis = initLenis();
+        lenis.on("scroll", ScrollTrigger.update);
+        
+        // Initialiser le store media query
+        const cleanupMediaQuery = initMediaQuery();
+        
+        // Variables pour stocker les valeurs des stores
+        let currentIsSmallMobile, currentIsMediumMobile, currentIsMobile, currentIsTablet, currentIsDesktop, currentIsLargeDesktop;
+        
+        // S'abonner aux stores pour obtenir les valeurs actuelles
+        const unsubscribeSmallMobile = isSmallMobile.subscribe(value => currentIsSmallMobile = value);
+        const unsubscribeMediumMobile = isMediumMobile.subscribe(value => currentIsMediumMobile = value);
+        const unsubscribeMobile = isMobile.subscribe(value => currentIsMobile = value);
+        const unsubscribeTablet = isTablet.subscribe(value => currentIsTablet = value);
+        const unsubscribeDesktop = isDesktop.subscribe(value => currentIsDesktop = value);
+        const unsubscribeLargeDesktop = isLargeDesktop.subscribe(value => currentIsLargeDesktop = value);
+
+        // Initialiser le canvas
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         ctx = canvas.getContext("2d");
@@ -168,34 +117,184 @@
         initStars();
         drawStars();
 
-        const atmoElement = document.body.querySelector(".atmo-one");
-        if (atmoElement) {
-            const rect = atmoElement.getBoundingClientRect();
-            startScroll = rect.top + window.scrollY;
-        } else {
-            startScroll = 0;
-        }
-        endScroll = startScroll + window.innerHeight;
-
+        // Gestion du resize
         window.addEventListener("resize", () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             initStars();
         });
 
-        window.addEventListener("scroll", handleScroll);
-    
-        const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          nuagesOne.classList.add("in-view");
-          observer.unobserve(nuagesOne); // animation une seule fois
-        }
-      },
-      { threshold: 0.1 } // déclenche quand 10% du container est visible
-    );
+        // Scroll pour les étoiles
+        window.addEventListener("scroll", updateStars);
+        
+        // GSAP ScrollTrigger
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Animation Cloud - Initialisation
+        gsap.set(".nuages-one", { opacity: 0, scale: 0.1 });
+        gsap.set(".intro-cloud-container", { opacity: 0, scale: 0.1 });
+        
+        // TEST MANUEL - Animation directe
+        setTimeout(() => {
+            gsap.to(".nuages-one", {
+                opacity: 1,
+                scale: 1,
+                duration: 2,
+                ease: "power2.out"
+            });
+        }, 1000);
+        
+        // Déterminer la taille d'écran actuelle
+        let currentSize;
+        if (currentIsSmallMobile) currentSize = 'smallMobile';
+        else if (currentIsMediumMobile) currentSize = 'mediumMobile';
+        else if (currentIsMobile) currentSize = 'mobile';
+        else if (currentIsTablet) currentSize = 'tablet';
+        else if (currentIsDesktop) currentSize = 'desktop';
+        else if (currentIsLargeDesktop) currentSize = 'largeDesktop';
 
-    observer.observe(nuagesOne);
+        // Animation Cloud avec switch selon la taille d'écran
+        let cloudAnimation;
+        let cloudContentAnimation;
+        let planetAnimation;
+        
+        switch (currentSize) {
+            case 'smallMobile':
+                // Très petits écrans (≤ 475px)
+                cloudAnimation = gsap.to(".nuages-one", {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 2,
+                    ease: "power2.out",
+                    markers: true,
+                    scrollTrigger: {
+                        trigger: ".atmo-one",
+                        start: "top 90%",
+                        end: "bottom 10%",
+                        toggleActions: "play none none reverse",
+                    }
+                });
+                
+                cloudContentAnimation = gsap.to(".intro-cloud-container", {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 2,
+                    ease: "back.out(1.7)",
+                    scrollTrigger: {
+                        trigger: ".atmo-one",
+                        start: "top 90%",
+                        end: "bottom 10%",
+                        toggleActions: "play none none reverse"
+                    }
+                });
+                
+                // Animation parallaxe planète
+                planetAnimation = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: ".atmo-one",
+                        start: "top 90%",
+                        end: "bottom 10%",
+                        scrub: 1
+                    }
+                });
+                
+                planetAnimation
+                    .to(".atmo-one img", {
+                        y: -100,
+                        duration: 1.5,
+                        ease: "power2.out"
+                    })
+                    .to(".atmo-one img", {
+                        scale: 8.0,
+                        width: "300%",
+                        height: "300%",
+                        duration: 2.0,
+                        ease: "power2.out"
+                    });
+
+                    gsap.timeline( { 
+                          scrollTrigger: {
+                            trigger: ".container-detection",
+                            start: "top 80%",
+                            end: "bottom 0%",
+                            scrub: 1,
+                            pin: true,
+                            toggleActions: "play none none reverse",
+                        }
+                    })
+                    .fromTo(".container-detection", 
+                    { 
+                        opacity: 0,
+                        y: 0,
+                    },{ 
+                        opacity: 1,
+                        y: -0,
+                        duration: 2,
+                        ease: "power2.out",
+                    }).to(".container-detection", {
+                        opacity: 0,
+                        y: 0,
+                        duration: 0.5,
+                        ease: "power2.out",
+                    }).to(".container-detection", {
+                        duration: 0.5,
+                        ease: "power2.out",
+                        onComplete: () => {
+                            setTimeout(() => {
+                                showDetctector = true;
+                            }, 2000);
+                            lenis.stop();
+                        }
+                    });
+        
+                break;
+
+            case 'mediumMobile':
+                // Medium mobile (476px - 767px) - Vide
+                break;
+
+            case 'mobile':
+                // Mobile (768px - 1023px) - Vide
+                break;
+
+            case 'tablet':
+                // Tablette (1024px - 1399px) - Vide
+                break;
+
+            case 'desktop':
+                // Desktop (1400px+) - Vide
+                break;
+
+            case 'largeDesktop':
+                // Large Desktop (≥1600px) - Vide
+                break;
+        }
+        
+
+           
+        
+
+        return () => {
+            // Nettoyer les abonnements aux stores
+            unsubscribeSmallMobile();
+            unsubscribeMediumMobile();
+            unsubscribeMobile();
+            unsubscribeTablet();
+            unsubscribeDesktop();
+            unsubscribeLargeDesktop();
+            
+            // Nettoyer le store media query
+            cleanupMediaQuery();
+            
+            // Tuer les animations Cloud
+            if (cloudAnimation) cloudAnimation.kill();
+            if (cloudContentAnimation) cloudContentAnimation.kill();
+            if (planetAnimation) planetAnimation.kill();
+            
+            // Nettoyer les event listeners
+            window.removeEventListener("resize", () => {});
+            window.removeEventListener("scroll", updateStars);
+        };
   });
     ;
 </script>
@@ -207,47 +306,33 @@
         </div>
 
         <div class="space-one">
+            <!-- <div class="repéres" style="position: absolute; top: -20; left: 0; z-index: 1000; color: red;">space-one top</div>    -->
             <Title />
             <Saturne />
             <Bienvenues />
         </div>
         <div class="space-two">
-            <!-- <div class="repéres" style="position: absolute; top: 0; left: 0; z-index: 1000; color: yellow;">space-two top</div>   
-            <div class="repéres" style="position: absolute; bottom: 0; left: 0; z-index: 1000; color: yellow;">space-two bottom</div>    -->
+             <!-- <div class="repéres" style="position: absolute; top: 0; left: 0; z-index: 1000; color: yellow;">space-two top</div>    -->
         </div>
         <div class="space-three">
-            {#if $detectionStore.showMessage}
-                <div class="container-detection ">
+                <div class="container-detection">
                     <div class="container-status">
-                        <p style="color: {$statusColor};">
-                            Status: {$statusMessage}
-                        </p>
+                        <p>"Status: Détection activée..."</p>
                     </div>
                 </div>
-            {/if}
-            {#if $detectionStore.showDetector}
-                <Detector
-                    on:finished={() => {
-                        detectionActions.finishSequence();
-                    }}
-                />
-            {/if}
-        </div>
+                <!-- {#if showDetctector === true}
+                <Detector/>
+                {/if} -->
+*        </div>
         <div class="atmo-one">
             <div
-                class="nuages-one"
-                style=" width: {10 + (cloudScale - 0.1) * 100}vw; height: {8 +
-                    (cloudScale - 0.1) * 100}vh;"
-                    bind:this={nuagesOne}
-
-            >
-                {#if showCloud}
+                class="nuages-one" bind:this={nuagesOne}>
                     <Cloud />
-                {/if}
             </div>
             <img bind:this={atmoOne} src={planet} alt="planet" />
         </div>
     </div>
+
 
     <Cockpit />
 </section>
@@ -262,11 +347,12 @@
     section {
         position: relative;
         width: 100vw;
+        height: auto;
     }
     .content_space {
         position: absolute;
         inset: 0;
-        height: 410dvh;
+        height: auto;
         overflow: hidden;
     }
     .video-container {
@@ -288,18 +374,17 @@
     .space-two,
     .space-three {
         position: relative;
-        width: 100dvw;
-        height: 100dvh;
     }
     .space-one {
         /* border: 1px solid red; */
-        height: 100dvh;
+        height: 150dvh;
     }
     .space-two {
         /* border: 1px solid yellow; */
         height: 110dvh;
     }
     .space-three {
+        position: relative;
         height: 100dvh;
         /* background: rgba(0, 255, 0, 0.05); */
         display: flex;
@@ -308,28 +393,23 @@
         flex-direction: column;
     }
 
-    /* .container-detection {
-        width: auto;
-        height: auto;
-        background: rgba(23, 187, 53, 0.816);
-        padding: 10px;
-        border-radius: 5px;
-        z-index: 1000;
-    } */
+
 
     .atmo-one {
         display: flex;
         justify-content: center;
         align-items: center;
         position: relative;
-        width: 100vw;
-        height: 100vh;
-        z-index: 1;
+        top:0;
+        left: 0%;
+        width: 100%;
+        height: 50vh;
+        /* z-index: 10; */
     }
 
     .atmo-one img {
         position: absolute;
-        top: 80%;
+        top: 0%;
         left: 90%;
         width: 100%;
         height: 150%;
@@ -343,38 +423,17 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        position: absolute;
-        bottom: 2%;
-        right: 0%;
-        z-index: 6;
-        transition: width 0.1s ease-out, height 0.6s ease-out; /* Animation fluide sur les dimensions */
-    }
-     /* .nuages-one:after {
-    content: "";
     position: absolute;
     top: 0;
     left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 20;
     width: 100%;
-    height: 10vh;
-    clip-path: polygon(50% 100%, 100% 62%, 100% 0, 0 0, 0% 62%);
-    background: linear-gradient(
-        to right,
-        #333,
-        #4d4d4d,
-        #666,
-        #888,
-        #999,
-        #b3b3b3,
-        #b3b3b3,
-        #999,
-        #888,
-        #666,
-        #4d4d4d,
-        #333
-    );
-    opacity: 1;
-     z-index: 1000; 
- } */
+        height: 100%;
+        /* GSAP gère l'animation, pas de transition CSS */
+    }
+   
 
 
 
@@ -401,10 +460,14 @@
     }
 
     .container-detection {
-        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid yellow;
         background: rgba(28, 173, 105, 0.219);
-        width: auto;
-        height: auto;
+        position: relative;
+        width: 100%;
+        height: 10%;
         padding: 20px;
         border-radius: 15px;
         filter: drop-shadow(0px -80px 15px rgba(110, 239, 34, 0.5));
@@ -438,6 +501,160 @@
         font-size: clamp(1rem, 4vw, 1.2rem);
         font-weight: bold;
         filter: drop-shadow(10px 0 10px rgba(110, 239, 34, 0.5));
+    }
+
+    /* ===== MEDIA QUERIES RESPONSIVE ===== */
+    
+    /* Très petits écrans (jusqu'à 475px) */
+    @media (max-width: 475px) {
+        .content_space {
+            height: 450dvh;
+        }
+        
+        .space-one {
+            height: 120dvh;
+        }
+        
+        .space-two {
+            height: 120dvh;
+        }
+        .space-three {
+            bottom: 0;
+            height: 50dvh;
+        }
+        .atmo-one {
+            /* border: 1px solid blue; */
+            height: 100%;
+        }
+        .atmo-one img {
+            top: 0%;
+            left: 0%;
+            width: 120%;
+            height: 170%;
+        }
+        .nuages-one {
+            height: 60%;
+        }
+        
+        .container-status {
+            font-size: clamp(0.9rem, 4.5vw, 1.1rem);
+            min-height: 80px;
+        }
+    }
+    
+    /* Medium Mobile (476px à 767px) */
+    @media (min-width: 476px) and (max-width: 767px) {
+        .content_space {
+            height: 420dvh;
+        }
+        
+        .space-one {
+            height: 150dvh;
+        }
+        
+        .space-two {
+            height: 110dvh;
+        }
+        .space-three {
+            bottom: 0;
+            height: 100dvh;
+        }
+        .atmo-one img {
+            top: 80%;
+            left: 90%;
+            width: 100%;
+            height: 150%;
+        }
+   
+        
+        .container-status {
+            font-size: clamp(1rem, 4vw, 1.2rem);
+            min-height: 90px;
+        }
+    }
+    
+    /* Mobile (768px à 1023px) */
+    @media (min-width: 768px) and (max-width: 1023px) {
+        .content_space {
+            height: 380dvh;
+        }
+        
+        .space-one {
+            height: 140dvh;
+        }
+        
+        .space-two {
+            height: 100dvh;
+        }
+        
+        .atmo-one img {
+            top: 75%;
+            left: 85%;
+            width: 90%;
+            height: 140%;
+        }
+        
+        
+        .container-status {
+            font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+            min-height: 100px;
+        }
+    }
+    
+    /* Tablette (1024px à 1399px) */
+    @media (min-width: 1024px) and (max-width: 1399px) {
+        .content_space {
+            height: 350dvh;
+        }
+        
+        .space-one {
+            height: 130dvh;
+        }
+        
+        .space-two {
+            height: 90dvh;
+        }
+        
+        .atmo-one img {
+            top: 70%;
+            left: 80%;
+            width: 80%;
+            height: 130%;
+        }
+        
+        
+        .container-status {
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            min-height: 110px;
+        }
+    }
+    
+    /* Desktop (1400px et plus) */
+    @media (min-width: 1400px) {
+        .content_space {
+            height: 320dvh;
+        }
+        
+        .space-one {
+            height: 100dvh;
+        }
+        
+        .space-two {
+            height: 80dvh;
+        }
+        
+        .atmo-one img {
+            top: 65%;
+            left: 75%;
+            width: 70%;
+            height: 120%;
+        }
+        
+        
+        .container-status {
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+            min-height: 120px;
+        }
     }
 
 </style>
