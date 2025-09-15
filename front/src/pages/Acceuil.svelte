@@ -62,9 +62,9 @@
             ScrollTrigger.refresh();
         }, 100);
 
-        // // Animation Cloud - Initialisation
-        // gsap.set(".nuages-one", { opacity: 0, scale: 0.1 });
-        // gsap.set(".intro-cloud-container", { opacity: 0, scale: 0.1 });
+        // Animation Cloud - Initialisation
+        gsap.set(".nuages-one", { opacity: 0, scale: 0.1 });
+        gsap.set(".intro-cloud-container", { opacity: 0, scale: 0.1 });
 
         // // TEST MANUEL - Animation directe
         // setTimeout(() => {
@@ -225,7 +225,7 @@
 <section>
     <div class="content_space">
         <div class="video-container">
-            <canvas bind:this={canvas} />
+            <canvas bind:this={canvas}></canvas>
             <Stars {canvas} bind:ctx />
         </div>
 
@@ -282,8 +282,8 @@
         height: 100%;
     }
     .content_space {
-        position: absolute;
-        inset: 0;
+        position: relative;
+        width: 100%;
         height: auto;
         overflow: hidden;
     }
@@ -306,17 +306,19 @@
     .space-two,
     .space-three {
         position: relative;
+        width: 100%;
     }
     .space-one {
         /* border: 1px solid red; */
-        height: 150dvh;
+        height: 100dvh;
     }
     .space-two {
-        height: 110dvh;
+        height: 100dvh;
     }
     .space-three {
         position: relative;
         height: 100dvh;
+        width: 100%;
         /* background: rgba(0, 255, 0, 0.05); */
         /* display: flex;
         align-items: center;
@@ -355,9 +357,7 @@
         filter: drop-shadow(50px 0px 10px rgba(230, 220, 128, 0.5));
     }
     .nuages-one {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+
         position: absolute;
         top: 0;
         left: 0;
@@ -433,7 +433,7 @@
     /* Très petits écrans (jusqu'à 475px) */
     @media (max-width: 475px) {
         .content_space {
-            height: 500dvh;
+            height: auto;
         }
 
         .space-one {
@@ -450,21 +450,22 @@
         .space-three {
             /* border:solid 1px orange; */
             /* display:flex; */
-            bottom: 0%;
-            height: 50%;
+            position: relative;
+            width: 100%;
+            height: 100dvh;
         }
         .atmo-one {
             /* border: 1px solid blue; */
             height: 100%;
         }
         .atmo-one img {
-            top: -50%;
+            /* top: -50%; */
             left: 0%;
             width: 120%;
             height: 170%;
         }
         .nuages-one {
-            height: 42%;
+            height: 100%;
         }
         .content-space-two {
             top:27%;
@@ -491,7 +492,7 @@
     /* Medium Mobile (476px à 767px) */
     @media (min-width: 476px) and (max-width: 767px) {
         .content_space {
-            height: 420dvh;
+            height: auto;
         }
 
         .space-one {
@@ -502,7 +503,8 @@
             height: 110dvh;
         }
         .space-three {
-            bottom: 0;
+            position: relative;
+            width: 100%;
             height: 100dvh;
         }
         .atmo-one img {
@@ -527,7 +529,7 @@
     /* Mobile (768px à 1023px) */
     @media (min-width: 768px) and (max-width: 1023px) {
         .content_space {
-            height: 380dvh;
+            height: auto;
         }
 
         .space-one {
@@ -560,7 +562,7 @@
     /* Tablette (1024px à 1399px) */
     @media (min-width: 1024px) and (max-width: 1399px) {
         .content_space {
-            height: 350dvh;
+            height: auto;
         }
 
         .space-one {
@@ -587,7 +589,7 @@
     /* Desktop (1400px et plus) */
     @media (min-width: 1400px) {
         .content_space {
-            height: 320dvh;
+            height: auto;
         }
 
         .space-one {
