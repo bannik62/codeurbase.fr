@@ -203,7 +203,7 @@
             technologies et outils.<br /><br />
 
             Mon objectif est simple : créer, apprendre et partager. Bonne visite
-            et bienvenue dans mon univers digital. 🌐<br /><br />
+            et bienvenue dans mon univers digital. <br /><span class="span-globe">🌐</span><br />
         </p>
         <h3 class="h3-en-cours-de-construction" style="font-size: clamp(1rem, 6.5vw, 4rem);color: crimson;" bind:this={h3EnCoursDeConstruction}>
             en cours de construction
@@ -280,7 +280,13 @@
     .red {
         color: crimson;
     }
-   
+    .span-globe {
+        position: relative;
+        bottom: -2%;
+        left: 0;
+        font-size: clamp(1rem, 10vw, 4rem);
+        height: 100%;
+    }
 
     /* ===== MEDIA QUERIES RESPONSIVE ===== */
     /* Mobile First - Base styles (jusqu'à 767px) */
@@ -305,19 +311,26 @@
      
         }
         .content-text-bienvenue {
-            /* border: 1px solid blue; */
+            border: 1px solid blue;
             background-color: rgba(34, 33, 33, 0.128);
             backdrop-filter: blur(5px);
             top: 42%;
-            height: 52%;
+            height: 65%;
         }
         .content-text-bienvenue p {
             line-height: 2.5;
         }
         .h3-en-cours-de-construction {
-            top :120%;
+            top :100%;
             z-index: 1000;
         }
+        .span-globe {
+        position: absolute;
+        bottom: -2%;
+        left: 35%;
+        height: 100px;
+        width: 100px;
+    }
   
     }
     
