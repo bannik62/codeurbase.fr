@@ -6,19 +6,23 @@
     
     // Variables pour les étoiles
     const stars = [];
-    const numStars = 400;
+    const numStars = 450; // Réduit de 400 à 150 pour de meilleures performances
     const baseSpeed = 2;
     let currentSpeed = baseSpeed;
     let curve = 0;
     let animationId;
+    
+    // Variables pré-calculées pour optimiser les performances
+    let canvasWidth, canvasHeight;
+    let halfWidth, halfHeight;
 
     function initStars() {
         stars.length = 0;
         for (let i = 0; i < numStars; i++) {
             stars.push({
-                x: (Math.random() - 0.5) * window.innerWidth,
-                y: (Math.random() - 0.5) * window.innerHeight,
-                z: Math.random() * window.innerWidth,
+                x: (Math.random() - 0.5) * canvasWidth,
+                y: (Math.random() - 0.5) * canvasHeight,
+                z: Math.random() * canvasWidth,
             });
         }
     }
@@ -26,34 +30,41 @@
     function drawStars() {
         if (!ctx) return;
         
+        // Effacer le canvas une seule fois
         ctx.fillStyle = "black";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-        for (let star of stars) {
-            star.z -= currentSpeed;
+        // Variables pré-calculées pour éviter les recalculs
+        const curveOffset = curve * 100;
+        const speed = currentSpeed;
+
+        for (let i = 0; i < stars.length; i++) {
+            const star = stars[i];
+            star.z -= speed;
+            
             if (star.z <= 0) {
-                star.z = window.innerWidth;
-                star.x = (Math.random() - 0.5) * window.innerWidth;
-                star.y = (Math.random() - 0.5) * window.innerHeight;
+                star.z = canvasWidth;
+                star.x = (Math.random() - 0.5) * canvasWidth;
+                star.y = (Math.random() - 0.5) * canvasHeight;
             }
 
-            let sx =
-                (star.x / star.z) * canvas.width +
-                canvas.width / 2 +
-                curve * 100;
-            let sy = (star.y / star.z) * canvas.height + canvas.height / 2;
+            // Calculs optimisés
+            const invZ = 1 / star.z;
+            const sx = star.x * invZ * canvasWidth + halfWidth + curveOffset;
+            const sy = star.y * invZ * canvasHeight + halfHeight;
 
-            if (sx < 0 || sx >= canvas.width || sy < 0 || sy >= canvas.height)
+            // Vérification des limites optimisée
+            if (sx < 0 || sx >= canvasWidth || sy < 0 || sy >= canvasHeight)
                 continue;
 
-            let size = Math.max(0, 2 - star.z / 400);
-            let shade = 255 - Math.min(255, star.z / 2);
+            // Calculs simplifiés
+            const size = Math.max(0, 2 - star.z * 0.0025); // 1/400 = 0.0025
+            const shade = Math.floor(255 - Math.min(255, star.z * 0.5)); // 1/2 = 0.5
+            
+            // Rendu simplifié sans shadow pour de meilleures performances
             ctx.fillStyle = `rgb(${shade},${shade},255)`;
-            ctx.shadowColor = "white";
-            ctx.shadowBlur = 6;
-
             ctx.beginPath();
-            ctx.arc(sx, sy, size, 0, Math.PI * 2);
+            ctx.arc(sx, sy, size, 0, 6.28); // 2*PI = 6.28
             ctx.fill();
         }
         animationId = requestAnimationFrame(drawStars);
@@ -69,26 +80,42 @@
 
     function handleResize() {
         if (canvas) {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            canvasWidth = window.innerWidth;
+            canvasHeight = window.innerHeight;
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+            halfWidth = canvasWidth * 0.5;
+            halfHeight = canvasHeight * 0.5;
             initStars();
         }
     }
 
     onMount(() => {
         if (canvas) {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            canvasWidth = window.innerWidth;
+            canvasHeight = window.innerHeight;
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+            halfWidth = canvasWidth * 0.5;
+            halfHeight = canvasHeight * 0.5;
             ctx = canvas.getContext("2d");
             
             initStars();
             drawStars();
             
-            // Gestion du resize
-            window.addEventListener("resize", handleResize);
+            // Gestion du resize avec throttling
+            let resizeTimeout;
+            window.addEventListener("resize", () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(handleResize, 100);
+            });
             
-            // Scroll pour les étoiles
-            window.addEventListener("scroll", updateStars);
+            // Scroll pour les étoiles avec throttling
+            let scrollTimeout;
+            window.addEventListener("scroll", () => {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(updateStars, 16); // ~60fps
+            });
         }
     });
 
