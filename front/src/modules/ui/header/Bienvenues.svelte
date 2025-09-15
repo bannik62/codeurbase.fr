@@ -72,14 +72,14 @@
                      xPercent: 200,
                      duration: 10,
                      ease: "back.inOut(1.7)",
-                     willChange: "transform",
+                    //  willChange: "transform",
                      
                  scrollTrigger: {
                     trigger: elements.elementOfTitle.container,
                     start: "top 0%",
                     end: "bottom 0%",
                     scrub: 2,
-                    markers: true,
+                    // markers: true,
                 },
                     }
                 );
