@@ -13,8 +13,6 @@
         gsap.to(".saturne-container-inner img", {
             opacity: 1,
             duration: 1,
-            height: "100%",
-            width: "clamp(100px, 80%, 100%)",
             transform: "translate3d(-30%, 0, 1000px)",
             scale: 1.5,
             // top: "-50%",
@@ -61,8 +59,8 @@
         top: 90%;
         left: 0;
         aspect-ratio: 1/1;
-        /* width: ); */
-        height: 0;
+        width: clamp(100px, 80%, 100%);
+        height: 100%;
         /* backdrop-filter: shadow(50px 0px 10px rgba(230, 220, 128, 0.5)); */
         filter: drop-shadow(0px -100px 20px rgba(95, 164, 198, 0.5));
         /* opacity: 0.5; */
