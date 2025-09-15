@@ -68,8 +68,8 @@
                 titleAnimation = gsap.to(
                     ".container-global-text-bienvenue h2",
                     {
-                     yPercent: 40,
-                     xPercent: 200,
+                     y: 150,
+                     x: 1200,
                      duration: 10,
                      ease: "back.inOut(1.7)",
                     //  willChange: "transform",
@@ -79,6 +79,7 @@
                     start: "top 0%",
                     end: "bottom 0%",
                     scrub: 2,
+                    toggleActions: "play none none none",
                     // markers: true,
                 },
                     }
@@ -88,23 +89,23 @@
                     selection[0].chars,
                 {
                     opacity: 0,
-                    yPercent: 50,
+                    y: 200,
                     rotationX: 0,
                 },
                 {
                     opacity: 1,
-                    yPercent: 0,
+                    y: 0,
                     rotationX: -100,
                     duration: 5,
                     stagger: 0.05,
                     ease: "back.out(1.7)",
                     scrollTrigger: {
-                        trigger: ".container-global-text-bienvenue",    
+                        trigger: ".bordure",    
                         // endTrigger: ".h3-en-cours-de-construction",                   
-                        start: "top 0%",
+                        start: "top -10%",
                         end: "bottom 0%",
                         toggleActions: "play none none reverse",
-                        scrub: 1.5,
+                        scrub: 0.5,
                         // markers: true,
                         },
                     }
@@ -127,11 +128,11 @@
                     .fromTo(".h3-in-my-world", 
                         {
                             opacity: 0,
-                            y: 80,
+                            y: 300,
                         },
                         {
                             opacity: 1,
-                            y: -81,
+                            y: -300,
                             duration: 1,
                             ease: "linear.inOut",
                         }
@@ -331,8 +332,8 @@
         }
         .span-globe {
         position: absolute;
-        bottom: -2%;
-        left: 35%;
+        bottom: -26px;
+        left: 37%;
         height: 100px;
         width: 100px;
     }
