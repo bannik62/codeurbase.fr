@@ -311,14 +311,19 @@
      
         }
         .content-text-bienvenue {
-            border: 1px solid blue;
+            /* border: 1px solid blue; */
             background-color: rgba(34, 33, 33, 0.128);
             backdrop-filter: blur(5px);
             top: 42%;
             height: 65%;
         }
         .content-text-bienvenue p {
-            line-height: 2.5;
+            position: relative;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            line-height: 2.3;
         }
         .h3-en-cours-de-construction {
             top :100%;

@@ -433,7 +433,7 @@
     /* Très petits écrans (jusqu'à 475px) */
     @media (max-width: 475px) {
         .content_space {
-            height: 450dvh;
+            height: 500dvh;
         }
 
         .space-one {
@@ -449,9 +449,9 @@
         }
         .space-three {
             /* border:solid 1px orange; */
-            display:flex;
+            /* display:flex; */
             bottom: 0%;
-            height: 75%;
+            height: 50%;
         }
         .atmo-one {
             /* border: 1px solid blue; */
@@ -468,8 +468,9 @@
         }
         .content-space-two {
             top:27%;
-            border: 1px solid blue;
             height: 100%;
+            background-color: rgba(34, 33, 33, 0.128);
+            backdrop-filter: blur(5px);
         }
         .container-detection-one {
             width: 90%;
