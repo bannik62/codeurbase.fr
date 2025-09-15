@@ -127,11 +127,11 @@
                     .fromTo(".h3-in-my-world", 
                         {
                             opacity: 0,
-                            yPercent: 80,
+                            y: 80,
                         },
                         {
                             opacity: 1,
-                            yPercent: -81,
+                            y: -81,
                             duration: 1,
                             ease: "linear.inOut",
                         }
