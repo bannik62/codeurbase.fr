@@ -13,7 +13,7 @@
 
  
 
-    // Variables réactives pour les positions des cercles depuis le store
+    // Variables réactives optimisées pour les positions des cercles
     let circleData = {
         circles: [
             { x: 0, y: 0, z: 0, zIndex: 1002 },
@@ -23,6 +23,9 @@
         titleZIndex: 1004
     };
 
+    // Variables pré-calculées pour optimiser les performances
+    let circleStyles = ['', '', ''];
+
     // Variables pour les éléments bindés
     let container;
     let bordure;
@@ -31,23 +34,19 @@
     let containerTitleScreenAndBalayage;
 
 
-    // Mettre à jour le store des éléments de façon réactive
-    $: elementsStore.update(store => ({
-        ...store,
-        elementOfTitle: {
-            bordure,
-            container,
-            title,
-            gyroscope,
-            containerTitleScreenAndBalayage
-        }
-    }));
-
-    let elements;
-
-    elementsStore.subscribe(store => {
-        elements = store;
-    });
+    // Mettre à jour le store des éléments de façon optimisée
+    $: if (bordure && container && title && gyroscope && containerTitleScreenAndBalayage) {
+        elementsStore.update(store => ({
+            ...store,
+            elementOfTitle: {
+                bordure,
+                container,
+                title,
+                gyroscope,
+                containerTitleScreenAndBalayage
+            }
+        }));
+    }
 
     onMount(() => {
         // Initialiser le store media query
@@ -70,10 +69,10 @@
         let bordureAnimation;
 
 
-        // Test d'accès aux éléments de Bienvenues via le store
-        elementsStore.subscribe(store => {
-            if (store.elementOfBienvenu.h2Welcome) {
-            }
+        // Test d'accès aux éléments de Bienvenues via le store (optimisé)
+        let bienvenuElement;
+        const unsubscribeBienvenu = elementsStore.subscribe(store => {
+            bienvenuElement = store.elementOfBienvenu?.h2Welcome;
         });
         switch (currentSize) {
             case 'smallMobile':
@@ -193,9 +192,13 @@
         }
 
 
-        // S'abonner au store des cercles
+        // S'abonner au store des cercles avec optimisation
         const unsubscribe = circleStore.subscribe(data => {
             circleData = data;
+            // Pré-calculer les styles pour éviter les recalculs dans le template
+            circleStyles = data.circles.map(circle => 
+                `left: ${circle.x}%; top: ${circle.y}%; transform: translateZ(${circle.z}px); z-index: ${circle.zIndex};`
+            );
         });
 
         // Démarrer l'animation des cercles
@@ -214,8 +217,9 @@
             // Arrêter l'animation des cercles
             circleStore.stopAnimation();
             
-            // Se désabonner du store des cercles
+            // Se désabonner des stores
             unsubscribe();
+            unsubscribeBienvenu();
         };
     });
     
@@ -232,43 +236,34 @@
             <div class="cadre top-left">
        
                 <div class="contain-rond-rectangle-top-left">
-                    <div class="relative" />
-                    <div class="rond" />
-                    <div class="rectangle" />
+                    <div class="relative"></div>
+                    <div class="rond"></div>
+                    <div class="rectangle"></div>
                 </div>
 
                 <div class="rectangle bottom-left">
                     <div class="vertical-rectangle">
-                        <div class="jauger-rectangle" />
+                        <div class="jauger-rectangle"></div>
                     </div>
                 </div>
             </div>
 
             <div class="cadre top-right">
-                <div
-                    class="rond-move rond-1"
-                    style="left: {circleData.circles[0].x}%; top: {circleData.circles[0].y}%; transform: translateZ({circleData.circles[0].z}px); z-index: {circleData.circles[0].zIndex};"
-                />
+                <div class="rond-move rond-1" style={circleStyles[0]}></div>
             </div>
 
             <div class="cadre bottom-left">
-                <div
-                    class="rond-move rond-2"
-                    style="left: {circleData.circles[1].x}%; top: {circleData.circles[1].y}%; transform: translateZ({circleData.circles[1].z}px); z-index: {circleData.circles[1].zIndex};"
-                />
+                <div class="rond-move rond-2" style={circleStyles[1]}></div>
             </div>
 
             <div class="cadre bottom-right">
-                <div
-                    class="rond-move rond-3"
-                    style="left: {circleData.circles[2].x}%; top: {circleData.circles[2].y}%; transform: translateZ({circleData.circles[2].z}px); z-index: {circleData.circles[2].zIndex};"
-                />
+                <div class="rond-move rond-3" style={circleStyles[2]}></div>
             </div>
 
             <div class="contain-balayage">
                 <img src={screen} alt="screen" />
                 <div class="balayage">
-                    <div class="balayage-content" />
+                    <div class="balayage-content"></div>
                 </div>
             </div>
 
@@ -393,42 +388,22 @@
          top: -200%;
          left: -250%;
          clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-         animation: gyroscope 2s linear infinite, pulse 2s ease-in-out infinite, neonGlow 3s ease-in-out infinite alternate;
+         animation: gyroscope 2s linear infinite, pulse 2s ease-in-out infinite;
          z-index: 1001;
-         filter: drop-shadow(0 0 20px rgba(0, 255, 0, 0.8)) 
-                 drop-shadow(0 0 40px rgba(0, 255, 0, 0.6)) 
-                 drop-shadow(0 0 60px rgba(0, 255, 0, 0.4));
+         filter: drop-shadow(0 0 20px rgba(0, 255, 0, 0.8));
      }
      @keyframes gyroscope {
-         0% {
-             transform: rotate(0deg);
-         }
-         100% {
-             transform: rotate(360deg);
-         }
+         to { transform: rotate(360deg); }
      }
      
      @keyframes pulse {
-         0%, 100% { 
-             opacity: 0.3; 
-         }
-         50% { 
-             opacity: 0.8; 
-         }
+         0%, 100% { opacity: 0.3; }
+         50% { opacity: 0.8; }
      }
      
      @keyframes neonGlow {
-         0% {
-             filter: drop-shadow(0 0 20px rgba(0, 255, 0, 0.8)) 
-                     drop-shadow(0 0 40px rgba(0, 255, 0, 0.6)) 
-                     drop-shadow(0 0 60px rgba(0, 255, 0, 0.4));
-         }
-         100% {
-             filter: drop-shadow(0 0 30px rgba(0, 255, 0, 1)) 
-                     drop-shadow(0 0 60px rgba(0, 255, 0, 0.8)) 
-                     drop-shadow(0 0 90px rgba(0, 255, 0, 0.6))
-                     drop-shadow(0 0 120px rgba(0, 255, 0, 0.4));
-         }
+         0% { filter: drop-shadow(0 0 20px rgba(0, 255, 0, 0.8)) drop-shadow(0 0 40px rgba(0, 255, 0, 0.6)) drop-shadow(0 0 60px rgba(0, 255, 0, 0.4)); }
+         100% { filter: drop-shadow(0 0 30px rgba(0, 255, 0, 1)) drop-shadow(0 0 60px rgba(0, 255, 0, 0.8)) drop-shadow(0 0 90px rgba(0, 255, 0, 0.6)) drop-shadow(0 0 120px rgba(0, 255, 0, 0.4)); }
      }
     .container-title-screen-and-balayage {
         position: relative;
@@ -459,43 +434,12 @@
         perspective: 1000px;
         transform-style: preserve-3d;
         filter: brightness(2);
-        animation: brightness 6s linear forwards;
         box-shadow: 0 20px 10px rgba(141, 109, 109, 0.368) inset;
     }
     @keyframes brightness {
-        0% {
-            filter: brightness(1.5);
-        }
-        10% {
-            filter: brightness(1.5);
-        }
-        20% {
-            filter: brightness(2.87);
-        }
-        30% {
-            filter: brightness(1.5);
-        }
-        40% {
-            filter: brightness(1.5);
-        }
-        50% {
-            filter: brightness(2.5);
-        }
-        60% {
-            filter: brightness(2.5);
-        }
-        70% {
-            filter: brightness(2.5);
-        }
-        80% {
-            filter: brightness(1.5);
-        }
-        90% {
-            filter: brightness(1.5);
-        }
-        100% {
-            filter: brightness(2.5);
-        }
+        0%, 10%, 30%, 40%, 80%, 90% { filter: brightness(1.5); }
+        20% { filter: brightness(2.87); }
+        50%, 60%, 70%, 100% { filter: brightness(2.5); }
     }
     .container-title-screen-and-balayage::after {
         content: "";
@@ -557,11 +501,8 @@
         animation: blink-slow 3s alternate-reverse infinite;
     }
     @keyframes blink-slow {
-        0% {
-            background: rgba(220, 20, 60, 0.105);           }
-        50% {
-            background: rgba(100, 141, 87, 0.056);
-        }
+        0% { background: rgba(220, 20, 60, 0.105); }
+        50% { background: rgba(100, 141, 87, 0.056); }
     }
     .contain-rond-rectangle-top-left .rectangle {
         position: absolute;
@@ -578,17 +519,8 @@
         animation-delay: 5s;
     }
     @keyframes alternateboxshadow {
-        0% {
-           
-            box-shadow: 0px 10px 20px rgba(39, 130, 85, 0.242) ;
-            filter: drop-shadow(0 0px 10px crimson);
-        }
-        100% {
-            box-shadow: 0px 10px 10px rgba(39, 130, 84, 0.242) ;
-            filter: drop-shadow(0 20px 10px crimson);
-            border-bottom-left-radius: 50%;
-         
-        }
+        0% { box-shadow: 0px 10px 20px rgba(39, 130, 85, 0.242); filter: drop-shadow(0 0px 10px crimson); }
+        100% { box-shadow: 0px 10px 10px rgba(39, 130, 84, 0.242); filter: drop-shadow(0 20px 10px crimson); border-bottom-left-radius: 50%; }
     }
     .rectangle.bottom-left {
         position: relative;
@@ -962,20 +894,6 @@
         }
     }
 
-    /* Couches de glitch supplémentaires */
-    .layer-a {
-        color: var(--g-a);
-        transform: translateX(-3px);
-        filter: saturate(1.2) blur(.2px);
-        animation: glitchA 2200ms infinite linear;
-    }
-
-    .layer-b {
-        color: var(--g-b);
-        transform: translateX(3px);
-        filter: saturate(1.4);
-        animation: glitchB 1800ms infinite linear;
-    }
 
     @keyframes glitchA {
         0%   { clip-path: inset(0 0 0 0); transform: translateX(-3px) translateY(0); opacity: .95;}
