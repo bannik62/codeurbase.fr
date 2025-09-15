@@ -15,9 +15,11 @@
 
     // Variables réactives pour les positions des cercles depuis le store
     let circleData = {
-        topRightPosition: { x: 0, y: 0, z: 0, zIndex: 1002 },
-        bottomLeftPosition: { x: 0, y: 0, z: 0, zIndex: 1002 },
-        bottomRightPosition: { x: 0, y: 0, z: 0, zIndex: 1002 },
+        circles: [
+            { x: 0, y: 0, z: 0, zIndex: 1002 },
+            { x: 0, y: 0, z: 0, zIndex: 1002 },
+            { x: 0, y: 0, z: 0, zIndex: 1002 }
+        ],
         titleZIndex: 1004
     };
 
@@ -68,22 +70,9 @@
         let bordureAnimation;
 
 
-        // Vérifier que les éléments nécessaires existent avant de créer les animations
-            const bordureExists = document.querySelector(".bordure");
-            const containerExists = document.querySelector(".container");
-        
-        if (!bordureExists || !containerExists) {
-            console.log("⚠️ Éléments manquants pour les animations Title:", {
-                bordure: !!bordureExists,
-                container: !!containerExists
-            });
-            return; // Sortir de la fonction si les éléments n'existent pas
-        }
-
         // Test d'accès aux éléments de Bienvenues via le store
         elementsStore.subscribe(store => {
             if (store.elementOfBienvenu.h2Welcome) {
-                console.log("✅ Accès à Bienvenues depuis Title:", store.elementOfBienvenu.h2Welcome);
             }
         });
         switch (currentSize) {
@@ -258,21 +247,21 @@
             <div class="cadre top-right">
                 <div
                     class="rond-move rond-1"
-                    style="left: {circleData.topRightPosition.x}%; top: {circleData.topRightPosition.y}%; transform: translateZ({circleData.topRightPosition.z}px); z-index: {circleData.topRightPosition.zIndex};"
+                    style="left: {circleData.circles[0].x}%; top: {circleData.circles[0].y}%; transform: translateZ({circleData.circles[0].z}px); z-index: {circleData.circles[0].zIndex};"
                 />
             </div>
 
             <div class="cadre bottom-left">
                 <div
                     class="rond-move rond-2"
-                    style="left: {circleData.bottomLeftPosition.x}%; top: {circleData.bottomLeftPosition.y}%; transform: translateZ({circleData.bottomLeftPosition.z}px); z-index: {circleData.bottomLeftPosition.zIndex};"
+                    style="left: {circleData.circles[1].x}%; top: {circleData.circles[1].y}%; transform: translateZ({circleData.circles[1].z}px); z-index: {circleData.circles[1].zIndex};"
                 />
             </div>
 
             <div class="cadre bottom-right">
                 <div
                     class="rond-move rond-3"
-                    style="left: {circleData.bottomRightPosition.x}%; top: {circleData.bottomRightPosition.y}%; transform: translateZ({circleData.bottomRightPosition.z}px); z-index: {circleData.bottomRightPosition.zIndex};"
+                    style="left: {circleData.circles[2].x}%; top: {circleData.circles[2].y}%; transform: translateZ({circleData.circles[2].z}px); z-index: {circleData.circles[2].zIndex};"
                 />
             </div>
 
