@@ -575,7 +575,7 @@
         font-size: clamp(0.5rem, 3vw, 1rem);
         font-weight: bold;
         margin-right: 10px;
-        filter: drop-shadow(0 0 10px rgba(213, 30, 30, 0.5));
+         filter: drop-shadow(0 0 10px rgba(213, 30, 30, 0.5));
     }
 
     @keyframes fadeInText {
