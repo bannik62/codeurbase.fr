@@ -1,159 +1,122 @@
 import { writable } from 'svelte/store';
 
-// Variables pour les positions et propriétés des cercles
+// Structure optimisée pour les cercles
 const createCircleStore = () => {
     const { subscribe, set, update } = writable({
-        topRightPosition: { x: 0, y: 0, z: 0, zIndex: 1002 },
-        bottomLeftPosition: { x: 0, y: 0, z: 0, zIndex: 1002 },
-        bottomRightPosition: { x: 0, y: 0, z: 0, zIndex: 1002 },
+        circles: [
+            { x: 0, y: 0, z: 0, zIndex: 1002, vx: 0.3, vy: 0.2, vz: 0.1, ax: 0, ay: 0 },
+            { x: 0, y: 0, z: 0, zIndex: 1002, vx: -0.25, vy: 0.35, vz: -0.08, ax: 0, ay: 0 },
+            { x: 0, y: 0, z: 0, zIndex: 1002, vx: 0.2, vy: -0.3, vz: 0.25, ax: 0, ay: 0 }
+        ],
         titleZIndex: 1004
     });
 
-    // Variables pour les vitesses et directions
-    let topRightVelocity = { x: 0.3, y: 0.2, z: 0.1 };
-    let bottomLeftVelocity = { x: -0.25, y: 0.35, z: -0.08 };
-    let bottomRightVelocity = { x: 0.2, y: -0.3, z: 0.25 };
+    // Constantes optimisées
+    const MAX_X = 90;
+    const MAX_Y = 90;
+    const MAX_Z = 20;
+    const COLLISION_BUFFER = 15;
+    const MAX_SPEED = 0.9;
+    const ACCELERATION_FACTOR = 0.05;
+    const RANDOM_DIRECTION_CHANCE = 0.0001;
+    const Z_INDEX_CHANGE_CHANCE = 0.009;
 
-    // Variables pour les accélérations (changements de direction fluides)
-    let topRightAcceleration = { x: 0, y: 0 };
-    let bottomLeftAcceleration = { x: 0, y: 0 };
-    let bottomRightAcceleration = { x: 0, y: 0 };
-
-    // Variables pour les limites
-    const maxX = 90; // 100% - 10% (largeur du cercle)
-    const maxY = 90; // 100% - 10% (hauteur du cercle)
-    const maxZ = 20; // Limite pour l'axe Z
-
-    // Zone de détection avant collision (en pourcentage)
-    const collisionBuffer = 15; // 15% de marge avant les bords
-
-    // Fonction pour générer une position initiale aléatoire
+    // Fonctions optimisées
     function getRandomPosition() {
         return {
-            x: Math.random() * maxX,
-            y: Math.random() * maxY,
-            z: (Math.random() - 0.5) * maxZ,
-            zIndex: 1005 + Math.floor(Math.random() * 3), // Entre 1005 et 1007
+            x: Math.random() * MAX_X,
+            y: Math.random() * MAX_Y,
+            z: (Math.random() - 0.5) * MAX_Z,
+            zIndex: 1005 + Math.floor(Math.random() * 3),
+            vx: 0, vy: 0, vz: 0, ax: 0, ay: 0
         };
     }
 
-    // Fonction pour générer une nouvelle direction aléatoire
     function getRandomDirection() {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = 0.1 + Math.random() * 0.3; // Vitesse entre 0.1 et 0.4
+        const angle = Math.random() * 6.28; // 2*PI pré-calculé
+        const speed = 0.1 + Math.random() * 0.3;
         return {
             x: Math.cos(angle) * speed,
             y: Math.sin(angle) * speed,
         };
     }
 
-    // Fonction pour mettre à jour les positions avec changements de direction fluides
+    // Fonction optimisée pour mettre à jour les positions
     function updatePositions() {
         update(current => {
-            // Top Right - Mouvement avec courbes
-            current.topRightPosition.x += topRightVelocity.x;
-            current.topRightPosition.y += topRightVelocity.y;
-            current.topRightPosition.z += topRightVelocity.z;
+            const circles = current.circles;
+            
+            for (let i = 0; i < circles.length; i++) {
+                const circle = circles[i];
+                
+                // Mise à jour des positions
+                circle.x += circle.vx;
+                circle.y += circle.vy;
+                circle.z += circle.vz;
 
-            // Bottom Left - Mouvement avec courbes
-            current.bottomLeftPosition.x += bottomLeftVelocity.x;
-            current.bottomLeftPosition.y += bottomLeftVelocity.y;
-            current.bottomLeftPosition.z += bottomLeftVelocity.z;
-
-            // Bottom Right - Mouvement avec courbes
-            current.bottomRightPosition.x += bottomRightVelocity.x;
-            current.bottomRightPosition.y += bottomRightVelocity.y;
-            current.bottomRightPosition.z += bottomRightVelocity.z;
-
-            // Gestion des rebonds avec changements de direction fluides
-            const positions = [current.topRightPosition, current.bottomLeftPosition, current.bottomRightPosition];
-            const velocities = [topRightVelocity, bottomLeftVelocity, bottomRightVelocity];
-            const accelerations = [topRightAcceleration, bottomLeftAcceleration, bottomRightAcceleration];
-
-            positions.forEach((pos, index) => {
-                const velocity = velocities[index];
-                const acceleration = accelerations[index];
-
-                // Détection précoce des bords X (avant collision)
-                if (pos.x <= collisionBuffer || pos.x >= maxX - collisionBuffer) {
-                    // Nouvelle direction qui évite le bord
+                // Gestion des collisions X
+                if (circle.x <= COLLISION_BUFFER || circle.x >= MAX_X - COLLISION_BUFFER) {
                     const newDir = getRandomDirection();
-                    // Forcer la direction vers l'intérieur si trop proche du bord
-                    if (pos.x <= collisionBuffer) {
-                        newDir.x = Math.abs(newDir.x); // Direction positive (vers la droite)
-                    } else if (pos.x >= maxX - collisionBuffer) {
-                        newDir.x = -Math.abs(newDir.x); // Direction négative (vers la gauche)
+                    if (circle.x <= COLLISION_BUFFER) {
+                        newDir.x = Math.abs(newDir.x);
+                    } else {
+                        newDir.x = -Math.abs(newDir.x);
                     }
-                    acceleration.x = (newDir.x - velocity.x) * 0.05; // Transition plus rapide
-                    acceleration.y = (newDir.y - velocity.y) * 0.05;
+                    circle.ax = (newDir.x - circle.vx) * ACCELERATION_FACTOR;
+                    circle.ay = (newDir.y - circle.vy) * ACCELERATION_FACTOR;
                 }
 
-                // Détection précoce des bords Y (avant collision)
-                if (pos.y <= collisionBuffer || pos.y >= maxY - collisionBuffer) {
-                    // Nouvelle direction qui évite le bord
+                // Gestion des collisions Y
+                if (circle.y <= COLLISION_BUFFER || circle.y >= MAX_Y - COLLISION_BUFFER) {
                     const newDir = getRandomDirection();
-                    // Forcer la direction vers l'intérieur si trop proche du bord
-                    if (pos.y <= collisionBuffer) {
-                        newDir.y = Math.abs(newDir.y); // Direction positive (vers le bas)
-                    } else if (pos.y >= maxY - collisionBuffer) {
-                        newDir.y = -Math.abs(newDir.y); // Direction négative (vers le haut)
+                    if (circle.y <= COLLISION_BUFFER) {
+                        newDir.y = Math.abs(newDir.y);
+                    } else {
+                        newDir.y = -Math.abs(newDir.y);
                     }
-                    acceleration.x = (newDir.x - velocity.x) * 0.05; // Transition plus rapide
-                    acceleration.y = (newDir.y - velocity.y) * 0.05;
+                    circle.ax = (newDir.x - circle.vx) * ACCELERATION_FACTOR;
+                    circle.ay = (newDir.y - circle.vy) * ACCELERATION_FACTOR;
                 }
 
-                // Sécurité : rebond sur les bords X (si malgré tout ils touchent)
-                if (pos.x <= 0 || pos.x >= maxX) {
-                    velocity.x *= -0.8;
-                    pos.x = Math.max(0, Math.min(maxX, pos.x));
+                // Sécurité rebonds
+                if (circle.x <= 0 || circle.x >= MAX_X) {
+                    circle.vx *= -0.8;
+                    circle.x = Math.max(0, Math.min(MAX_X, circle.x));
+                }
+                if (circle.y <= 0 || circle.y >= MAX_Y) {
+                    circle.vy *= -0.8;
+                    circle.y = Math.max(0, Math.min(MAX_Y, circle.y));
+                }
+                if (circle.z <= -MAX_Z || circle.z >= MAX_Z) {
+                    circle.vz *= -1;
+                    circle.z = Math.max(-MAX_Z, Math.min(MAX_Z, circle.z));
                 }
 
-                // Sécurité : rebond sur les bords Y (si malgré tout ils touchent)
-                if (pos.y <= 0 || pos.y >= maxY) {
-                    velocity.y *= -0.8;
-                    pos.y = Math.max(0, Math.min(maxY, pos.y));
+                // Changements aléatoires optimisés
+                if (Math.random() < Z_INDEX_CHANGE_CHANCE) {
+                    circle.zIndex = 1005 + Math.floor(Math.random() * 3);
                 }
-
-                // Rebond sur les bords Z
-                if (pos.z <= -maxZ || pos.z >= maxZ) {
-                    velocity.z *= -1;
-                    pos.z = Math.max(-maxZ, Math.min(maxZ, pos.z));
-                }
-
-                // Changement aléatoire de z-index
-                if (Math.random() < 0.009) {
-                    // 0.5% de chance à chaque frame
-                    pos.zIndex = 1005 + Math.floor(Math.random() * 3);
-                }
-
-                // Changement aléatoire de direction (plus fréquent pour plus de mouvement)
-                if (Math.random() < 0.0001) {
-                    // 1% de chance à chaque frame
+                if (Math.random() < RANDOM_DIRECTION_CHANCE) {
                     const newDir = getRandomDirection();
-                    acceleration.x = (newDir.x - velocity.x) * 0.09; // Transition plus rapide
-                    acceleration.y = (newDir.y - velocity.y) * 0.03;
+                    circle.ax = (newDir.x - circle.vx) * 0.09;
+                    circle.ay = (newDir.y - circle.vy) * 0.03;
                 }
 
-                // Application des accélérations pour des changements fluides
-                velocity.x += acceleration.x;
-                velocity.y += acceleration.y;
+                // Application des accélérations
+                circle.vx += circle.ax;
+                circle.vy += circle.ay;
 
                 // Limitation des vitesses
-                const maxSpeed = 0.9;
-                const speed = Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
-                if (speed > maxSpeed) {
-                    velocity.x = (velocity.x / speed) * maxSpeed;
-                    velocity.y = (velocity.y / speed) * maxSpeed;
+                const speed = Math.sqrt(circle.vx * circle.vx + circle.vy * circle.vy);
+                if (speed > MAX_SPEED) {
+                    const factor = MAX_SPEED / speed;
+                    circle.vx *= factor;
+                    circle.vy *= factor;
                 }
+            }
 
-                // Réduction progressive des accélérations
-                acceleration.x *= 1;
-                acceleration.y *= 1;
-            });
-
-            // Changement aléatoire du z-index du titre
+            // Changement z-index titre (optimisé)
             if (Math.random() < 0.5) {
-                // 1% de chance à chaque frame
                 current.titleZIndex = Math.random() < 0.5 ? 1003 : 1004;
             }
 
@@ -164,33 +127,31 @@ const createCircleStore = () => {
     let animationId = null;
     let isAnimating = false;
 
-    // Fonction pour démarrer l'animation
+    // Fonction optimisée pour démarrer l'animation
     function startAnimation() {
         if (isAnimating) return;
         
         isAnimating = true;
         
-        // Initialiser les positions
+        // Initialiser les cercles avec positions et vitesses
         update(current => {
-            current.topRightPosition = getRandomPosition();
-            current.bottomLeftPosition = getRandomPosition();
-            current.bottomRightPosition = getRandomPosition();
+            current.circles = [
+                getRandomPosition(),
+                getRandomPosition(),
+                getRandomPosition()
+            ];
+            
+            // Initialiser les vitesses
+            const dirs = [getRandomDirection(), getRandomDirection(), getRandomDirection()];
+            current.circles.forEach((circle, i) => {
+                circle.vx = dirs[i].x;
+                circle.vy = dirs[i].y;
+            });
+            
             return current;
         });
 
-        // Initialiser les directions
-        const topRightDir = getRandomDirection();
-        const bottomLeftDir = getRandomDirection();
-        const bottomRightDir = getRandomDirection();
-
-        topRightVelocity.x = topRightDir.x;
-        topRightVelocity.y = topRightDir.y;
-        bottomLeftVelocity.x = bottomLeftDir.x;
-        bottomLeftVelocity.y = bottomLeftDir.y;
-        bottomRightVelocity.x = bottomRightDir.x;
-        bottomRightVelocity.y = bottomRightDir.y;
-
-        // Démarrer la boucle d'animation
+        // Boucle d'animation optimisée
         function animate() {
             updatePositions();
             animationId = requestAnimationFrame(animate);
@@ -212,20 +173,25 @@ const createCircleStore = () => {
         subscribe,
         startAnimation,
         stopAnimation,
-        // Méthodes utilitaires pour accéder aux positions
+        // Méthodes utilitaires optimisées
+        getCirclePosition: (index) => {
+            let pos;
+            subscribe(current => pos = current.circles[index])();
+            return pos;
+        },
         getTopRightPosition: () => {
             let pos;
-            subscribe(current => pos = current.topRightPosition)();
+            subscribe(current => pos = current.circles[0])();
             return pos;
         },
         getBottomLeftPosition: () => {
             let pos;
-            subscribe(current => pos = current.bottomLeftPosition)();
+            subscribe(current => pos = current.circles[1])();
             return pos;
         },
         getBottomRightPosition: () => {
             let pos;
-            subscribe(current => pos = current.bottomRightPosition)();
+            subscribe(current => pos = current.circles[2])();
             return pos;
         }
     };
