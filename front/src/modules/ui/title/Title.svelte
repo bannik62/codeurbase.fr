@@ -4,247 +4,109 @@
     import Bienvenues from "../header/Bienvenues.svelte";
     import { gsap } from "gsap";
     import { ScrollTrigger } from "gsap/ScrollTrigger";
-    import { 
-        initMediaQuery, 
-        isSmallMobile,
-        isMediumMobile, 
-        isMobile, 
-        isTablet, 
-        isDesktop, 
-        isLargeDesktop,
-        screenWidth,
-        screenHeight
-    } from "../../../stores/mediaQuery.js";
+    import { initMediaQuery, useMediaQuery } from "../../../stores/mediaQuery.js";
+    import { circleStore } from "../../../stores/circleMove.js";
+    import { elementsStore } from "../../../stores/elements.js";
 
     // Enregistrer le plugin ScrollTrigger
     gsap.registerPlugin(ScrollTrigger);
 
-    let titleZIndex = 1004;
+ 
 
-    // Variables pour les positions et propriétés des cercles
-    let topRightPosition = { x: 0, y: 0, z: 0, zIndex: 1002 };
-    let bottomLeftPosition = { x: 0, y: 0, z: 0, zIndex: 1002 };
-    let bottomRightPosition = { x: 0, y: 0, z: 0, zIndex: 1002 };
+    // Variables réactives pour les positions des cercles depuis le store
+    let circleData = {
+        topRightPosition: { x: 0, y: 0, z: 0, zIndex: 1002 },
+        bottomLeftPosition: { x: 0, y: 0, z: 0, zIndex: 1002 },
+        bottomRightPosition: { x: 0, y: 0, z: 0, zIndex: 1002 },
+        titleZIndex: 1004
+    };
 
-    // Variables pour les vitesses et directions
-    let topRightVelocity = { x: 0.3, y: 0.2, z: 0.1 };
-    let bottomLeftVelocity = { x: -0.25, y: 0.35, z: -0.08 };
-    let bottomRightVelocity = { x: 0.2, y: -0.3, z: 0.25 };
+    // Variables pour les éléments bindés
+    let container;
+    let bordure;
+    let title;
+    let gyroscope;
+    let containerTitleScreenAndBalayage;
 
-    // Variables pour les accélérations (changements de direction fluides)
-    let topRightAcceleration = { x: 0, y: 0 };
-    let bottomLeftAcceleration = { x: 0, y: 0 };
-    let bottomRightAcceleration = { x: 0, y: 0 };
 
-    // Variables pour les cibles (nouvelles directions)
-    let topRightTarget = { x: 0, y: 0 };
-    let bottomLeftTarget = { x: 0, y: 0 };
-    let bottomRightTarget = { x: 0, y: 0 };
+    // Mettre à jour le store des éléments de façon réactive
+    $: elementsStore.update(store => ({
+        ...store,
+        elementOfTitle: {
+            bordure,
+            container,
+            title,
+            gyroscope,
+            containerTitleScreenAndBalayage
+        }
+    }));
 
-    // Variables pour les limites
-    const maxX = 90; // 100% - 10% (largeur du cercle)
-    const maxY = 90; // 100% - 10% (hauteur du cercle)
-    const maxZ = 20; // Limite pour l'axe Z
+    let elements;
 
-    // Zone de détection avant collision (en pourcentage)
-    const collisionBuffer = 15; // 15% de marge avant les bords
-
-    // Animation GSAP déplacée dans onMount
-
-    // Fonction pour générer une position initiale aléatoire
-    function getRandomPosition() {
-        return {
-            x: Math.random() * maxX,
-            y: Math.random() * maxY,
-            z: (Math.random() - 0.5) * maxZ,
-            zIndex: 1005 + Math.floor(Math.random() * 3), // Entre 1005 et 1007
-        };
-    }
-
-    // Fonction pour générer une nouvelle direction aléatoire
-    function getRandomDirection() {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = 0.1 + Math.random() * 0.3; // Vitesse entre 0.1 et 0.4
-        return {
-            x: Math.cos(angle) * speed,
-            y: Math.sin(angle) * speed,
-        };
-    }
-
-    // Fonction pour mettre à jour les positions avec changements de direction fluides
-    function updatePositions() {
-        // Top Right - Mouvement avec courbes
-        topRightPosition.x += topRightVelocity.x;
-        topRightPosition.y += topRightVelocity.y;
-        topRightPosition.z += topRightVelocity.z;
-
-        // Bottom Left - Mouvement avec courbes
-        bottomLeftPosition.x += bottomLeftVelocity.x;
-        bottomLeftPosition.y += bottomLeftVelocity.y;
-        bottomLeftPosition.z += bottomLeftVelocity.z;
-
-        // Bottom Right - Mouvement avec courbes
-        bottomRightPosition.x += bottomRightVelocity.x;
-        bottomRightPosition.y += bottomRightVelocity.y;
-        bottomRightPosition.z += bottomRightVelocity.z;
-
-        // Gestion des rebonds avec changements de direction fluides
-        [topRightPosition, bottomLeftPosition, bottomRightPosition].forEach(
-            (pos, index) => {
-                const velocities = [
-                    topRightVelocity,
-                    bottomLeftVelocity,
-                    bottomRightVelocity,
-                ][index];
-                const accelerations = [
-                    topRightAcceleration,
-                    bottomLeftAcceleration,
-                    bottomRightAcceleration,
-                ][index];
-
-                // Détection précoce des bords X (avant collision)
-                if (
-                    pos.x <= collisionBuffer ||
-                    pos.x >= maxX - collisionBuffer
-                ) {
-                    // Nouvelle direction qui évite le bord
-                    const newDir = getRandomDirection();
-                    // Forcer la direction vers l'intérieur si trop proche du bord
-                    if (pos.x <= collisionBuffer) {
-                        newDir.x = Math.abs(newDir.x); // Direction positive (vers la droite)
-                    } else if (pos.x >= maxX - collisionBuffer) {
-                        newDir.x = -Math.abs(newDir.x); // Direction négative (vers la gauche)
-                    }
-                    accelerations.x = (newDir.x - velocities.x) * 0.05; // Transition plus rapide
-                    accelerations.y = (newDir.y - velocities.y) * 0.05;
-                }
-
-                // Détection précoce des bords Y (avant collision)
-                if (
-                    pos.y <= collisionBuffer ||
-                    pos.y >= maxY - collisionBuffer
-                ) {
-                    // Nouvelle direction qui évite le bord
-                    const newDir = getRandomDirection();
-                    // Forcer la direction vers l'intérieur si trop proche du bord
-                    if (pos.y <= collisionBuffer) {
-                        newDir.y = Math.abs(newDir.y); // Direction positive (vers le bas)
-                    } else if (pos.y >= maxY - collisionBuffer) {
-                        newDir.y = -Math.abs(newDir.y); // Direction négative (vers le haut)
-                    }
-                    accelerations.x = (newDir.x - velocities.x) * 0.05; // Transition plus rapide
-                    accelerations.y = (newDir.y - velocities.y) * 0.05;
-                }
-
-                // Sécurité : rebond sur les bords X (si malgré tout ils touchent)
-                if (pos.x <= 0 || pos.x >= maxX) {
-                    velocities.x *= -0.8;
-                    pos.x = Math.max(0, Math.min(maxX, pos.x));
-                }
-
-                // Sécurité : rebond sur les bords Y (si malgré tout ils touchent)
-                if (pos.y <= 0 || pos.y >= maxY) {
-                    velocities.y *= -0.8;
-                    pos.y = Math.max(0, Math.min(maxY, pos.y));
-                }
-
-                // Rebond sur les bords Z
-                if (pos.z <= -maxZ || pos.z >= maxZ) {
-                    velocities.z *= -1;
-                    pos.z = Math.max(-maxZ, Math.min(maxZ, pos.z));
-                }
-
-                // Changement aléatoire de z-index
-                if (Math.random() < 0.009) {
-                    // 0.5% de chance à chaque frame
-                    pos.zIndex = 1005 + Math.floor(Math.random() * 3);
-                }
-
-                // Changement aléatoire de direction (plus fréquent pour plus de mouvement)
-                if (Math.random() < 0.0001) {
-                    // 1% de chance à chaque frame
-                    const newDir = getRandomDirection();
-                    accelerations.x = (newDir.x - velocities.x) * 0.09; // Transition plus rapide
-                    accelerations.y = (newDir.y - velocities.y) * 0.03;
-                }
-
-                // Application des accélérations pour des changements fluides
-                velocities.x += accelerations.x;
-                velocities.y += accelerations.y;
-
-                // Limitation des vitesses
-                const maxSpeed = 0.9;
-                const speed = Math.sqrt(
-                    velocities.x * velocities.x + velocities.y * velocities.y
-                );
-                if (speed > maxSpeed) {
-                    velocities.x = (velocities.x / speed) * maxSpeed;
-                    velocities.y = (velocities.y / speed) * maxSpeed;
-                }
-
-                // Réduction progressive des accélérations
-                accelerations.x *= 1;
-                accelerations.y *= 1;
-            }
-        );
-    }
+    elementsStore.subscribe(store => {
+        elements = store;
+    });
 
     onMount(() => {
         // Initialiser le store media query
         const cleanupMediaQuery = initMediaQuery();
         
-        // Variables pour stocker les valeurs des stores
-        let currentIsSmallMobile, currentIsMediumMobile, currentIsMobile, currentIsTablet, currentIsDesktop, currentIsLargeDesktop;
-        
-        // S'abonner aux stores pour obtenir les valeurs actuelles
-        const unsubscribeSmallMobile = isSmallMobile.subscribe(value => currentIsSmallMobile = value);
-        const unsubscribeMediumMobile = isMediumMobile.subscribe(value => currentIsMediumMobile = value);
-        const unsubscribeMobile = isMobile.subscribe(value => currentIsMobile = value);
-        const unsubscribeTablet = isTablet.subscribe(value => currentIsTablet = value);
-        const unsubscribeDesktop = isDesktop.subscribe(value => currentIsDesktop = value);
-        const unsubscribeLargeDesktop = isLargeDesktop.subscribe(value => currentIsLargeDesktop = value);
+        // Utiliser la fonction centralisée pour les media queries
+        const {
+            currentSize,
+            currentIsSmallMobile,
+            currentIsMediumMobile,
+            currentIsMobile,
+            currentIsTablet,
+            currentIsDesktop,
+            currentIsLargeDesktop,
+            cleanup: cleanupMediaQueryStores
+        } = useMediaQuery();
 
-        console.log("Taille d'écran détectée dans Title:", {
-            isSmallMobile: currentIsSmallMobile,
-            isMediumMobile: currentIsMediumMobile,
-            isMobile: currentIsMobile,
-            isTablet: currentIsTablet,
-            isDesktop: currentIsDesktop,
-            isLargeDesktop: currentIsLargeDesktop,
-            width: window.innerWidth,
-            height: window.innerHeight
-        });
 
         // Animation de la bordure selon la taille d'écran
         let bordureAnimation;
 
-        // Déterminer la taille d'écran actuelle
-        let currentSize;
-        if (currentIsSmallMobile) currentSize = 'smallMobile';
-        else if (currentIsMediumMobile) currentSize = 'mediumMobile';
-        else if (currentIsMobile) currentSize = 'mobile';
-        else if (currentIsTablet) currentSize = 'tablet';
-        else if (currentIsDesktop) currentSize = 'desktop';
-        else if (currentIsLargeDesktop) currentSize = 'largeDesktop';
 
+        // Vérifier que les éléments nécessaires existent avant de créer les animations
+            const bordureExists = document.querySelector(".bordure");
+            const containerExists = document.querySelector(".container");
+        
+        if (!bordureExists || !containerExists) {
+            console.log("⚠️ Éléments manquants pour les animations Title:", {
+                bordure: !!bordureExists,
+                container: !!containerExists
+            });
+            return; // Sortir de la fonction si les éléments n'existent pas
+        }
+
+        // Test d'accès aux éléments de Bienvenues via le store
+        elementsStore.subscribe(store => {
+            if (store.elementOfBienvenu.h2Welcome) {
+                console.log("✅ Accès à Bienvenues depuis Title:", store.elementOfBienvenu.h2Welcome);
+            }
+        });
         switch (currentSize) {
             case 'smallMobile':
                 // Très petits écrans (≤ 475px)
                 bordureAnimation = gsap.to(".bordure", {
-                    yPercent: 1000,
-                    xPercent: 200,
-                    scale: 0.5,
+                    yPercent: 300,
+                    xPercent: 0,
+                    scale: -0.5,
+                    z: 100,
+                    transformStyle: "preserve-3d",
+                    transformOrigin: "center center",
                     rotation: -360,
-                    opacity: 1,
-                    duration: 1.8,
+                    opacity: 0,
+                    duration:10,
                     scrollTrigger: {
                         trigger: ".container",
-                        start: "top 5%",
-                        end: "bottom 70%",
-                        scrub: 0.8,
+                        start: "top 0%",
+                        end: "bottom 20%",
+                        scrub: 3,
+                        // markers: true,
                     },
                     ease: "power2.inOut",
-                    onStart: () => console.log("Animation très petit mobile bordure démarrée"),
                 });
                 break;
 
@@ -277,8 +139,8 @@
                     duration: 2.5,
                     scrollTrigger: {
                         trigger: ".container",
-                        start: "top 15%",
-                        end: "top 35%",
+                        start: "top 0",
+                        end: "bottom 90%",
                         scrub: 1.5,
                     },
                     ease: "power2.inOut",
@@ -342,46 +204,17 @@
         }
 
 
-        // Positions initiales
-        topRightPosition = getRandomPosition();
-        bottomLeftPosition = getRandomPosition();
-        bottomRightPosition = getRandomPosition();
+        // S'abonner au store des cercles
+        const unsubscribe = circleStore.subscribe(data => {
+            circleData = data;
+        });
 
-        // Directions initiales
-        const topRightDir = getRandomDirection();
-        const bottomLeftDir = getRandomDirection();
-        const bottomRightDir = getRandomDirection();
-
-        topRightVelocity.x = topRightDir.x;
-        topRightVelocity.y = topRightDir.y;
-        bottomLeftVelocity.x = bottomLeftDir.x;
-        bottomLeftVelocity.y = bottomLeftDir.y;
-        bottomRightVelocity.x = bottomRightDir.x;
-        bottomRightVelocity.y = bottomRightDir.y;
-
-        // Animation continue avec requestAnimationFrame
-        let animationId;
-        function animate() {
-            updatePositions();
-
-            // Changement aléatoire du z-index du titre
-            if (Math.random() < 0.5) {
-                // 1% de chance à chaque frame
-                titleZIndex = Math.random() < 0.5 ? 1003 : 1004;
-            }
-
-            animationId = requestAnimationFrame(animate);
-        }
-        animate();
+        // Démarrer l'animation des cercles
+        circleStore.startAnimation();
 
         return () => {
-            // Nettoyer les abonnements aux stores
-            unsubscribeSmallMobile();
-            unsubscribeMediumMobile();
-            unsubscribeMobile();
-            unsubscribeTablet();
-            unsubscribeDesktop();
-            unsubscribeLargeDesktop();
+            // Nettoyer les abonnements aux stores media query
+            cleanupMediaQueryStores();
             
             // Nettoyer le store media query
             cleanupMediaQuery();
@@ -389,21 +222,23 @@
             // Tuer l'animation
             if (bordureAnimation) bordureAnimation.kill();
             
-            // Nettoyer l'animation continue
-            if (animationId) {
-                cancelAnimationFrame(animationId);
-            }
+            // Arrêter l'animation des cercles
+            circleStore.stopAnimation();
+            
+            // Se désabonner du store des cercles
+            unsubscribe();
         };
     });
+    
 </script>
 
-<div class="container">
+<div class="container" bind:this={container}>
     <!-- <div class="repéres" style="position: absolute; top: 0; left: 0; z-index: 1000; color: blue;">title top</div>   
  <div class="repéres" style="position: absolute; bottom: 0; left: 0; z-index: 1000; color: blue;">title bottom</div>    -->
 
-    <div class="bordure">
+    <div class="bordure" bind:this={bordure}>
      
-        <div class="container-title-screen-and-balayage">
+        <div class="container-title-screen-and-balayage" bind:this={containerTitleScreenAndBalayage}>
      
             <div class="cadre top-left">
        
@@ -423,21 +258,21 @@
             <div class="cadre top-right">
                 <div
                     class="rond-move rond-1"
-                    style="left: {topRightPosition.x}%; top: {topRightPosition.y}%; transform: translateZ({topRightPosition.z}px); z-index: {topRightPosition.zIndex};"
+                    style="left: {circleData.topRightPosition.x}%; top: {circleData.topRightPosition.y}%; transform: translateZ({circleData.topRightPosition.z}px); z-index: {circleData.topRightPosition.zIndex};"
                 />
             </div>
 
             <div class="cadre bottom-left">
                 <div
                     class="rond-move rond-2"
-                    style="left: {bottomLeftPosition.x}%; top: {bottomLeftPosition.y}%; transform: translateZ({bottomLeftPosition.z}px); z-index: {bottomLeftPosition.zIndex};"
+                    style="left: {circleData.bottomLeftPosition.x}%; top: {circleData.bottomLeftPosition.y}%; transform: translateZ({circleData.bottomLeftPosition.z}px); z-index: {circleData.bottomLeftPosition.zIndex};"
                 />
             </div>
 
             <div class="cadre bottom-right">
                 <div
                     class="rond-move rond-3"
-                    style="left: {bottomRightPosition.x}%; top: {bottomRightPosition.y}%; transform: translateZ({bottomRightPosition.z}px); z-index: {bottomRightPosition.zIndex};"
+                    style="left: {circleData.bottomRightPosition.x}%; top: {circleData.bottomRightPosition.y}%; transform: translateZ({circleData.bottomRightPosition.z}px); z-index: {circleData.bottomRightPosition.zIndex};"
                 />
             </div>
 
@@ -451,14 +286,15 @@
             <h1
                 class="title glitch-base"
                 data-text="CodeurBase.fr"
-                style="z-index: {titleZIndex}"
+                style="z-index: {circleData.titleZIndex}"
+                bind:this={title}
             >
                 <span class="title-part1">Codeur</span><span class="title-part2"
                     >Base.fr</span
                 >
             </h1>
         </div>
-        <div class="gyroscope">
+        <div class="gyroscope" bind:this={gyroscope}>
         </div>
     </div>
 </div>
@@ -505,7 +341,7 @@
             0 93%,
             0 16%
         );
-        padding: 10px;
+        padding: 15px 10px 10px 10px;
         
     }
 
@@ -516,7 +352,7 @@
         letter-spacing: 0.5em;
         color: crimson;
         position: absolute;
-        top: -3%;
+        top: -2%;
         left: 0;
         width: 100%;
         clip-path: polygon(
@@ -568,7 +404,7 @@
          top: -200%;
          left: -250%;
          clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-         animation: gyroscope 10s linear infinite, pulse 2s ease-in-out infinite, neonGlow 3s ease-in-out infinite alternate;
+         animation: gyroscope 2s linear infinite, pulse 2s ease-in-out infinite, neonGlow 3s ease-in-out infinite alternate;
          z-index: 1001;
          filter: drop-shadow(0 0 20px rgba(0, 255, 0, 0.8)) 
                  drop-shadow(0 0 40px rgba(0, 255, 0, 0.6)) 
@@ -873,8 +709,13 @@
     
     /* Très petits écrans (jusqu'à 475px) */
     @media (max-width: 475px) {
+        .container {
+            top: 0%;
+            height: 35%;
+            width: 100%;
+        }
         .bordure {
-            top: -40%;
+            top: -15%;
             left: 0%;
             transform-origin: center center;
         }

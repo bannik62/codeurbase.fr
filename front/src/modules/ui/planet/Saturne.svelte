@@ -33,14 +33,12 @@
 
 <div class="saturne-container">
     <div class="saturne-container-inner">
-    <!-- <div class="repere" style="position: absolute; top: 0; left: 0; z-index: 1000; color: blue;">repere saturne top</div>
-    <div class="repere" style="position: absolute; bottom: 0; left: 0; z-index: 1000; color: blue;">repere saturne bottom</div> -->
         <img src={saturne} alt="saturne">
     </div>
 </div>
 
 <style>
-    .saturne-container {
+    .saturne-container {    
         position: relative;
         width: 100%;
         height: 100%;
@@ -53,8 +51,7 @@
         left: 0;
         width: clamp(100px, 100%, 100%);
         height: 100%;
-        /* opacity: 0; */
-        transition: opacity 1s ease-in-out;
+        transition: opacity 1.3s ease-in-out;
         perspective: 1000px;
         transform-style: preserve-3d;
     }
@@ -70,7 +67,6 @@
         filter: drop-shadow(0px -100px 20px rgba(95, 164, 198, 0.5));
         /* opacity: 0.5; */
         animation: graduateFilter 10s forwards;
-        animation-timeline: view();
     }
     @keyframes graduateFilter {
         0% {
@@ -78,6 +74,93 @@
         }
         100% {
             filter: drop-shadow(-20px -100px 20px rgba(95, 164, 198, 0.5));
+        }
+    }
+
+    /* ===== MEDIA QUERIES RESPONSIVE ===== */
+    
+    /* Très petits écrans (jusqu'à 475px) */
+    @media (max-width: 475px) {
+        .saturne-container {
+            height: 80%;
+        }
+        
+        .saturne-container-inner {
+            top: -20%;
+            width: 90%;
+        }
+        
+        .saturne-container-inner img {
+            top: 85%;
+            filter: drop-shadow(0px -80px 15px rgba(95, 164, 198, 0.4));
+        }
+    }
+    
+    /* Medium Mobile (476px à 767px) */
+    @media (min-width: 476px) and (max-width: 767px) {
+        .saturne-container {
+            height: 85%;
+        }
+        
+        .saturne-container-inner {
+            top: -15%;
+            width: 95%;
+        }
+        
+        .saturne-container-inner img {
+            top: 88%;
+            filter: drop-shadow(0px -90px 18px rgba(95, 164, 198, 0.45));
+        }
+    }
+    
+    /* Mobile (768px à 1023px) */
+    @media (min-width: 768px) and (max-width: 1023px) {
+        .saturne-container {
+            height: 90%;
+        }
+        
+        .saturne-container-inner {
+            top: -18%;
+            width: 98%;
+        }
+        
+        .saturne-container-inner img {
+            top: 90%;
+            filter: drop-shadow(0px -95px 20px rgba(95, 164, 198, 0.5));
+        }
+    }
+    
+    /* Tablette (1024px à 1399px) */
+    @media (min-width: 1024px) and (max-width: 1399px) {
+        .saturne-container {
+            height: 95%;
+        }
+        
+        .saturne-container-inner {
+            top: -20%;
+            width: 100%;
+        }
+        
+        .saturne-container-inner img {
+            top: 90%;
+            filter: drop-shadow(0px -100px 20px rgba(95, 164, 198, 0.5));
+        }
+    }
+    
+    /* Desktop (1400px et plus) */
+    @media (min-width: 1400px) {
+        .saturne-container {
+            height: 100%;
+        }
+        
+        .saturne-container-inner {
+            top: -20%;
+            width: 100%;
+        }
+        
+        .saturne-container-inner img {
+            top: 90%;
+            filter: drop-shadow(0px -100px 20px rgba(95, 164, 198, 0.5));
         }
     }
 </style>

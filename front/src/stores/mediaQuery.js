@@ -119,3 +119,46 @@ export function matchesBreakpoint(breakpoint) {
     }
     return false;
 }
+
+// Fonction centralisée pour gérer les media queries dans les composants
+export function useMediaQuery() {
+    let currentIsSmallMobile, currentIsMediumMobile, currentIsMobile, currentIsTablet, currentIsDesktop, currentIsLargeDesktop;
+    
+    // S'abonner aux stores pour obtenir les valeurs actuelles
+    const unsubscribeSmallMobile = isSmallMobile.subscribe(value => currentIsSmallMobile = value);
+    const unsubscribeMediumMobile = isMediumMobile.subscribe(value => currentIsMediumMobile = value);
+    const unsubscribeMobile = isMobile.subscribe(value => currentIsMobile = value);
+    const unsubscribeTablet = isTablet.subscribe(value => currentIsTablet = value);
+    const unsubscribeDesktop = isDesktop.subscribe(value => currentIsDesktop = value);
+    const unsubscribeLargeDesktop = isLargeDesktop.subscribe(value => currentIsLargeDesktop = value);
+
+    // Déterminer la taille d'écran actuelle
+    let currentSize;
+    if (currentIsSmallMobile) currentSize = 'smallMobile';
+    else if (currentIsMediumMobile) currentSize = 'mediumMobile';
+    else if (currentIsMobile) currentSize = 'mobile';
+    else if (currentIsTablet) currentSize = 'tablet';
+    else if (currentIsDesktop) currentSize = 'desktop';
+    else if (currentIsLargeDesktop) currentSize = 'largeDesktop';
+
+    // Fonction de nettoyage
+    const cleanup = () => {
+        unsubscribeSmallMobile();
+        unsubscribeMediumMobile();
+        unsubscribeMobile();
+        unsubscribeTablet();
+        unsubscribeDesktop();
+        unsubscribeLargeDesktop();
+    };
+
+    return {
+        currentSize,
+        currentIsSmallMobile,
+        currentIsMediumMobile,
+        currentIsMobile,
+        currentIsTablet,
+        currentIsDesktop,
+        currentIsLargeDesktop,
+        cleanup
+    };
+}

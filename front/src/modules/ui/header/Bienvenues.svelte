@@ -3,100 +3,83 @@
     import { gsap } from "gsap";
     import { ScrollTrigger } from "gsap/ScrollTrigger";
     import Splitting from "splitting";
-    import { initLenis } from "../../../stores/lenis.js";
-    import { 
-        initMediaQuery, 
-        isSmallMobile,
-        isMediumMobile, 
-        isMobile, 
-        isTablet, 
-        isDesktop, 
-        isLargeDesktop,
-        screenWidth,
-        screenHeight,
-    } from "../../../stores/mediaQuery.js";
+    import { initMediaQuery, useMediaQuery } from "../../../stores/mediaQuery.js";
+    import { elementsStore } from "../../../stores/elements.js";
+
+    // Variables pour les éléments bindés
+    let containerGlobalTextBienvenue;
+    let h2Welcome;
+    let h3InMyWorld;
+    let contentTextBienvenue;
+    let pBienvenue;
+    let h3EnCoursDeConstruction;
+
+
+    // Mettre à jour le store des éléments de façon réactive
+    $: elementsStore.update(store => ({
+        ...store,
+        elementOfBienvenu: {
+            containerGlobalTextBienvenue,
+            h2Welcome,
+            h3InMyWorld,
+            contentTextBienvenue,
+            pBienvenue,
+            h3EnCoursDeConstruction
+        }
+    }));
+    let elements;
+
+         elementsStore.subscribe(store => {
+            elements = store;
+        });
 
     onMount(() => {
         gsap.registerPlugin(ScrollTrigger);
         
-        // Initialiser Lenis via le store
-        const lenis = initLenis();
-        lenis.on("scroll", ScrollTrigger.update);
-        
-        // Initialiser le store media query
         const cleanupMediaQuery = initMediaQuery();
         
         // Appliquer Splitting et stocker le résultat
         let selection = Splitting();
         
-        // Variables pour stocker les valeurs des stores
-        let currentIsSmallMobile,
+        // Utiliser la fonction centralisée pour les media queries
+        const {
+            currentSize,
+            currentIsSmallMobile,
             currentIsMediumMobile,
             currentIsMobile,
             currentIsTablet,
             currentIsDesktop,
-            currentIsLargeDesktop;
-        
-        // S'abonner aux stores pour obtenir les valeurs actuelles
-        const unsubscribeSmallMobile = isSmallMobile.subscribe(
-            (value) => (currentIsSmallMobile = value)
-        );
-        const unsubscribeMediumMobile = isMediumMobile.subscribe(
-            (value) => (currentIsMediumMobile = value)
-        );
-        const unsubscribeMobile = isMobile.subscribe(
-            (value) => (currentIsMobile = value)
-        );
-        const unsubscribeTablet = isTablet.subscribe(
-            (value) => (currentIsTablet = value)
-        );
-        const unsubscribeDesktop = isDesktop.subscribe(
-            (value) => (currentIsDesktop = value)
-        );
-        const unsubscribeLargeDesktop = isLargeDesktop.subscribe(
-            (value) => (currentIsLargeDesktop = value)
-        );
+            currentIsLargeDesktop,
+            cleanup: cleanupMediaQueryStores
+        } = useMediaQuery();
 
-        console.log("Taille d'écran détectée:", {
-            isSmallMobile: currentIsSmallMobile,
-            isMediumMobile: currentIsMediumMobile,
-            isMobile: currentIsMobile,
-            isTablet: currentIsTablet,
-            isDesktop: currentIsDesktop,
-            isLargeDesktop: currentIsLargeDesktop,
-            width: window.innerWidth,
-            height: window.innerHeight,
-        });
+
 
         // Animations selon la taille d'écran
         let titleAnimation;
         let splittingAnimation;
         let timelineInMyWorld;
 
-        // Déterminer la taille d'écran actuelle
-        let currentSize;
-        if (currentIsSmallMobile) currentSize = "smallMobile";
-        else if (currentIsMediumMobile) currentSize = "mediumMobile";
-        else if (currentIsMobile) currentSize = "mobile";
-        else if (currentIsTablet) currentSize = "tablet";
-        else if (currentIsDesktop) currentSize = "desktop";
-        else if (currentIsLargeDesktop) currentSize = "largeDesktop";
-
+        // currentSize est déjà déterminé par useMediaQuery()
+        setTimeout(() => {
         switch (currentSize) {
             case "smallMobile":
             // Très petits écrans (iPhone SE, petits Android)
                 titleAnimation = gsap.to(
                     ".container-global-text-bienvenue h2",
                     {
-                     yPercent: 50,
-                     xPercent: 950,
-                     duration: 0.3,
-                     ease: "power2.inOut",
-                scrollTrigger: {
-                    trigger: ".container",
+                     yPercent: 40,
+                     xPercent: 200,
+                     duration: 10,
+                     ease: "back.inOut(1.7)",
+                     willChange: "transform",
+                     
+                 scrollTrigger: {
+                    trigger: elements.elementOfTitle.container,
                     start: "top 0%",
                     end: "bottom 0%",
-                    scrub: 0.8,
+                    scrub: 2,
+                    markers: true,
                 },
                     }
                 );
@@ -130,9 +113,10 @@
                 // Timeline pour small mobile
                 timelineInMyWorld = gsap.timeline({
                     scrollTrigger: {
-                        trigger: ".container-global-text-bienvenue",    
-                        start: "top 0%",
-                        end: "bottom 90%",
+                        trigger: ".h2-welcome",    
+                        start: "top 20%",
+                        // endTrigger: "h2-welcome",
+                        // end: "bottom 0%",
                         scrub: 0.8,
                         // markers: true,
                     },
@@ -143,20 +127,21 @@
                     .fromTo(".h3-in-my-world", 
                         {
                             opacity: 0,
-                            y: 80,
+                            yPercent: 80,
                         },
                         {
                             opacity: 1,
-                            y: -40,
-                            duration: 0.5,
-                            ease: "bounce.out",
+                            yPercent: -81,
+                            duration: 1,
+                            ease: "linear.inOut",
                         }
                     )
-                    .to(".h3-in-my-world", {
-                        xPercent: -100,
-                        duration: 0.5,
-                        ease: "power2.out",
-                    });
+                    // .to(".h3-in-my-world", {
+                    //     delay: 1.5,
+                    //     xPercent: -100,
+                    //     duration: 0.5,
+                    //     ease: "power2.out",
+                    // });
                 break;
 
             case "mediumMobile":
@@ -179,23 +164,12 @@
                 // Large Desktop (≥1600px) - Vide
                 break;
         }
-
-        // Animation loop pour Lenis
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-        requestAnimationFrame(raf);
+        }, 100);
 
         // Fonction de nettoyage
         return () => {
-            // Nettoyer les abonnements aux stores
-            unsubscribeSmallMobile();
-            unsubscribeMediumMobile();
-            unsubscribeMobile();
-            unsubscribeTablet();
-            unsubscribeDesktop();
-            unsubscribeLargeDesktop();
+            // Nettoyer les abonnements aux stores media query
+            cleanupMediaQueryStores();
             
             // Nettoyer le store media query
             cleanupMediaQuery();
@@ -208,23 +182,12 @@
     });
 </script>
 
-<div class="container-global-text-bienvenue">
-    <!-- <div
-        class="repéres"
-        style="position: absolute; top: 0; left: 0; z-index: 1000; color: red;"
-    >
-        bienvenue top global
-    </div>
-    <div
-        class="repéres"
-        style="position: absolute; bottom: 0; left: 0; z-index: 1000; color: red;"
-    >
-        bienvenue bottom global
-    </div> -->
-    <h2 class="h2-welcome">Welcome</h2>
-    <h3 class="h3-in-my-world">In my world</h3>
-    <div class="content-text-bienvenue">
-        <p class="p-bienvenue" data-splitting>
+<div class="container-global-text-bienvenue" bind:this={containerGlobalTextBienvenue}>
+
+    <h2 class="h2-welcome" bind:this={h2Welcome}>Welcome</h2>
+    <h3 class="h3-in-my-world" bind:this={h3InMyWorld}>In my world</h3>
+    <div class="content-text-bienvenue" bind:this={contentTextBienvenue}>
+        <p class="p-bienvenue" data-splitting bind:this={pBienvenue}>
             Bienvenue sur <span class="red">CodeurBase</span>.<br /><br />
             Cet espace est mon laboratoire numérique personnel, où je partage à la
             fois mes projets, mes expériences et mes découvertes dans le développement
@@ -242,7 +205,7 @@
             Mon objectif est simple : créer, apprendre et partager. Bonne visite
             et bienvenue dans mon univers digital. 🌐<br /><br />
         </p>
-        <h3 class="h3-en-cours-de-construction" style="font-size: clamp(1rem, 6.5vw, 4rem);color: crimson;">
+        <h3 class="h3-en-cours-de-construction" style="font-size: clamp(1rem, 6.5vw, 4rem);color: crimson;" bind:this={h3EnCoursDeConstruction}>
             en cours de construction
         </h3>
     </div>
@@ -274,8 +237,8 @@
         font-weight: 800;
         margin: 0;
         /* opacity: 0.5; */
-        will-change: transform;
-        transform-origin: center center;
+        /* will-change: transform; */
+        transform-origin: bottom bottom;
     }
     .h3-in-my-world {
         font-family: "Orbitron", "Bungee Shade", cursive;
@@ -283,10 +246,7 @@
         font-weight: 800;
         color: crimson;
         margin: 0;
-        opacity: 0;
-        position: absolute;
-        top: 0%;
-        left: 0;
+
       
     }
     .content-text-bienvenue {
@@ -308,15 +268,19 @@
     }
 
     .h3-en-cours-de-construction {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         position: absolute;
         top: 50%;
         left: 0;
         width: 100%;
-        height: clamp(100px, 150dvh, 100%);
+        height: 10%;
     }
-    .red{
-        color: red;
+    .red {
+        color: crimson;
     }
+   
 
     /* ===== MEDIA QUERIES RESPONSIVE ===== */
     /* Mobile First - Base styles (jusqu'à 767px) */
@@ -324,26 +288,34 @@
     
     /* Très petits écrans (jusqu'à 475px) */
     @media (max-width: 475px) {      
+     
+        .container-global-text-bienvenue {
+            top: 0;
+            height: 100%;
+        }
         .container-global-text-bienvenue h2 {
-            top: 15%;
+            top: 25%;
             left: -200%;
             z-index: 5000;
         }
         .h3-in-my-world {
-            opacity: 0;
-            top: 40%;
+            position: relative;
+            top: -8%;
+            left: 2%;
+     
         }
         .content-text-bienvenue {
             /* border: 1px solid blue; */
             background-color: rgba(34, 33, 33, 0.128);
             backdrop-filter: blur(5px);
-            top: 48%;
+            top: 42%;
+            height: 52%;
         }
         .content-text-bienvenue p {
             line-height: 2.5;
         }
         .h3-en-cours-de-construction {
-            top: 90%;
+            top :120%;
             z-index: 1000;
         }
   
@@ -351,7 +323,6 @@
     
     /* Medium Mobile (476px à 767px) */
     @media (min-width: 476px) and (max-width: 767px) {
-        /* Les clamp() sont déjà définis dans les styles de base */
     }
     
     /* Tablette (768px à 1023px) */
@@ -365,7 +336,7 @@
         }
         
         .content-text-bienvenue {
-            top: 50%; /* Ajustement pour tablette */
+            top: 52%; /* Ajustement pour tablette */
         }
     }
     
