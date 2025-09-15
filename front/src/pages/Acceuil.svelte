@@ -237,16 +237,20 @@
             <Bienvenues />
         </div>
         <div class="space-two">
+
+            <div class="content-space-two">
             <div class="container-detection-one">
                 <div class="container-status">
                     <p>"Status: Détection activée..."</p>
                 </div>
             </div>
-            <div class="container-detector-two">
+            <div class="container-detector">
                 {#if showDetector === true}
                     <Detector />
                 {/if}
-            </div>        </div>
+            </div>        
+        </div>
+        </div>
         <div class="space-three">
         
            
@@ -319,7 +323,13 @@
         justify-content: center;
         flex-direction: column;  */
     }
-
+    .content-space-two {
+        position: relative;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
     .atmo-one {
         display: flex;
         justify-content: center;
@@ -395,7 +405,7 @@
         border-radius: 15px;
         filter: drop-shadow(0px 2px 35px rgba(110, 239, 34, 0.5));
     }
-    .container-detector-two {
+    .container-detector{
         position: absolute;
         top: 0;
         left: 0;
@@ -454,21 +464,26 @@
             height: 170%;
         }
         .nuages-one {
-            height: 60%;
+            height: 42%;
+        }
+        .content-space-two {
+            top:27%;
+            border: 1px solid blue;
+            height: 100%;
         }
         .container-detection-one {
             width: 90%;
-            height: 3%;
+            height: 10%;
             margin: 0 auto;
-            top: 30%;
+            top: 10%;
         }
-        .container-detector-two {
+        .container-detector {
             top: 20%;
         }
 
         .container-status {
             font-size: clamp(0.9rem, 4.5vw, 1.1rem);
-            min-height: 80px;
+            min-height: 150px;
         }
     }
 
