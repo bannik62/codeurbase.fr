@@ -224,10 +224,10 @@
 
 <section>
     <div class="content_space">
-        <!-- <div class="video-container">
+        <div class="video-container">
             <canvas bind:this={canvas} />
             <Stars {canvas} bind:ctx />
-        </div> -->
+        </div>
 
         <div class="space-one">
         

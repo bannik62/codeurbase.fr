@@ -6,7 +6,7 @@
     
     // Variables pour les étoiles
     const stars = [];
-    const numStars = 450; // Réduit de 400 à 150 pour de meilleures performances
+    const numStars = 100; // Réduit de 400 à 150 pour de meilleures performances
     const baseSpeed = 2;
     let currentSpeed = baseSpeed;
     let curve = 0;
