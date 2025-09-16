@@ -248,7 +248,7 @@
     @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
     .intro-cloud-container {
         position: relative;
-        top: 0;
+        bottom: 0;
         left: 0;
         width: 100%;
         height: 100%;
@@ -330,13 +330,14 @@
         }
     }
 
+
     .child-div {
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: space-around;
         position: absolute;
-        top: 1px;
+        bottom: 1px;
         left: 0;
         width: 100%;
         height: 90%;
@@ -590,7 +591,7 @@
     }
     @media (max-width: 475px) {
          .intro-cloud-container {
-            height: clamp(50%, 55%, 60%);
+            height: clamp(50%, 100%, 100%);
         }
 
         .child-div {
