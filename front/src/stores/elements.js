@@ -2,8 +2,8 @@ import { writable, derived } from 'svelte/store';
 
 export const elementsStore = writable({
     elementOfTitle: {
-        bordure: null,
         container: null,
+        bordure: null,
         title: null,
         gyroscope: null,
         containerTitleScreenAndBalayage: null

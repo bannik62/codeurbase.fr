@@ -65,25 +65,37 @@
         switch (currentSize) {
             case "smallMobile":
             // Très petits écrans (iPhone SE, petits Android)
-                titleAnimation = gsap.to(
-                    ".container-global-text-bienvenue h2",
-                    {
-                     y: 150,
-                     x: 1200,
-                     duration: 15,
-                     ease: "back.inOut(1.7)",
-                    //  willChange: "transform",
-                     
-                 scrollTrigger: {
-                    trigger: elements.elementOfTitle.container,
-                    start: "top 0%",
-                    end: "bottom 0%",
-                    scrub: 3,
-                    toggleActions: "play none none none",
-                    // markers: true,
-                },
-                    }
-                );
+                // Timeline pour l'animation du titre "Welcome"
+                titleAnimation = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: elements.elementOfTitle.container,
+                        start: "top 0%",
+                        endTrigger: elements.elementOfTitle.container,
+                        end: "bottom 20%",
+                        scrub: 1.3,
+                        toggleActions: "play none none none",
+                        markers: true,
+                    },
+                });
+
+                // Séquence d'animations pour le titre
+                titleAnimation
+                    .to(".container-global-text-bienvenue h2", {
+                        y: 50,
+                        x: 800,
+                        duration: 5,
+                        ease: "power2.out",
+                        willChange: "transform",
+                        scale: 1,
+                    })
+                    .to(".container-global-text-bienvenue h2", {
+                        y: 100,
+                        x: 1420,
+                        duration: 10,
+                        ease: "back.inOut(1.3)",
+                        willChange: "transform",    
+                        scale: 0.5,
+                    });
 
                 splittingAnimation = gsap.fromTo(
                     selection[0].chars,
@@ -97,12 +109,12 @@
                     y: 0,
                     rotationX: -100,
                     duration: 8,
-                    stagger: 0.15,
+                    stagger: 2,
                     ease: "back.out(1.7)",
                     scrollTrigger: {
-                        trigger: ".bordure",    
+                        trigger: ".h2-welcome",    
                         // endTrigger: ".h3-en-cours-de-construction",                   
-                        start: "top -10%",
+                        start: "top 0%",
                         end: "bottom 0%",
                         toggleActions: "play none none reverse",
                         scrub: 1,
@@ -114,12 +126,12 @@
                 // Timeline pour small mobile
                 timelineInMyWorld = gsap.timeline({
                     scrollTrigger: {
-                        trigger: ".h2-welcome",    
-                        start: "top 20%",
-                        // endTrigger: "h2-welcome",
-                        // end: "bottom 0%",
+                        trigger: elements.elementOfTitle.bordure,    
+                        start: "top ",
+                        endTrigger: elements.elementOfTitle.bordure,
+                        end: "bottom ",
                         scrub: 0.8,
-                        // markers: true,
+                        markers: true,
                     },
                 });
 
@@ -128,21 +140,35 @@
                     .fromTo(".h3-in-my-world", 
                         {
                             opacity: 0,
-                            y: 300,
+                            y: 650,
+                            // scale: 0,
                         },
                         {
-                            opacity: 1,
-                            y: -300,
-                            duration: 2.5,
+                            opacity: 0.5,
+                            y: -90,
+                            duration: 0.5,
                             ease: "linear.inOut",
+                            scale: 1,
                         }
                     )
-                    // .to(".h3-in-my-world", {
-                    //     delay: 1.5,
-                    //     xPercent: -100,
-                    //     duration: 0.5,
-                    //     ease: "power2.out",
-                    // });
+                    .to(".h3-in-my-world", {
+                        opacity: 1,
+                        scale: 0.5,
+                        // delay: 1.5,
+                        // xPercent: -100,
+                        duration: 0.8,
+                        ease: "power2.out",
+                    }
+                    )
+                    .to(".h3-in-my-world", {
+                        opacity: 1,
+                        scale: 1,
+                        // delay: 1.5,
+                        // xPercent: -100,
+                        duration: 0.5,
+                        ease: "power2.out",
+                    }
+                );
                 break;
 
             case "mediumMobile":
@@ -273,8 +299,7 @@
         justify-content: center;
         align-items: center;
         position: absolute;
-        top: 50%;
-        left: 0;
+
         width: 100%;
         height: 10%;
     }
@@ -301,7 +326,7 @@
             height: 100%;
         }
         .container-global-text-bienvenue h2 {
-            top: 25%;
+            top: 20%;
             left: -200%;
             z-index: 5000;
         }
@@ -327,12 +352,14 @@
             line-height: 1.8;
         }
         .h3-en-cours-de-construction {
-            top :100%;
+            background-color: rgba(28, 173, 105, 0.219);
+            
+            bottom :0px;
             z-index: 1000;
         }
         .span-globe {
         position: absolute;
-        bottom: -26px;
+        top: -300px;
         left: 37%;
         height: clamp(60px, 8vw, 100px);
         width: clamp(60px, 8vw, 100px);

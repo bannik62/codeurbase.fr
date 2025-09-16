@@ -433,8 +433,7 @@
         
       
         <div class="atmo-one">
-            <div
-                class="nuages-one" bind:this={nuagesOne}>
+            <div class="nuages-one" bind:this={nuagesOne}>
                     <Cloud />
             </div>
             <img bind:this={atmoOne} src={planet} alt="planet" />
@@ -643,10 +642,10 @@
         .nuages-one {
             height: 100%;
         }
+
         .content-space-two {
             top:27%;
             height: 100%;
-            background-color: rgba(34, 33, 33, 0.128);
             backdrop-filter: blur(5px);
         }
         .container-detection-one {
