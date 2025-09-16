@@ -70,7 +70,7 @@
                     {
                      y: 150,
                      x: 1200,
-                     duration: 10,
+                     duration: 15,
                      ease: "back.inOut(1.7)",
                     //  willChange: "transform",
                      
@@ -78,7 +78,7 @@
                     trigger: elements.elementOfTitle.container,
                     start: "top 0%",
                     end: "bottom 0%",
-                    scrub: 2,
+                    scrub: 3,
                     toggleActions: "play none none none",
                     // markers: true,
                 },
@@ -96,8 +96,8 @@
                     opacity: 1,
                     y: 0,
                     rotationX: -100,
-                    duration: 5,
-                    stagger: 0.05,
+                    duration: 8,
+                    stagger: 0.15,
                     ease: "back.out(1.7)",
                     scrollTrigger: {
                         trigger: ".bordure",    
@@ -105,7 +105,7 @@
                         start: "top -10%",
                         end: "bottom 0%",
                         toggleActions: "play none none reverse",
-                        scrub: 0.5,
+                        scrub: 1,
                         // markers: true,
                         },
                     }
@@ -133,7 +133,7 @@
                         {
                             opacity: 1,
                             y: -300,
-                            duration: 1,
+                            duration: 2.5,
                             ease: "linear.inOut",
                         }
                     )
@@ -259,7 +259,7 @@
     }
     .content-text-bienvenue p {
         font-family: "Orbitron", cursive;
-        font-size: clamp(1rem, 4.9vw, 2.9rem);
+        font-size: clamp(0.9rem, 4.2vw, 2.5rem);
         font-weight: 800;
         margin: 0;
         opacity: 1;
@@ -324,7 +324,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            line-height: 2.3;
+            line-height: 1.8;
         }
         .h3-en-cours-de-construction {
             top :100%;
@@ -334,8 +334,8 @@
         position: absolute;
         bottom: -26px;
         left: 37%;
-        height: 100px;
-        width: 100px;
+        height: clamp(60px, 8vw, 100px);
+        width: clamp(60px, 8vw, 100px);
     }
   
     }
