@@ -3,27 +3,67 @@
     import { gsap } from "gsap";
     import { ScrollTrigger } from "gsap/ScrollTrigger";
     import saturne from "../../../assets/saturne.png";
-
+    import { elementsStore } from "../../../stores/elements.js";
+    
     gsap.registerPlugin(ScrollTrigger);
+
+    let elements;
+    const unsubscribeBienvenu = elementsStore.subscribe(store => {
+        elements = store;
+    });
 
     onMount(() => {
         console.log("chargé saturne.svelte");
         gsap.registerPlugin(ScrollTrigger);
     
-        gsap.to(".saturne-container-inner img", {
-            opacity: 1,
-            duration: 1,
-            transform: "translate3d(-30%, 0, 1000px)",
-            scale: 1.5,
-            // top: "-50%",
-            ease: "power2.inOut",                       
+        // Vérification des éléments du store
+        console.log("Elements disponibles:", elements);
+        console.log("contentTextBienvenue:", elements?.elementOfBienvenu?.contentTextBienvenue);
+    
+        // ===== ANIMATION DE SATURNE FLUIDE =====
+        // Création d'une timeline GSAP qui se déclenche au scroll
+        gsap.timeline({
             scrollTrigger: {
-                trigger: ".saturne-container",
-                start: "top 10%",
-                end: "bottom 20%",
-                scrub: true,
-                // markers: true,
+                trigger: ".saturne-container", // Élément qui déclenche l'animation
+                start: "top 40%", // L'animation commence quand le haut du conteneur atteint 40% de l'écran
+                end: "bottom 20%", // Fin quand le bas du conteneur atteint 20% de l'écran (plus simple)
+                scrub: 1, // L'animation suit le scroll avec un délai de 1s pour plus de fluidité
+                markers: true, // Affiche les marqueurs de debug
+                onUpdate: (self) => {
+                    // Log une seule fois par étape
+                    if (self.progress < 0.3 && !self.isActive) {
+                        console.log("🪐 Étape 1 - Saturne apparaît en haut à gauche");
+                    } else if (self.progress >= 0.3 && !self.isActive) {
+                        console.log("🪐 Étape 2 - Saturne traverse en diagonal vers bas à droite !");
+                    }
+                }
             }
+        })
+        
+        // ===== ÉTAPE 1 : APPARITION ET APPROCHE =====
+        .fromTo(".saturne-container-inner img", 
+            {
+                // ÉTAT INITIAL (haut à gauche - invisible et loin)
+                opacity: 0, // Invisible
+                scale: 0.09, // Très petit (équivalent 10px)
+                transform: "translate3d(-100%, -100%, -2000px)", // Haut à gauche et très loin
+            },
+            {
+                // ÉTAT FINAL DE CETTE ÉTAPE (visible et plus proche)
+                opacity: 1, // Devient visible
+                scale: 1, // Taille normale
+                transform: "translate3d(-50%, -50%, -1000px)", // Reste en haut à gauche mais plus proche
+                duration: 0.3, // Durée pour l'apparition
+                ease: "power2.out" // Courbe d'accélération
+            }
+        )
+        
+        // ===== ÉTAPE 2 : TRAJECTOIRE DIAGONALE =====
+        .to(".saturne-container-inner img", {
+            // TRAJECTOIRE DIAGONALE vers l'opposé (bas à droite)
+            transform: "translate3d(100%, 150%, 0px)", // Bas à droite - opposé diagonal (Y=150% pour descendre plus)
+            duration: 0.7, // Durée principale pour la traversée diagonale
+            ease: "power2.inOut" // Courbe d'accélération puis décélération
         });
 
     });
@@ -45,7 +85,7 @@
     }
     .saturne-container-inner {
         position: absolute;
-        top: -20%;
+        top: -0%;
         left: 0;
         width: clamp(100px, 100%, 100%);
         height: 100%;
@@ -54,13 +94,15 @@
         transform-style: preserve-3d;
     }
     .saturne-container-inner img {
-        transform: translate3d(0, 0, -1000px); /* X=0, Y=0, Z=100px */
+        transform: translate3d(0, 0, -2000px); /* Position initiale très loin */
         position: relative;
         top: 90%;
         left: 0;
         aspect-ratio: 1/1;
         width: clamp(100px, 80%, 100%);
         height: 100%;
+        opacity: 0; /* Commence invisible */
+        scale: 0.01; /* Commence très petit (10px) */
         /* backdrop-filter: shadow(50px 0px 10px rgba(230, 220, 128, 0.5)); */
         filter: drop-shadow(0px -100px 20px rgba(95, 164, 198, 0.5));
         /* opacity: 0.5; */
@@ -80,16 +122,19 @@
     /* Très petits écrans (jusqu'à 475px) */
     @media (max-width: 475px) {
         .saturne-container {
-            height: 80%;
+            border: 1px solid yellow;
+            height: 100%;
         }
         
         .saturne-container-inner {
-            top: -20%;
-            width: 90%;
+            border: 1px solid red;
+            top: 20%;
+            width: 100%;
+            height: 100%;
         }
         
         .saturne-container-inner img {
-            top: 85%;
+            top: 0%;
             filter: drop-shadow(0px -80px 15px rgba(95, 164, 198, 0.4));
         }
     }
