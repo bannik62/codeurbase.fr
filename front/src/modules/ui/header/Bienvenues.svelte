@@ -74,7 +74,7 @@
                         end: "bottom 20%",
                         scrub: 1.3,
                         toggleActions: "play none none none",
-                        markers: true,
+                        // markers: true,
                     },
                 });
 
@@ -82,9 +82,9 @@
                 titleAnimation
                     .to(".container-global-text-bienvenue h2", {
                         y: 50,
-                        x: 800,
+                        x:790,
                         duration: 5,
-                        ease: "power2.out",
+                        ease: "linear.inOut",
                         willChange: "transform",
                         scale: 1,
                     })
@@ -108,14 +108,14 @@
                     opacity: 1,
                     y: 0,
                     rotationX: -100,
-                    duration: 8,
+                    duration: 2,
                     stagger: 2,
                     ease: "back.out(1.7)",
                     scrollTrigger: {
                         trigger: ".h2-welcome",    
-                        // endTrigger: ".h3-en-cours-de-construction",                   
-                        start: "top 0%",
-                        end: "bottom 0%",
+                        endTrigger: ".content-text-bienvenue",                   
+                        start: "top 10%",
+                        end: "bottom 50%",
                         toggleActions: "play none none reverse",
                         scrub: 1,
                         // markers: true,
@@ -131,7 +131,7 @@
                         endTrigger: elements.elementOfTitle.bordure,
                         end: "bottom ",
                         scrub: 0.8,
-                        markers: true,
+                        // markers: true,
                     },
                 });
 
@@ -141,7 +141,7 @@
                         {
                             opacity: 0,
                             y: 650,
-                            // scale: 0,
+                            scale: 0,
                         },
                         {
                             opacity: 0.5,
@@ -260,7 +260,7 @@
         font-family: "Orbitron", cursive;
         text-transform: uppercase;
         color: crimson !important;
-        font-size: clamp(2rem, 25vw, 10rem);
+        font-size: clamp(2rem, 16.4vw, 10rem);
         font-weight: 800;
         margin: 0;
         /* opacity: 0.5; */
@@ -359,8 +359,8 @@
         }
         .span-globe {
         position: absolute;
-        top: -300px;
-        left: 37%;
+        bottom: 150px;
+        left: 40%;
         height: clamp(60px, 8vw, 100px);
         width: clamp(60px, 8vw, 100px);
     }
