@@ -26,7 +26,7 @@
 
     // Fonction pour générer une vitesse aléatoire (minimum 0.6s)
     function getRandomSpeed() {
-        return Math.random() * 0.1 + 0.1; // Entre 0.6 et 1.0 secondes
+        return Math.random() * 0.2 + 0.3; // Entre 0.3 et 0.5 secondes
     }
 
     // Fonction pour animer les lettres une par une
@@ -52,7 +52,7 @@
             const letters = text.split("");
             letters.forEach((letter, letterIndex) => {
                 const speed = getRandomSpeed();
-                const delay = totalDelay + letterIndex * speed * 100; // Convertir en ms
+                const delay = totalDelay + letterIndex * speed * 200; // Convertir en ms (plus lent)
 
                 const timeout = setTimeout(() => {
                     // Vérifier si la lettre n'existe pas déjà
@@ -72,7 +72,7 @@
 
                 animationTimeouts.push(timeout);
             });
-            totalDelay += letters.length * 10; // Petit délai entre les lignes
+            totalDelay += letters.length * 20; // Délai entre les lignes (plus lent)
         });
 
         // Marquer l'animation comme terminée après un délai
@@ -220,7 +220,7 @@
                             <div
                                 class="loading-progress"
                                 style="width: {loaderProgress}%"
-                            />
+                            ></div>
                         </div>
                         {#if succes}
                             <div class="success-message">
@@ -231,7 +231,7 @@
                 {/if}
             </div>
             <div class="separator">
-                <div class="separator-line" />
+                <div class="separator-line"></div>
             </div>
             <div class="dashboard-section-two">
                 <h3>Section 2</h3>
@@ -251,7 +251,7 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 110%;
+        height: 100%;
         transform-origin: left center;
         overflow: hidden;
         animation-delay: 0s;
@@ -339,7 +339,7 @@
         top: 1px;
         left: 0;
         width: 100%;
-        height: 100%;
+        height: 90%;
         margin: 0 auto;
         /* background-color: rgba(67, 182, 54, 0.391); */
         border-radius: 8px;
@@ -590,11 +590,11 @@
     }
     @media (max-width: 475px) {
          .intro-cloud-container {
-            height: 57%;
+            height: clamp(50%, 55%, 60%);
         }
 
         .child-div {
-            height: 70%;
+            height: clamp(65%, 70%, 75%);
         } 
     }
 </style>
