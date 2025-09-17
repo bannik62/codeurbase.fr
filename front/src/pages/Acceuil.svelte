@@ -40,6 +40,7 @@
             currentIsTablet,
             currentIsDesktop,
             currentIsLargeDesktop,
+            currentIsXlDesktop,
             cleanup: cleanupMediaQueryStores,
         } = useMediaQuery();
 
@@ -365,7 +366,109 @@
                 break;
 
             case "largeDesktop":
-                // Large Desktop (≥1600px) - Vide
+                // Large Desktop (1400px-1799px)
+                cloudAnimation = gsap.to(".nuages-one", {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 2,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: ".atmo-one",
+                        start: "top 60%",
+                        end: "bottom 40%",
+                        toggleActions: "play none none reverse",
+                    },
+                });
+
+                cloudContentAnimation = gsap.to(".intro-cloud-container", {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 2,
+                    ease: "back.out(1.7)",
+                    scrollTrigger: {
+                        trigger: ".atmo-one",
+                        start: "top 60%",
+                        end: "bottom 40%",
+                        toggleActions: "play none none reverse",
+                    },
+                });
+
+                // Animation parallaxe planète
+                planetAnimation = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: ".atmo-one",
+                        start: "top 60%",
+                        end: "bottom 40%",
+                        scrub: 1.2,
+                    },
+                });
+
+                planetAnimation
+                    .to(".atmo-one img", {
+                        y: -50,
+                        duration: 1.5,
+                        ease: "power2.out",
+                    })
+                    .to(".atmo-one img", {
+                        scale: 5.0,
+                        width: "60%",
+                        height: "60%",
+                        duration: 2.0,
+                        ease: "power2.out",
+                    });
+                break;
+
+            case "xlDesktop":
+                // XL Desktop (≥1800px)
+                cloudAnimation = gsap.to(".nuages-one", {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 2,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: ".atmo-one",
+                        start: "top 55%",
+                        end: "bottom 45%",
+                        toggleActions: "play none none reverse",
+                    },
+                });
+
+                cloudContentAnimation = gsap.to(".intro-cloud-container", {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 2,
+                    ease: "back.out(1.7)",
+                    scrollTrigger: {
+                        trigger: ".atmo-one",
+                        start: "top 55%",
+                        end: "bottom 45%",
+                        toggleActions: "play none none reverse",
+                    },
+                });
+
+                // Animation parallaxe planète
+                planetAnimation = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: ".atmo-one",
+                        start: "top 55%",
+                        end: "bottom 45%",
+                        scrub: 1.5,
+                    },
+                });
+
+                planetAnimation
+                    .to(".atmo-one img", {
+                        y: -40,
+                        duration: 1.5,
+                        ease: "power2.out",
+                    })
+                    .to(".atmo-one img", {
+                        scale: 4.5,
+                        width: "50%",
+                        height: "50%",
+                        duration: 2.0,
+                        ease: "power2.out",
+                    });
                 break;
         }
 
@@ -428,7 +531,7 @@
     </div>
 </div>
 
-    <Cockpit />
+    <!-- <Cockpit /> -->
 </section>
 
 <style>
@@ -740,6 +843,9 @@
         .space-two {
             height: 90svh;
         }
+        .space-three {
+            height: 160dvh;
+        }
 
         .atmo-one img {
             top: 70%;
@@ -754,18 +860,24 @@
         }
     }
 
-    /* Desktop (1400px et plus) - Correspond à largeDesktop dans mediaQuery.js */
-    @media (min-width: 1400px) {
+    /* Desktop (1024px à 1399px) */
+    @media (min-width: 1024px) and (max-width: 1399px) {
         .content_space {
             height: auto;
         }
 
         .space-one {
-            height: 100svh;
+            border: 1px solid yellow;
+            height: 200dvh;
         }
 
         .space-two {
-            height: 80svh;
+            border: 1px solid orange;
+            height:160dvh;
+        }
+        .space-three {
+            border: 1px solid green;
+            height: 160dvh;
         }
 
         .atmo-one img {
@@ -778,6 +890,64 @@
         .container-status {
             font-size: clamp(1.3rem, 2.5vw, 1.8rem);
             min-height: 120px;
+        }
+    }
+    
+    /* Large Desktop (1400px à 1799px) */
+    @media (min-width: 1400px) and (max-width: 1799px) {
+        .content_space {
+            height: auto;
+        }
+
+        .space-one {
+            height: 200dvh;
+        }
+
+        .space-two {
+            height: 200dvh;
+        }
+
+        .space-three {
+            height: 160dvh;
+        }
+
+        .atmo-one img {
+            top: 65%;
+            left: 75%;
+            width: 70%;
+            height: clamp(100%, 110%, 120%);
+        }
+
+        .container-status {
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+            min-height: 120px;
+        }
+    }
+    
+    /* XL Desktop (1800px et plus) */
+    @media (min-width: 1800px) {
+        .content_space {
+            height: auto;
+        }
+
+        .space-one {
+            height: 90svh;
+        }
+
+        .space-two {
+            height: 75svh;
+        }
+
+        .atmo-one img {
+            top: 60%;
+            left: 70%;
+            width: 60%;
+            height: clamp(90%, 100%, 110%);
+        }
+
+        .container-status {
+            font-size: clamp(1.4rem, 2vw, 2rem);
+            min-height: 130px;
         }
     }
 </style>

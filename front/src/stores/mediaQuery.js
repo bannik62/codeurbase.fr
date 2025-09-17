@@ -2,12 +2,11 @@ import { writable, derived } from 'svelte/store';
 
 // Store centralisé pour les tailles de media queries
 export const mediaQueryBreakpoints = {
-    smallMobile: 475,
-    mediumMobile: 476,
-    mobile: 767,
-    tablet: 1023,
-    desktop: 1399,
-    largeDesktop: 1400
+    smallMobile: 480,
+    mobile: 768,
+    tablet: 1024,
+    desktop: 1400,
+    largeDesktop: 1800
 };
 
 // Store réactif pour la largeur de l'écran
@@ -19,30 +18,30 @@ export const screenHeight = writable(0);
 // Stores dérivés pour les détections de taille d'écran
 export const isSmallMobile = derived(
     screenWidth,
-    $width => $width <= mediaQueryBreakpoints.smallMobile
-);
-
-export const isMediumMobile = derived(
-    screenWidth,
-    $width => $width > mediaQueryBreakpoints.smallMobile && $width <= mediaQueryBreakpoints.mediumMobile
+    $width => $width < mediaQueryBreakpoints.smallMobile
 );
 
 export const isMobile = derived(
     screenWidth,
-    $width => $width > mediaQueryBreakpoints.mediumMobile && $width <= mediaQueryBreakpoints.mobile
+    $width => $width >= mediaQueryBreakpoints.smallMobile && $width < mediaQueryBreakpoints.mobile
 );
 
 export const isTablet = derived(
     screenWidth,
-    $width => $width >= mediaQueryBreakpoints.mobile + 1 && $width <= mediaQueryBreakpoints.tablet
+    $width => $width >= mediaQueryBreakpoints.mobile && $width < mediaQueryBreakpoints.tablet
 );
 
 export const isDesktop = derived(
     screenWidth,
-    $width => $width >= mediaQueryBreakpoints.tablet + 1 && $width <= mediaQueryBreakpoints.desktop
+    $width => $width >= mediaQueryBreakpoints.tablet && $width < mediaQueryBreakpoints.desktop
 );
 
 export const isLargeDesktop = derived(
+    screenWidth,
+    $width => $width >= mediaQueryBreakpoints.desktop && $width < mediaQueryBreakpoints.largeDesktop
+);
+
+export const isXlDesktop = derived(
     screenWidth,
     $width => $width >= mediaQueryBreakpoints.largeDesktop
 );
@@ -86,12 +85,12 @@ export function initMediaQuery() {
 export function getCurrentBreakpoint() {
     if (typeof window !== 'undefined') {
         const width = window.innerWidth;
-        if (width <= mediaQueryBreakpoints.smallMobile) return 'smallMobile';
-        if (width <= mediaQueryBreakpoints.mediumMobile) return 'mediumMobile';
-        if (width <= mediaQueryBreakpoints.mobile) return 'mobile';
-        if (width <= mediaQueryBreakpoints.tablet) return 'tablet';
-        if (width <= mediaQueryBreakpoints.desktop) return 'desktop';
-        return 'largeDesktop';
+        if (width < mediaQueryBreakpoints.smallMobile) return 'smallMobile';
+        if (width < mediaQueryBreakpoints.mobile) return 'mobile';
+        if (width < mediaQueryBreakpoints.tablet) return 'tablet';
+        if (width < mediaQueryBreakpoints.desktop) return 'desktop';
+        if (width < mediaQueryBreakpoints.largeDesktop) return 'largeDesktop';
+        return 'xlDesktop';
     }
     return 'desktop'; // Valeur par défaut pour SSR
 }
@@ -102,16 +101,16 @@ export function matchesBreakpoint(breakpoint) {
         const width = window.innerWidth;
         switch (breakpoint) {
             case 'smallMobile':
-                return width <= mediaQueryBreakpoints.smallMobile;
-            case 'mediumMobile':
-                return width > mediaQueryBreakpoints.smallMobile && width <= mediaQueryBreakpoints.mediumMobile;
+                return width < mediaQueryBreakpoints.smallMobile;
             case 'mobile':
-                return width > mediaQueryBreakpoints.mediumMobile && width <= mediaQueryBreakpoints.mobile;
+                return width >= mediaQueryBreakpoints.smallMobile && width < mediaQueryBreakpoints.mobile;
             case 'tablet':
-                return width >= mediaQueryBreakpoints.mobile + 1 && width <= mediaQueryBreakpoints.tablet;
+                return width >= mediaQueryBreakpoints.mobile && width < mediaQueryBreakpoints.tablet;
             case 'desktop':
-                return width >= mediaQueryBreakpoints.tablet + 1 && width <= mediaQueryBreakpoints.desktop;
+                return width >= mediaQueryBreakpoints.tablet && width < mediaQueryBreakpoints.desktop;
             case 'largeDesktop':
+                return width >= mediaQueryBreakpoints.desktop && width < mediaQueryBreakpoints.largeDesktop;
+            case 'xlDesktop':
                 return width >= mediaQueryBreakpoints.largeDesktop;
             default:
                 return false;
@@ -122,43 +121,43 @@ export function matchesBreakpoint(breakpoint) {
 
 // Fonction centralisée pour gérer les media queries dans les composants
 export function useMediaQuery() {
-    let currentIsSmallMobile, currentIsMediumMobile, currentIsMobile, currentIsTablet, currentIsDesktop, currentIsLargeDesktop;
+    let currentIsSmallMobile, currentIsMobile, currentIsTablet, currentIsDesktop, currentIsLargeDesktop, currentIsXlDesktop;
     
     // S'abonner aux stores pour obtenir les valeurs actuelles
     const unsubscribeSmallMobile = isSmallMobile.subscribe(value => currentIsSmallMobile = value);
-    const unsubscribeMediumMobile = isMediumMobile.subscribe(value => currentIsMediumMobile = value);
     const unsubscribeMobile = isMobile.subscribe(value => currentIsMobile = value);
     const unsubscribeTablet = isTablet.subscribe(value => currentIsTablet = value);
     const unsubscribeDesktop = isDesktop.subscribe(value => currentIsDesktop = value);
     const unsubscribeLargeDesktop = isLargeDesktop.subscribe(value => currentIsLargeDesktop = value);
+    const unsubscribeXlDesktop = isXlDesktop.subscribe(value => currentIsXlDesktop = value);
 
     // Déterminer la taille d'écran actuelle
     let currentSize;
     if (currentIsSmallMobile) currentSize = 'smallMobile';
-    else if (currentIsMediumMobile) currentSize = 'mediumMobile';
     else if (currentIsMobile) currentSize = 'mobile';
     else if (currentIsTablet) currentSize = 'tablet';
     else if (currentIsDesktop) currentSize = 'desktop';
     else if (currentIsLargeDesktop) currentSize = 'largeDesktop';
+    else if (currentIsXlDesktop) currentSize = 'xlDesktop';
 
     // Fonction de nettoyage
     const cleanup = () => {
         unsubscribeSmallMobile();
-        unsubscribeMediumMobile();
         unsubscribeMobile();
         unsubscribeTablet();
         unsubscribeDesktop();
         unsubscribeLargeDesktop();
+        unsubscribeXlDesktop();
     };
 
     return {
         currentSize,
         currentIsSmallMobile,
-        currentIsMediumMobile,
         currentIsMobile,
         currentIsTablet,
         currentIsDesktop,
         currentIsLargeDesktop,
+        currentIsXlDesktop,
         cleanup
     };
 }

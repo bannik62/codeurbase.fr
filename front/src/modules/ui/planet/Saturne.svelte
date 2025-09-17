@@ -176,8 +176,15 @@
         }
     }
     
-    /* Desktop (1400px et plus) */
-    @media (min-width: 1400px) {
+    /* Desktop (1024px à 1399px) */
+    @media (min-width: 1024px) and (max-width: 1399px) {
+        .saturne-container {
+            height: 95%;
+        }
+    }
+    
+    /* Large Desktop (1400px à 1799px) */
+    @media (min-width: 1400px) and (max-width: 1799px) {
         .saturne-container {
             height: 100%;
         }
