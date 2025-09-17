@@ -82,7 +82,7 @@
                 titleAnimation
                     .to(".container-global-text-bienvenue h2", {
                         y: 50,
-                        x:790,
+                        x:789,
                         duration: 5,
                         ease: "linear.inOut",
                         willChange: "transform",
@@ -260,7 +260,7 @@
         font-family: "Orbitron", cursive;
         text-transform: uppercase;
         color: crimson !important;
-        font-size: clamp(2rem, 16.4vw, 10rem);
+        font-size: clamp(2rem, 16.3vw, 10rem);
         font-weight: 800;
         margin: 0;
         /* opacity: 0.5; */
