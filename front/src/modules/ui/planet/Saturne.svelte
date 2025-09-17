@@ -4,6 +4,8 @@
     import { ScrollTrigger } from "gsap/ScrollTrigger";
     import saturne from "../../../assets/saturne.png";
     import { elementsStore } from "../../../stores/elements.js";
+    import { initMediaQuery, useMediaQuery } from "../../../stores/mediaQuery.js";
+    import { initSaturneAnimation, cleanupSaturneAnimation } from "./animationsSaturne.js";
     
     gsap.registerPlugin(ScrollTrigger);
 
@@ -19,58 +21,39 @@
         // Vérification des éléments du store
         console.log("Elements disponibles:", elements);
         console.log("contentTextBienvenue:", elements?.elementOfBienvenu?.contentTextBienvenue);
-    
-        // ===== ANIMATION DE SATURNE FLUIDE =====
-        // Création d'une timeline GSAP qui se déclenche au scroll
-        gsap.timeline({
-            scrollTrigger: {
-                trigger: ".saturne-container", // Élément qui déclenche l'animation
-                start: "top 40%", // L'animation commence quand le haut du conteneur atteint 40% de l'écran
-                end: "bottom 20%", // Fin quand le bas du conteneur atteint 20% de l'écran (plus simple)
-                scrub: 1, // L'animation suit le scroll avec un délai de 1s pour plus de fluidité
-                // markers: true,
-                onUpdate: (self) => {
-                    // Log une seule fois par étape
-                    if (self.progress < 0.3 && !self.isActive) {
-                        console.log("🪐 Étape 1 - Saturne apparaît en haut à gauche");
-                    } else if (self.progress >= 0.3 && !self.isActive) {
-                        console.log("🪐 Étape 2 - Saturne traverse en diagonal vers bas à droite !");
-                    }
-                }
-            }
-        })
-        
-        // ===== ÉTAPE 1 : APPARITION ET APPROCHE =====
-        .fromTo(".saturne-container-inner img", 
-            {
-                // ÉTAT INITIAL (haut à gauche - invisible et loin)
-                opacity: 0, // Invisible
-                scale: 0.05, // Très petit (équivalent 10px)
-                transform: "translate3d(-100%, -19%, -2000px)", // Haut à gauche et très loin
-            },
-            {
-                // ÉTAT FINAL DE CETTE ÉTAPE (visible et plus proche)
-                opacity: 1, // Devient visible
-                scale: 0.6, // Taille normale
-                transform: "translate3d(-50%, -60%, -1000px)", // Reste en haut à gauche mais plus proche
-                duration: 0.3, // Durée pour l'apparition
-                ease: "power2.out" // Courbe d'accélération
-            },{
-                scale: 1.9,
-                opacity: 0,
-                duration: 0.3,
-                ease: "power2.out"
-            }
-        )
-        
-        // ===== ÉTAPE 2 : TRAJECTOIRE DIAGONALE =====
-        .to(".saturne-container-inner img", {
-            // TRAJECTOIRE DIAGONALE vers l'opposé (bas à droite)
-            transform: "translate3d(100%, 150%, 0px)", // Bas à droite - opposé diagonal (Y=150% pour descendre plus)
-            duration: 2, // Durée principale pour la traversée diagonale
-            ease: "power2.inOut" // Courbe d'accélération puis décélération
-        });
 
+        // Initialiser le store media query
+        const cleanupMediaQuery = initMediaQuery();
+        
+        // Utiliser la fonction centralisée pour les media queries
+        const {
+            currentSize,
+            currentIsSmallMobile,
+            currentIsMediumMobile,
+            currentIsMobile,
+            currentIsTablet,
+            currentIsDesktop,
+            currentIsLargeDesktop,
+            cleanup: cleanupMediaQueryStores
+        } = useMediaQuery();
+
+        // Animation de Saturne selon la taille d'écran
+        let saturneAnimation = initSaturneAnimation(currentSize);
+
+        // Fonction de nettoyage
+        return () => {
+            // Nettoyer les abonnements aux stores media query
+            cleanupMediaQueryStores();
+            
+            // Nettoyer le store media query
+            cleanupMediaQuery();
+            
+            // Tuer l'animation de Saturne
+            cleanupSaturneAnimation(saturneAnimation);
+            
+            // Se désabonner des stores
+            unsubscribeBienvenu();
+        };
     });
 </script>
 
