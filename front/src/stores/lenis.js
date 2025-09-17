@@ -12,8 +12,8 @@ export function initLenis() {
         direction: 'vertical',
         smooth: true,
         mouseMultiplier: 250,
-        smoothTouch: false,
-        touchMultiplier: 4,
+        smoothTouch: true, // ✅ ACTIVÉ pour mobile
+        touchMultiplier: 2, // Réduit pour mobile (plus fluide)
     });
     
     lenis.set(lenisInstance);
