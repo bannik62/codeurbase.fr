@@ -8,7 +8,7 @@
     import Stars from "../modules/ui/stars/Stars.svelte";
     import { gsap } from "gsap";
     import { ScrollTrigger } from "gsap/ScrollTrigger";
-    import Bienvenues from "../modules/ui/header/Bienvenues.svelte";
+    import Bienvenues from "../modules/ui/header/Welcome.svelte";
     import Cockpit from "../modules/ui/cockpit/Cockpit.svelte";
     import { initMediaQuery, useMediaQuery } from "../stores/mediaQuery.js";
     import {

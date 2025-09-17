@@ -5,6 +5,7 @@
     import Splitting from "splitting";
     import { initMediaQuery, useMediaQuery } from "../../../stores/mediaQuery.js";
     import { elementsStore } from "../../../stores/elements.js";
+    import { initSmallMobileAnimations, cleanupAnimations } from "./animationsWelcome.js";
 
     // Variables pour les éléments bindés
     let containerGlobalTextBienvenue;
@@ -56,119 +57,14 @@
 
 
         // Animations selon la taille d'écran
-        let titleAnimation;
-        let splittingAnimation;
-        let timelineInMyWorld;
+        let animations = {};
 
         // currentSize est déjà déterminé par useMediaQuery()
         setTimeout(() => {
         switch (currentSize) {
             case "smallMobile":
             // Très petits écrans (iPhone SE, petits Android)
-                // Timeline pour l'animation du titre "Welcome"
-                titleAnimation = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: elements.elementOfTitle.container,
-                        start: "top 0%",
-                        endTrigger: elements.elementOfTitle.container,
-                        end: "bottom 20%",
-                        scrub: 1.3,
-                        toggleActions: "play none none none",
-                        // markers: true,
-                    },
-                });
-
-                // Séquence d'animations pour le titre
-                titleAnimation
-                    .to(".container-global-text-bienvenue h2", {
-                        y: 50,
-                        x:792,
-                        duration: 5,
-                        ease: "linear.inOut",
-                        willChange: "transform",
-                        scale: 1,
-                    })
-                    .to(".container-global-text-bienvenue h2", {
-                        y: 100,
-                        x: 1420,
-                        duration: 10,
-                        ease: "back.inOut(1.3)",
-                        willChange: "transform",    
-                        scale: 0.5,
-                    });
-
-                splittingAnimation = gsap.fromTo(
-                    selection[0].chars,
-                {
-                    opacity: 0,
-                    y: 200,
-                    rotationX: 0,
-                },
-                {
-                    opacity: 1,
-                    y: 0,
-                    rotationX: -100,
-                    duration: 2,
-                    stagger: 2,
-                    ease: "back.out(1.7)",
-                    scrollTrigger: {
-                        trigger: ".h2-welcome",    
-                        endTrigger: ".content-text-bienvenue",                   
-                        start: "top 10%",
-                        end: "bottom 50%",
-                        toggleActions: "play none none reverse",
-                        scrub: 1,
-                        // markers: true,
-                        },
-                    }
-                );
-
-                // Timeline pour small mobile
-                timelineInMyWorld = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: elements.elementOfTitle.bordure,    
-                        start: "top ",
-                        endTrigger: elements.elementOfTitle.bordure,
-                        end: "bottom ",
-                        scrub: 0.8,
-                        // markers: true,
-                    },
-                });
-
-                // Timeline simple : apparaît puis va à droite
-                timelineInMyWorld
-                    .fromTo(".h3-in-my-world", 
-                        {
-                            opacity: 0,
-                            y: 650,
-                            scale: 0,
-                        },
-                        {
-                            opacity: 0.5,
-                            y: -90,
-                            duration: 0.5,
-                            ease: "linear.inOut",
-                            scale: 1,
-                        }
-                    )
-                    .to(".h3-in-my-world", {
-                        opacity: 1,
-                        scale: 0.5,
-                        // delay: 1.5,
-                        // xPercent: -100,
-                        duration: 0.8,
-                        ease: "power2.out",
-                    }
-                    )
-                    .to(".h3-in-my-world", {
-                        opacity: 1,
-                        scale: 1,
-                        // delay: 1.5,
-                        // xPercent: -100,
-                        duration: 0.5,
-                        ease: "power2.out",
-                    }
-                );
+                animations = initSmallMobileAnimations(elements, selection);
                 break;
 
             case "mediumMobile":
@@ -202,9 +98,7 @@
             cleanupMediaQuery();
             
             // Tuer les animations
-            if (titleAnimation) titleAnimation.kill();
-            if (splittingAnimation) splittingAnimation.kill();
-            if (timelineInMyWorld) timelineInMyWorld.kill();
+            cleanupAnimations(animations);
         };
     });
 </script>
@@ -281,7 +175,8 @@
         top: 45%;
         left: 0;
         width: 100%;
-        height: clamp(100px, 150dvh, 100%);
+        height: 50vh;
+        max-height: 90vh;
     }
     .content-text-bienvenue p {
         font-family: "Orbitron", cursive;
@@ -352,14 +247,13 @@
             line-height: 1.8;
         }
         .h3-en-cours-de-construction {
-            background-color: rgba(28, 173, 105, 0.219);
-            
+            background-color: rgba(28, 173, 105, 0.219);  
             bottom :0px;
             z-index: 1000;
         }
         .span-globe {
         position: absolute;
-        bottom: 150px;
+        bottom: 90px;
         left: 40%;
         height: clamp(60px, 8vw, 100px);
         width: clamp(60px, 8vw, 100px);

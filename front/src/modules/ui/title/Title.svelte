@@ -1,7 +1,7 @@
 <script>
     import screen from "../../../assets/sl_021821_40890_09.jpg";
     import { onMount } from "svelte";
-    import Bienvenues from "../header/Bienvenues.svelte";
+    import Bienvenues from "../header/Welcome.svelte";
     import { gsap } from "gsap";
     import { ScrollTrigger } from "gsap/ScrollTrigger";
     import { initMediaQuery, useMediaQuery } from "../../../stores/mediaQuery.js";
