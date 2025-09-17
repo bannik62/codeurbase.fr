@@ -65,17 +65,6 @@
         gsap.set(".nuages-one", { opacity: 0, scale: 0.1 });
         gsap.set(".intro-cloud-container", { opacity: 0, scale: 0.1 });
 
-        // // TEST MANUEL - Animation directe
-        // setTimeout(() => {
-        //     gsap.to(".nuages-one", {
-        //         opacity: 1,
-        //         scale: 1,
-        //         duration: 2,
-        //         ease: "power2.out",
-        //     });
-        // }, 1000);
-
-        // currentSize est déjà déterminé par useMediaQuery()
 
         // Animation Cloud avec switch selon la taille d'écran
         let cloudAnimation;
@@ -606,7 +595,11 @@
 
     /* Très petits écrans (jusqu'à 475px) */
     @media (max-width: 475px) {
+        section {
+           background-color: black;
+        }
         .content_space {
+            top: 5vh;
             height: auto;
         }
 
@@ -667,6 +660,7 @@
     /* Medium Mobile (476px à 767px) */
     @media (min-width: 476px) and (max-width: 767px) {
         .content_space {
+            top: 0;
             height: auto;
         }
 
