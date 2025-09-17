@@ -151,8 +151,8 @@
         top: 45%;
         left: 0;
         width: 100%;
-        height: 50vh;
-        max-height: 90vh;
+        height: 50svh;
+        max-height: 90svh;
     }
     .content-text-bienvenue p {
         font-family: "Orbitron", cursive;
@@ -212,14 +212,15 @@
             background-color: rgba(34, 33, 33, 0.128);
             backdrop-filter: blur(5px);
             top: 42%;
-            height: 65%;
+            height: 70svh;
         }
         .content-text-bienvenue p {
             position: relative;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
+            height: auto;
+            min-height: 100%;
             line-height: 1.8;
         }
         .h3-en-cours-de-construction {

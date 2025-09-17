@@ -57,10 +57,9 @@
         requestAnimationFrame(raf);
 
         // Forcer un refresh de ScrollTrigger après le chargement complet
-        // pour corriger les problèmes de dimensions causés par CarbonAds
         setTimeout(() => {
             ScrollTrigger.refresh();
-        }, 100);
+        }, 50);
 
         // Animation Cloud - Initialisation
         gsap.set(".nuages-one", { opacity: 0, scale: 0.1 });
@@ -485,14 +484,14 @@
     }
     .space-one {
         /* border: 1px solid red; */
-        height: 100dvh;
+        height: 100svh;
     }
     .space-two {
-        height: 100dvh;
+        height: 100svh;
     }
     .space-three {
         position: relative;
-        height: 100dvh;
+        height: 100svh;
         width: 100%;
         /* background: rgba(0, 255, 0, 0.05); */
         /* display: flex;
@@ -515,7 +514,7 @@
         top: 0;
         left: 0%;
         width: 100%;
-        height: 50vh;
+        height: 50svh;
         /* z-index: 10; */
     }
 
@@ -546,7 +545,7 @@
 
     @keyframes toInvisible {
         0% {
-            top: -10vh;
+            top: -10svh;
             opacity: 1;
         }
         100% {
@@ -557,7 +556,7 @@
 
     @keyframes toInvisible {
         0% {
-            top: -10vh;
+            top: -10svh;
             opacity: 1;
         }
         100% {
@@ -612,7 +611,7 @@
         }
 
         .space-one {
-            height: 150dvh;
+            height: 150svh;
             /* border: solid 1px red; */
             
         }
@@ -620,14 +619,14 @@
         .space-two {
             /* border: solid 1px yellow; */
             top: 0%;
-            height: 100dvh;
+            height: 100svh;
         }
         .space-three {
             /* border:solid 1px orange; */
             /* display:flex; */
             position: relative;
             width: 100%;
-            height: 100dvh;
+            height: 100svh;
         }
         .atmo-one {
             top:17%;
@@ -672,16 +671,16 @@
         }
 
         .space-one {
-            height: 130dvh;
+            height: 130svh;
         }
 
         .space-two {
-            height: 100dvh;
+            height: 100svh;
         }
         .space-three {
             position: relative;
             width: 100%;
-            height: 100dvh;
+            height: 100svh;
         }
         .atmo-one img {
             top: 80%;
@@ -709,11 +708,11 @@
         }
 
         .space-one {
-            height: 120dvh;
+            height: 120svh;
         }
 
         .space-two {
-            height: 90dvh;
+            height: 90svh;
         }
 
         .atmo-one img {
@@ -742,11 +741,11 @@
         }
 
         .space-one {
-            height: 130dvh;
+            height: 130svh;
         }
 
         .space-two {
-            height: 90dvh;
+            height: 90svh;
         }
 
         .atmo-one img {
@@ -769,11 +768,11 @@
         }
 
         .space-one {
-            height: 100dvh;
+            height: 100svh;
         }
 
         .space-two {
-            height: 80dvh;
+            height: 80svh;
         }
 
         .atmo-one img {

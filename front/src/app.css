@@ -101,11 +101,11 @@ h1 {
 
 @keyframes toInvisible {
   0% {
-    top: -35vh;
+    top: -35svh;
     opacity: 0;
   }
   100% {
-    top: -2vh;
+    top: -2svh;
     opacity: 1;
   }
 }

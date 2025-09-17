@@ -364,7 +364,7 @@
         top: 0%;
         left: 0;
         width: 100%;
-        height: 15vh;
+        height: 15svh;
         clip-path: polygon(50% 100%, 100% 62%, 100% 0, 0 0, 0% 62%);
         background: linear-gradient(
             to right,

@@ -28,7 +28,7 @@ nav {
   top: 0;
     left: 0;
     width: 100%;
-    height: 10vh;
+    height: 10svh;
     display: flex;
     flex-direction: row;
     justify-content: space-around;

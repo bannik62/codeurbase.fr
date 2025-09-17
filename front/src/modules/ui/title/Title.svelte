@@ -310,7 +310,7 @@
         justify-content: center;
         align-items: center;
         width: clamp(100px, 90dvw, 95dvw);
-        height: clamp(100px, 15dvh, 31dvh);
+        height: clamp(100px, 15svh, 31svh);
         /* padding: 5px; */
         /* isolation: isolate; */
         z-index: 1002;
