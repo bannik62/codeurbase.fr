@@ -595,7 +595,7 @@
         }
 
         .child-div {
-            height: clamp(65%, 70%, 75%);
+            height: clamp(65%, 70%, 90%);
         } 
     }
 </style>
