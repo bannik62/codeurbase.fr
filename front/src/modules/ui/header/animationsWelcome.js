@@ -30,7 +30,7 @@ export function createSmallMobileTitleAnimation(elements) {
         y: 100,
         x: 1420,
         duration: 10,
-        ease: "back.inOut(1.3)",
+        ease: "back.inOut(1)",
         willChange: "transform",    
         scale: 0.5,
     });

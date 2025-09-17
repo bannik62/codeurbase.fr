@@ -16,7 +16,7 @@
         bottom: 0;
         left: 0;
         width: 100%;
-        height: 15%;
+        height: 10%;
         background: #bbb;
         clip-path: polygon(50% 0%, 100% 38%, 100% 100%, 0 100%, 0% 38%);
         z-index: 3000;

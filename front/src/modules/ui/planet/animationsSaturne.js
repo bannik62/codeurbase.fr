@@ -12,39 +12,32 @@ export function createSmallMobileSaturneAnimation() {
             start: "top 40%",
             end: "bottom 20%",
             scrub: 1,
-            onUpdate: (self) => {
-                if (self.progress < 0.3 && !self.isActive) {
-                    console.log("🪐 Étape 1 - Saturne apparaît en haut à gauche");
-                } else if (self.progress >= 0.3 && !self.isActive) {
-                    console.log("🪐 Étape 2 - Saturne traverse en diagonal vers bas à droite !");
-                }
-            }
         }
     })
     .fromTo(".saturne-container-inner img", 
         {
             opacity: 0,
             scale: 0.05,
-            transform: "translate3d(-100%, -19%, -2000px)",
+            transform: "translate3d(-90%, -19%, -2000px)",
+            duration: 0.5,
         },
         {
             opacity: 1,
-            scale: 0.6,
-            transform: "translate3d(-50%, -60%, -1000px)",
+            scale: 0.5,
+            transform: "translate3d(-90%, -100%, -1000px)",
             duration: 0.3,
             ease: "power2.out"
         },{
-            scale: 1.9,
+            scale: 2,
             opacity: 0,
             duration: 0.3,
             ease: "power2.out"
-        }
-    )
-    .to(".saturne-container-inner img", {
-        transform: "translate3d(100%, 150%, 0px)",
-        duration: 2,
-        ease: "power2.inOut"
-    });
+        })
+        .to(".saturne-container-inner img", {
+            transform: "translate3d(150%, 150%, 0px)",
+            duration: 2,
+            ease: "power2.inOut"
+        });
 }
 
 /**

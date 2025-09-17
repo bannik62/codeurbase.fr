@@ -415,17 +415,16 @@
             </div>        
         </div>
         </div>
-        <div class="space-three">
-        
-           
-        
       
-        <div class="atmo-one">
-            <div class="nuages-one" bind:this={nuagesOne}>
+        <div class="space-three">
+      
+            <div class="atmo-one">
+                <div class="nuages-one" bind:this={nuagesOne}>
                     <Cloud />
-            </div>
+                </div>
             <img bind:this={atmoOne} src={planet} alt="planet" />
         </div>
+    
     </div>
 </div>
 
@@ -599,7 +598,7 @@
            background-color: black;
         }
         .content_space {
-            top: 5vh;
+            top: 10vh;
             height: auto;
         }
 

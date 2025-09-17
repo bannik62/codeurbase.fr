@@ -210,9 +210,9 @@
         .content-text-bienvenue {
             /* border: 1px solid blue; */
             background-color: rgba(34, 33, 33, 0.128);
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(3px);
             top: 42%;
-            height: 70svh;
+            height: 100svh;
         }
         .content-text-bienvenue p {
             position: relative;
