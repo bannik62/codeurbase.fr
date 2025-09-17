@@ -82,7 +82,7 @@
                 titleAnimation
                     .to(".container-global-text-bienvenue h2", {
                         y: 50,
-                        x:789,
+                        x:792,
                         duration: 5,
                         ease: "linear.inOut",
                         willChange: "transform",
@@ -333,7 +333,7 @@
         .h3-in-my-world {
             position: relative;
             top: -8%;
-            left: 2%;
+            left: 0;
      
         }
         .content-text-bienvenue {
