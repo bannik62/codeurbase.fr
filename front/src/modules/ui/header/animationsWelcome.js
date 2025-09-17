@@ -6,14 +6,14 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
  * @param {Object} elements - Les éléments DOM bindés
  * @returns {Object} - L'animation GSAP
  */
-export function createTitleAnimation(elements) {
+export function createSmallMobileTitleAnimation(elements) {
     return gsap.timeline({
         scrollTrigger: {
             trigger: elements.elementOfTitle.container,
             start: "top 0%",
             endTrigger: elements.elementOfTitle.container,
             end: "bottom 20%",
-            scrub: 1.3,
+            scrub: 0.3,
             toggleActions: "play none none none",
             // markers: true,
         },
@@ -37,11 +37,11 @@ export function createTitleAnimation(elements) {
 }
 
 /**
- * Crée l'animation de splitting pour le texte
+ * Crée l'animation de splitting pour small mobile
  * @param {Array} selection - Résultat de Splitting
  * @returns {Object} - L'animation GSAP
  */
-export function createSplittingAnimation(selection) {
+export function createSmallMobileSplittingAnimation(selection) {
     return gsap.fromTo(
         selection[0].chars,
         {
@@ -74,7 +74,7 @@ export function createSplittingAnimation(selection) {
  * @param {Object} elements - Les éléments DOM bindés
  * @returns {Object} - L'animation GSAP
  */
-export function createInMyWorldAnimation(elements) {
+export function createSmallMobileInMyWorldAnimation(elements) {
     return gsap.timeline({
         scrollTrigger: {
             trigger: elements.elementOfTitle.bordure,    
@@ -114,28 +114,95 @@ export function createInMyWorldAnimation(elements) {
 }
 
 /**
- * Initialise toutes les animations pour small mobile
+ * Crée toutes les animations pour medium mobile
  * @param {Object} elements - Les éléments DOM bindés
  * @param {Array} selection - Résultat de Splitting
  * @returns {Object} - Objet contenant toutes les animations
  */
-export function initSmallMobileAnimations(elements, selection) {
-    const titleAnimation = createTitleAnimation(elements);
-    const splittingAnimation = createSplittingAnimation(selection);
-    const timelineInMyWorld = createInMyWorldAnimation(elements);
+export function createMediumMobileAnimations(elements, selection) {
+    // TODO: Implémenter les animations pour medium mobile
+    return {};
+}
 
-    return {
-        titleAnimation,
-        splittingAnimation,
-        timelineInMyWorld
-    };
+/**
+ * Crée toutes les animations pour mobile
+ * @param {Object} elements - Les éléments DOM bindés
+ * @param {Array} selection - Résultat de Splitting
+ * @returns {Object} - Objet contenant toutes les animations
+ */
+export function createMobileAnimations(elements, selection) {
+    // TODO: Implémenter les animations pour mobile
+    return {};
+}
+
+/**
+ * Crée toutes les animations pour tablette
+ * @param {Object} elements - Les éléments DOM bindés
+ * @param {Array} selection - Résultat de Splitting
+ * @returns {Object} - Objet contenant toutes les animations
+ */
+export function createTabletAnimations(elements, selection) {
+    // TODO: Implémenter les animations pour tablette
+    return {};
+}
+
+/**
+ * Crée toutes les animations pour desktop
+ * @param {Object} elements - Les éléments DOM bindés
+ * @param {Array} selection - Résultat de Splitting
+ * @returns {Object} - Objet contenant toutes les animations
+ */
+export function createDesktopAnimations(elements, selection) {
+    // TODO: Implémenter les animations pour desktop
+    return {};
+}
+
+/**
+ * Crée toutes les animations pour large desktop
+ * @param {Object} elements - Les éléments DOM bindés
+ * @param {Array} selection - Résultat de Splitting
+ * @returns {Object} - Objet contenant toutes les animations
+ */
+export function createLargeDesktopAnimations(elements, selection) {
+    // TODO: Implémenter les animations pour large desktop
+    return {};
+}
+
+/**
+ * Initialise les animations selon la taille d'écran
+ * @param {string} currentSize - La taille d'écran actuelle
+ * @param {Object} elements - Les éléments DOM bindés
+ * @param {Array} selection - Résultat de Splitting
+ * @returns {Object} - Objet contenant toutes les animations
+ */
+export function initWelcomeAnimations(currentSize, elements, selection) {
+    switch (currentSize) {
+        case 'smallMobile':
+            return {
+                titleAnimation: createSmallMobileTitleAnimation(elements),
+                splittingAnimation: createSmallMobileSplittingAnimation(selection),
+                timelineInMyWorld: createSmallMobileInMyWorldAnimation(elements)
+            };
+        case 'mediumMobile':
+            return createMediumMobileAnimations(elements, selection);
+        case 'mobile':
+            return createMobileAnimations(elements, selection);
+        case 'tablet':
+            return createTabletAnimations(elements, selection);
+        case 'desktop':
+            return createDesktopAnimations(elements, selection);
+        case 'largeDesktop':
+            return createLargeDesktopAnimations(elements, selection);
+        default:
+            return {};
+    }
 }
 
 /**
  * Nettoie toutes les animations
  * @param {Object} animations - Objet contenant les animations
  */
-export function cleanupAnimations(animations) {
+export function cleanupWelcomeAnimations(animations) {
     if (animations.titleAnimation) animations.titleAnimation.kill();
     if (animations.splittingAnimation) animations.splittingAnimation.kill();
     if (animations.timelineInMyWorld) animations.timelineInMyWorld.kill();

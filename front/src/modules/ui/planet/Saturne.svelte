@@ -45,16 +45,21 @@
             {
                 // ÉTAT INITIAL (haut à gauche - invisible et loin)
                 opacity: 0, // Invisible
-                scale: 0.09, // Très petit (équivalent 10px)
-                transform: "translate3d(-100%, -100%, -2000px)", // Haut à gauche et très loin
+                scale: 0.05, // Très petit (équivalent 10px)
+                transform: "translate3d(-100%, -19%, -2000px)", // Haut à gauche et très loin
             },
             {
                 // ÉTAT FINAL DE CETTE ÉTAPE (visible et plus proche)
                 opacity: 1, // Devient visible
-                scale: 1, // Taille normale
+                scale: 0.6, // Taille normale
                 transform: "translate3d(-50%, -60%, -1000px)", // Reste en haut à gauche mais plus proche
                 duration: 0.3, // Durée pour l'apparition
                 ease: "power2.out" // Courbe d'accélération
+            },{
+                scale: 1.9,
+                opacity: 0,
+                duration: 0.3,
+                ease: "power2.out"
             }
         )
         
