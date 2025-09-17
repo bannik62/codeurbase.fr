@@ -11,7 +11,7 @@ export function initLenis() {
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         direction: 'vertical',
         smooth: true,
-        mouseMultiplier: 150, // ✅ PLUS LENT : 250 → 150 (plus la valeur est basse, plus c'est lent)
+        mouseMultiplier: 90, // ✅ PLUS LENT : 250 → 150 (plus la valeur est basse, plus c'est lent)
         smoothTouch: true, // ✅ ACTIVÉ pour mobile
         touchMultiplier: 1, // ✅ PLUS LENT : 2 → 1 (plus la valeur est basse, plus c'est lent)
     });
