@@ -150,7 +150,6 @@
 
 <!-- Div container focusable -->
 <div class="intro-cloud-container" bind:this={introContainer}>
-    <!-- Div enfant réactive -->
     {#if showChildDiv}
         <div class="child-div">
             <!-- Exemple d'enfants -->
@@ -240,7 +239,7 @@
 
             <!-- Vous pouvez ajouter autant d'enfants que vous voulez -->
         </div>
-        <!-- <button class="action-button">Action</button> -->
+        
     {/if}
 </div>
 
