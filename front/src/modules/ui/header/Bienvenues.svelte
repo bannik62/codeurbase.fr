@@ -61,7 +61,7 @@
         let timelineInMyWorld;
 
         // currentSize est déjà déterminé par useMediaQuery()
-        // setTimeout(() => {
+        setTimeout(() => {
         switch (currentSize) {
             case "smallMobile":
             // Très petits écrans (iPhone SE, petits Android)
@@ -191,7 +191,7 @@
                 // Large Desktop (≥1600px) - Vide
                 break;
         }
-        // }, 100);
+        }, 100);
 
         // Fonction de nettoyage
         return () => {
