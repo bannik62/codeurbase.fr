@@ -7,13 +7,13 @@ export const lenis = writable(null);
 
 export function initLenis() {
     lenisInstance = new Lenis({
-        duration: 3,
+        duration: 5, // ✅ PLUS LENT : 3 → 5 (plus la valeur est élevée, plus c'est lent)
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         direction: 'vertical',
         smooth: true,
-        mouseMultiplier: 250,
+        mouseMultiplier: 150, // ✅ PLUS LENT : 250 → 150 (plus la valeur est basse, plus c'est lent)
         smoothTouch: true, // ✅ ACTIVÉ pour mobile
-        touchMultiplier: 2, // Réduit pour mobile (plus fluide)
+        touchMultiplier: 1, // ✅ PLUS LENT : 2 → 1 (plus la valeur est basse, plus c'est lent)
     });
     
     lenis.set(lenisInstance);
