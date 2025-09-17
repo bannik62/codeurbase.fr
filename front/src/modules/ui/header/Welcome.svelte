@@ -5,7 +5,7 @@
     import Splitting from "splitting";
     import { initMediaQuery, useMediaQuery } from "../../../stores/mediaQuery.js";
     import { elementsStore } from "../../../stores/elements.js";
-    import { initSmallMobileAnimations, cleanupAnimations } from "./animationsWelcome.js";
+    import { initWelcomeAnimations, cleanupWelcomeAnimations } from "./animationsWelcome.js";
 
     // Variables pour les éléments bindés
     let containerGlobalTextBienvenue;
@@ -61,32 +61,8 @@
 
         // currentSize est déjà déterminé par useMediaQuery()
         setTimeout(() => {
-        switch (currentSize) {
-            case "smallMobile":
-            // Très petits écrans (iPhone SE, petits Android)
-                animations = initSmallMobileAnimations(elements, selection);
-                break;
+            animations = initWelcomeAnimations(currentSize, elements, selection);
 
-            case "mediumMobile":
-                // Medium mobile (476px - 767px) - Vide
-                break;
-
-            case "mobile":
-                // Mobile (768px - 1023px) - Vide
-                break;
-
-            case "tablet":
-                // Tablette (1024px - 1399px) - Vide
-                break;
-
-            case "desktop":
-                // Desktop (1400px+) - Vide
-                break;
-
-            case "largeDesktop":
-                // Large Desktop (≥1600px) - Vide
-                break;
-        }
         }, 100);
 
         // Fonction de nettoyage
@@ -98,7 +74,7 @@
             cleanupMediaQuery();
             
             // Tuer les animations
-            cleanupAnimations(animations);
+            cleanupWelcomeAnimations(animations);
         };
     });
 </script>

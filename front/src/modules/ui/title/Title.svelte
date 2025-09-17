@@ -7,6 +7,7 @@
     import { initMediaQuery, useMediaQuery } from "../../../stores/mediaQuery.js";
     import { circleStore } from "../../../stores/circleMove.js";
     import { elementsStore } from "../../../stores/elements.js";
+    import { initBordureAnimation, cleanupBordureAnimation } from "./animationsTitle.js";
 
     // Enregistrer le plugin ScrollTrigger
     gsap.registerPlugin(ScrollTrigger);
@@ -66,131 +67,13 @@
 
 
         // Animation de la bordure selon la taille d'écran
-        let bordureAnimation;
-
+        let bordureAnimation = initBordureAnimation(currentSize);
 
         // Test d'accès aux éléments de Bienvenues via le store (optimisé)
         let bienvenuElement;
         const unsubscribeBienvenu = elementsStore.subscribe(store => {
             bienvenuElement = store.elementOfBienvenu?.h2Welcome;
         });
-        switch (currentSize) {
-            case 'smallMobile':
-                // Très petits écrans (≤ 475px)
-                bordureAnimation = gsap.to(".bordure", {
-                    yPercent: 300,
-                    xPercent: 0,
-                    scale: -0.3,
-                    z: 0,
-                    transformStyle: "preserve-3d",
-                    transformOrigin: "center center",
-                    rotation: -70,
-                    opacity: 0,
-                    duration:10,
-                    backgroundColor: "rgba(28, 173, 105)",
-                    scrollTrigger: {
-                        trigger: ".container",
-                        start: "top 0%",
-                        end: "bottom 0%",
-                        scrub: 3,
-                        // markers: true,
-                    },
-                    ease: "power2.inOut",
-                });
-                break;
-
-            case 'mediumMobile':
-                // Medium mobile (476px - 767px)
-                bordureAnimation = gsap.to(".bordure", {
-                    yPercent: 0,
-                    xPercent: 100,
-                    opacity: 1,
-                    duration: 2,
-                    scrollTrigger: {
-                        trigger: ".container",
-                        start: "top 10%",
-                        end: "bottom 10%",
-                        scrub: 1,
-                    },
-                    ease: "power2.inOut",
-                    onStart: () => console.log("Animation medium mobile bordure démarrée"),
-                });
-                break;
-
-            case 'mobile':
-                // Mobile (768px - 1023px)
-                bordureAnimation = gsap.to(".bordure", {
-                    yPercent: -150,
-                    xPercent: 150,
-                    scale: 1.2,
-                    rotation: 55,
-                    opacity: 1,
-                    duration: 2.5,
-                    scrollTrigger: {
-                        trigger: ".container",
-                        start: "top 0",
-                        end: "bottom 90%",
-                        scrub: 1.5,
-                    },
-                    ease: "power2.inOut",
-                    onStart: () => console.log("Animation mobile bordure démarrée"),
-                });
-                break;
-
-            case 'tablet':
-                // Tablette (1024px - 1399px)
-                bordureAnimation = gsap.to(".bordure", {
-                    yPercent: -100,
-                    xPercent: 100,
-                    opacity: 1,
-                    duration: 3,
-                    scrollTrigger: {
-                        trigger: ".container",
-                        start: "top 20%",
-                        end: "bottom 20%",
-                        scrub: 2,
-                    },
-                    ease: "power2.inOut",
-                    onStart: () => console.log("Animation tablette bordure démarrée"),
-                });
-                break;
-
-            case 'desktop':
-                // Desktop (1400px+)
-                bordureAnimation = gsap.to(".bordure", {
-                    yPercent: -80,
-                    xPercent: 80,
-                    opacity: 1,
-                    duration: 3.5,
-                    scrollTrigger: {
-                        trigger: ".container",
-                        start: "top 25%",
-                        end: "bottom 25%",
-                        scrub: 2.5,
-                    },
-                    ease: "power2.inOut",
-                    onStart: () => console.log("Animation desktop bordure démarrée"),
-                });
-                break;
-
-            case 'largeDesktop':
-                // Large Desktop (1400px+)
-                bordureAnimation = gsap.to(".bordure", {
-                    yPercent: -60,
-                    xPercent: 60,
-                    opacity: 1,
-                    duration: 4,
-                    scrollTrigger: {
-                        trigger: ".container",
-                        start: "top 30%",
-                        end: "bottom 30%",
-                        scrub: 3,
-                    },
-                    ease: "power2.inOut",
-                    onStart: () => console.log("Animation large desktop bordure démarrée"),
-                });
-                break;
-        }
 
 
         // S'abonner au store des cercles avec optimisation
@@ -212,8 +95,8 @@
             // Nettoyer le store media query
             cleanupMediaQuery();
             
-            // Tuer l'animation
-            if (bordureAnimation) bordureAnimation.kill();
+            // Tuer l'animation de bordure
+            cleanupBordureAnimation(bordureAnimation);
             
             // Arrêter l'animation des cercles
             circleStore.stopAnimation();
