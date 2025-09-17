@@ -630,6 +630,7 @@
             height: 100dvh;
         }
         .atmo-one {
+            top:17%;
             /* border: 1px solid blue; */
             height: 100%;
         }

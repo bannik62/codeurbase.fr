@@ -28,7 +28,7 @@
                 start: "top 40%", // L'animation commence quand le haut du conteneur atteint 40% de l'écran
                 end: "bottom 20%", // Fin quand le bas du conteneur atteint 20% de l'écran (plus simple)
                 scrub: 1, // L'animation suit le scroll avec un délai de 1s pour plus de fluidité
-                markers: true, // Affiche les marqueurs de debug
+                // markers: true,
                 onUpdate: (self) => {
                     // Log une seule fois par étape
                     if (self.progress < 0.3 && !self.isActive) {
@@ -52,7 +52,7 @@
                 // ÉTAT FINAL DE CETTE ÉTAPE (visible et plus proche)
                 opacity: 1, // Devient visible
                 scale: 1, // Taille normale
-                transform: "translate3d(-50%, -50%, -1000px)", // Reste en haut à gauche mais plus proche
+                transform: "translate3d(-50%, -60%, -1000px)", // Reste en haut à gauche mais plus proche
                 duration: 0.3, // Durée pour l'apparition
                 ease: "power2.out" // Courbe d'accélération
             }
@@ -62,7 +62,7 @@
         .to(".saturne-container-inner img", {
             // TRAJECTOIRE DIAGONALE vers l'opposé (bas à droite)
             transform: "translate3d(100%, 150%, 0px)", // Bas à droite - opposé diagonal (Y=150% pour descendre plus)
-            duration: 0.7, // Durée principale pour la traversée diagonale
+            duration: 2, // Durée principale pour la traversée diagonale
             ease: "power2.inOut" // Courbe d'accélération puis décélération
         });
 
@@ -122,12 +122,10 @@
     /* Très petits écrans (jusqu'à 475px) */
     @media (max-width: 475px) {
         .saturne-container {
-            border: 1px solid yellow;
             height: 100%;
         }
         
         .saturne-container-inner {
-            border: 1px solid red;
             top: 20%;
             width: 100%;
             height: 100%;
