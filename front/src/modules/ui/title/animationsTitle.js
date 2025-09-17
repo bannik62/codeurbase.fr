@@ -22,7 +22,7 @@ export function createSmallMobileBordureAnimation() {
             start: "top 0%",
             end: "bottom 0%",
             scrub: 3,
-            // markers: true,
+            markers: true,
         },
         ease: "power2.inOut",
     });
@@ -43,6 +43,7 @@ export function createMediumMobileBordureAnimation() {
             start: "top 10%",
             end: "bottom 10%",
             scrub: 1,
+            markers: true,
         },
         ease: "power2.inOut",
         onStart: () => console.log("Animation medium mobile bordure démarrée"),
@@ -66,6 +67,7 @@ export function createMobileBordureAnimation() {
             start: "top 0",
             end: "bottom 90%",
             scrub: 1.5,
+            markers: true,
         },
         ease: "power2.inOut",
         onStart: () => console.log("Animation mobile bordure démarrée"),
@@ -87,6 +89,7 @@ export function createTabletBordureAnimation() {
             start: "top 20%",
             end: "bottom 20%",
             scrub: 2,
+            markers: true,
         },
         ease: "power2.inOut",
         onStart: () => console.log("Animation tablette bordure démarrée"),
@@ -108,6 +111,7 @@ export function createDesktopBordureAnimation() {
             start: "top 25%",
             end: "bottom 25%",
             scrub: 2.5,
+            markers: true,
         },
         ease: "power2.inOut",
         onStart: () => console.log("Animation desktop bordure démarrée"),
@@ -120,18 +124,41 @@ export function createDesktopBordureAnimation() {
  */
 export function createLargeDesktopBordureAnimation() {
     return gsap.to(".bordure", {
-        yPercent: -60,
+        yPercent: 0,
         xPercent: 60,
         opacity: 1,
-        duration: 4,
+        duration: 0.4,
         scrollTrigger: {
             trigger: ".container",
-            start: "top 30%",
-            end: "bottom 30%",
-            scrub: 3,
+            start: "top 0%",
+            end: "bottom 90%",
+            scrub: 0.3,
+            markers: true,
         },
         ease: "power2.inOut",
         onStart: () => console.log("Animation large desktop bordure démarrée"),
+    });
+}
+
+/**
+ * Crée l'animation de bordure pour xl desktop
+ * @returns {Object} - L'animation GSAP
+ */
+export function createXlDesktopBordureAnimation() {
+    return gsap.to(".bordure", {
+        yPercent: 40,
+        xPercent: 40,
+        opacity: 1,
+        duration: 4.5,
+        scrollTrigger: {
+            trigger: ".container",
+            start: "top 35%",
+            end: "bottom 35%",
+            scrub: 3.5,
+            markers: true,
+        },
+        ease: "power2.inOut",
+        onStart: () => console.log("Animation xl desktop bordure démarrée"),
     });
 }
 
@@ -144,8 +171,6 @@ export function initBordureAnimation(currentSize) {
     switch (currentSize) {
         case 'smallMobile':
             return createSmallMobileBordureAnimation();
-        case 'mediumMobile':
-            return createMediumMobileBordureAnimation();
         case 'mobile':
             return createMobileBordureAnimation();
         case 'tablet':
@@ -154,6 +179,8 @@ export function initBordureAnimation(currentSize) {
             return createDesktopBordureAnimation();
         case 'largeDesktop':
             return createLargeDesktopBordureAnimation();
+        case 'xlDesktop':
+            return createXlDesktopBordureAnimation();
         default:
             return null;
     }

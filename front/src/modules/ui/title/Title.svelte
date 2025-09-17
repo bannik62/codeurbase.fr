@@ -57,16 +57,17 @@
         const {
             currentSize,
             currentIsSmallMobile,
-            currentIsMediumMobile,
             currentIsMobile,
             currentIsTablet,
             currentIsDesktop,
             currentIsLargeDesktop,
+            currentIsXlDesktop,
             cleanup: cleanupMediaQueryStores
         } = useMediaQuery();
 
 
         // Animation de la bordure selon la taille d'écran
+        console.log("🎯 Taille d'écran détectée:", currentSize);
         let bordureAnimation = initBordureAnimation(currentSize);
 
         // Test d'accès aux éléments de Bienvenues via le store (optimisé)
@@ -234,11 +235,15 @@
             0 16%
         );
       
-        z-index: 100;
+        z-index: 1006;
         
     }
     .bordure::after {
-        content: '';
+        content: 'RetroVibes';
+        font-family: "Orbitron", cursive;
+        font-weight: 900;
+        letter-spacing: 0.1em;
+        color: crimson;
         position: absolute;
         left: 0;
         bottom: 0;
@@ -555,11 +560,48 @@
         }
     }
     
-    /* Desktop (1400px et plus) */
-    @media (min-width: 1400px) {
+    /* Desktop (1024px à 1399px) */
+    @media (min-width: 1024px) and (max-width: 1399px) {
+        .container {
+            border: 1px solid red;
+        }
+        .container-title-screen-and-balayage {
+            border: 1px solid green;
+            height: clamp(100px, 40svh, 40dvh);
+        }
+        .bordure {
+            top: -30%;
+            border: 1px solid green;
+        }
         .title {
             flex-wrap: nowrap;
             gap: 0.5em;
+        }
+    }
+    
+    /* Large Desktop (1400px à 1799px) */
+    @media (min-width: 1400px) and (max-width: 1799px) {
+        .container {
+            height: 100%;
+        }
+        .container-title-screen-and-balayage {
+            height: clamp(100px, 40svh, 40dvh);
+        }
+        .bordure {
+            top: -30%;
+        }
+        .title {
+            flex-wrap: nowrap;
+            gap: 0.5em;
+        }
+    }
+    
+    /* XL Desktop (1800px et plus) */
+    @media (min-width: 1800px) {
+        .title {
+            border: 1px solid blue;
+            flex-wrap: nowrap;
+            gap: 0.6em;
         }
     }
 

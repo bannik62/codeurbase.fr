@@ -125,12 +125,12 @@
     }
     .h2-welcome {
         position: absolute;
-        top: 0%;
-        left: 0%;
+        top: 50%;
+        left: 220%;
         font-family: "Orbitron", cursive;
         text-transform: uppercase;
         color: crimson !important;
-        font-size: clamp(2rem, 16.3vw, 10rem);
+        font-size: clamp(2rem, 16.3vw, 20rem);
         font-weight: 800;
         margin: 0;
         /* opacity: 0.5; */
@@ -139,7 +139,7 @@
     }
     .h3-in-my-world {
         font-family: "Orbitron", "Bungee Shade", cursive;
-        font-size: clamp(1rem, 15vw, 4rem);
+        font-size: clamp(1rem, 15vw, 12rem);
         font-weight: 800;
         color: crimson;
         margin: 0;
@@ -210,9 +210,11 @@
         .content-text-bienvenue {
             /* border: 1px solid blue; */
             background-color: rgba(34, 33, 33, 0.128);
-            backdrop-filter: blur(3px);
+            backdrop-filter: blur(2px);
             top: 42%;
-            height: 100svh;
+            /* height: 100svh; */
+            min-height: 95svh;
+            max-height: 100svh;
         }
         .content-text-bienvenue p {
             position: relative;
@@ -272,18 +274,29 @@
         }
     }
     
-    /* Large Desktop (1400px et plus) */
-    @media (min-width: 1400px) {
+    /* Desktop (1024px à 1399px) */
+    @media (min-width: 1024px) and (max-width: 1399px) {
         .container-global-text-bienvenue {
-            top: 35%; /* Ajustement pour large desktop */
+            top: 30%; /* Ajustement pour desktop */
+        }
+    }
+    
+    /* Large Desktop (1400px à 1799px) */
+    @media (min-width: 1400px) and (max-width: 1799px) {
+        .container-global-text-bienvenue {
+            top: 50%; /* Ajustement pour large desktop */
         }
         
         .container-global-text-bienvenue h2 {
-            top: 30%; /* Ajustement pour large desktop */
+            top:0%; /* Ajustement pour large desktop */
         }
         
         .content-text-bienvenue {
             top: 60%; /* Ajustement pour large desktop */
+        }
+        .h3-in-my-world {
+            position: relative;
+             top: 5%;        
         }
     }
 </style>

@@ -153,8 +153,122 @@ export function createTabletAnimations(elements, selection) {
  * @returns {Object} - Objet contenant toutes les animations
  */
 export function createDesktopAnimations(elements, selection) {
-    // TODO: Implémenter les animations pour desktop
-    return {};
+    return {
+        titleAnimation: createDesktopTitleAnimation(elements),
+        splittingAnimation: createDesktopSplittingAnimation(selection),
+        timelineInMyWorld: createDesktopInMyWorldAnimation(elements)
+    };
+}
+
+/**
+ * Crée l'animation du titre "Welcome" pour desktop
+ * @param {Object} elements - Les éléments DOM bindés
+ * @returns {Object} - L'animation GSAP
+ */
+export function createDesktopTitleAnimation(elements) {
+    return gsap.timeline({
+        scrollTrigger: {
+            trigger: elements.elementOfTitle.container,
+            start: "top 0%",
+            endTrigger: elements.elementOfTitle.container,
+            end: "bottom 20%",
+            scrub: 0.3,
+            toggleActions: "play none none none",
+            markers: true,
+        },
+    })
+    .to(".container-global-text-bienvenue h2", {
+        y: 120,
+        x: 1800,
+        duration: 5,
+        ease: "linear.inOut",
+        willChange: "transform",
+        scale: 1,
+        onStart: () => console.log("Animation desktop titre démarrée"),
+    })
+    .to(".container-global-text-bienvenue h2", {
+        y: 200,
+        x: 2800,
+        duration: 10,
+        ease: "back.inOut(1)",
+        willChange: "transform",    
+        scale: 0.5,
+    });
+}
+
+/**
+ * Crée l'animation de splitting pour desktop
+ * @param {Array} selection - Résultat de Splitting
+ * @returns {Object} - L'animation GSAP
+ */
+export function createDesktopSplittingAnimation(selection) {
+    return gsap.fromTo(
+        selection[0].chars,
+        {
+            opacity: 0,
+            y: 300,
+            rotationX: 0,
+        },
+        {
+            opacity: 1,
+            y: 0,
+            rotationX: -120,
+            duration: 2.5,
+            stagger: 2.5,
+            ease: "back.out(1.7)",
+            scrollTrigger: {
+                trigger: ".h2-welcome",    
+                endTrigger: ".content-text-bienvenue",                   
+                start: "top 10%",
+                end: "bottom 50%",
+                toggleActions: "play none none reverse",
+                scrub: 1.2,
+            },
+        }
+    );
+}
+
+/**
+ * Crée l'animation "In my world" pour desktop
+ * @param {Object} elements - Les éléments DOM bindés
+ * @returns {Object} - L'animation GSAP
+ */
+export function createDesktopInMyWorldAnimation(elements) {
+    return gsap.timeline({
+        scrollTrigger: {
+            trigger: elements.elementOfTitle.bordure,    
+            start: "top ",
+            endTrigger: elements.elementOfTitle.bordure,
+            end: "bottom ",
+            scrub: 1.0,
+        },
+    })
+    .fromTo(".h3-in-my-world", 
+        {
+            opacity: 0,
+            y: 800,
+            scale: 0,
+        },
+        {
+            opacity: 0.5,
+            y: -120,
+            duration: 0.6,
+            ease: "linear.inOut",
+            scale: 1,
+        }
+    )
+    .to(".h3-in-my-world", {
+        opacity: 1,
+        scale: 0.6,
+        duration: 1.0,
+        ease: "power2.out",
+    })
+    .to(".h3-in-my-world", {
+        opacity: 1,
+        scale: 1,
+        duration: 0.6,
+        ease: "power2.out",
+    });
 }
 
 /**
@@ -164,8 +278,247 @@ export function createDesktopAnimations(elements, selection) {
  * @returns {Object} - Objet contenant toutes les animations
  */
 export function createLargeDesktopAnimations(elements, selection) {
-    // TODO: Implémenter les animations pour large desktop
-    return {};
+    return {
+        titleAnimation: createLargeDesktopTitleAnimation(elements),
+        splittingAnimation: createLargeDesktopSplittingAnimation(selection),
+        timelineInMyWorld: createLargeDesktopInMyWorldAnimation(elements)
+    };
+}
+
+/**
+ * Crée l'animation du titre "Welcome" pour large desktop
+ * @param {Object} elements - Les éléments DOM bindés
+ * @returns {Object} - L'animation GSAP
+ */
+export function createLargeDesktopTitleAnimation(elements) {
+    return gsap.timeline({
+        scrollTrigger: {
+            trigger: elements.elementOfTitle.container,
+            start: "top 0%",
+            endTrigger: elements.elementOfTitle.container,
+            end: "bottom 0%",
+            scrub: 0.9,
+            toggleActions: "play none none none",
+            markers: true,
+        },
+    })
+    .to(".container-global-text-bienvenue h2", {
+        yPercent: -15,
+        xPercent: -220,
+        duration: 5,
+        ease: "linear.inOut",
+        willChange: "transform",
+        scale: 1,
+    })
+    .to(".container-global-text-bienvenue h2", {
+        yPercent: 15,
+        xPercent: -220,
+        duration: 10,
+        ease: "back.inOut(1)",
+        willChange: "transform",    
+        scale: 0.5,
+    });
+}
+
+/**
+ * Crée l'animation de splitting pour large desktop
+ * @param {Array} selection - Résultat de Splitting
+ * @returns {Object} - L'animation GSAP
+ */
+export function createLargeDesktopSplittingAnimation(selection) {
+    return gsap.fromTo(
+        selection[0].chars,
+        {
+            opacity: 0,
+            y: 350,
+            rotationX: 0,
+        },
+        {
+            opacity: 1,
+            y: 0,
+            rotationX: -140,
+            duration: 3,
+            stagger: 3,
+            ease: "back.out(1.7)",
+            scrollTrigger: {
+                trigger: ".h2-welcome",    
+                endTrigger: ".content-text-bienvenue",                   
+                start: "top 10%",
+                end: "bottom 50%",
+                toggleActions: "play none none reverse",
+                scrub: 1.5,
+            },
+        }
+    );
+}
+
+/**
+ * Crée l'animation "In my world" pour large desktop
+ * @param {Object} elements - Les éléments DOM bindés
+ * @returns {Object} - L'animation GSAP
+ */
+export function createLargeDesktopInMyWorldAnimation(elements) {
+    return gsap.timeline({
+        scrollTrigger: {
+            trigger: elements.elementOfTitle.bordure,    
+            start: "top 0%",
+            endTrigger: elements.elementOfTitle.bordure,
+            end: "bottom ",
+            scrub: 2,
+            toggleActions: "play none none none",
+        },
+    })
+    .fromTo(".h3-in-my-world", 
+        {
+            opacity: 0,
+            yPercent: 3,
+            scale: 0,
+            duration: 1.5,
+        },
+        {
+            opacity: 0.5,
+            yPercent: -80,
+            duration: 2,
+            ease: "elastic.out(1, 0.3)",
+            scale: 1,
+        }
+    )
+    .to(".h3-in-my-world", {
+        opacity: 1,
+        scale: 0.7,
+        duration: 1.5,
+        ease: "linear.Out",
+    })
+    .to(".h3-in-my-world", {
+        opacity: 1,
+        scale: 1,
+        duration: 1.4,
+        ease: "linear.Out",
+        pin: true,
+    });
+}
+
+/**
+ * Crée toutes les animations pour xl desktop
+ * @param {Object} elements - Les éléments DOM bindés
+ * @param {Array} selection - Résultat de Splitting
+ * @returns {Object} - Objet contenant toutes les animations
+ */
+export function createXlDesktopAnimations(elements, selection) {
+    return {
+        titleAnimation: createXlDesktopTitleAnimation(elements),
+        splittingAnimation: createXlDesktopSplittingAnimation(selection),
+        timelineInMyWorld: createXlDesktopInMyWorldAnimation(elements)
+    };
+}
+
+/**
+ * Crée l'animation du titre "Welcome" pour xl desktop
+ * @param {Object} elements - Les éléments DOM bindés
+ * @returns {Object} - L'animation GSAP
+ */
+export function createXlDesktopTitleAnimation(elements) {
+    return gsap.timeline({
+        scrollTrigger: {
+            trigger: elements.elementOfTitle.container,
+            start: "top 0%",
+            endTrigger: elements.elementOfTitle.container,
+            end: "bottom 20%",
+            scrub: 0.3,
+            toggleActions: "play none none none",
+        },
+    })
+    .to(".container-global-text-bienvenue h2", {
+        y: 180,
+        x: 2600,
+        duration: 5,
+        ease: "linear.inOut",
+        willChange: "transform",
+        scale: 1,
+    })
+    .to(".container-global-text-bienvenue h2", {
+        y: 300,
+        x: 4000,
+        duration: 10,
+        ease: "back.inOut(1)",
+        willChange: "transform",    
+        scale: 0.5,
+    });
+}
+
+/**
+ * Crée l'animation de splitting pour xl desktop
+ * @param {Array} selection - Résultat de Splitting
+ * @returns {Object} - L'animation GSAP
+ */
+export function createXlDesktopSplittingAnimation(selection) {
+    return gsap.fromTo(
+        selection[0].chars,
+        {
+            opacity: 0,
+            y: 400,
+            rotationX: 0,
+        },
+        {
+            opacity: 1,
+            y: 0,
+            rotationX: -160,
+            duration: 3.5,
+            stagger: 3.5,
+            ease: "back.out(1.7)",
+            scrollTrigger: {
+                trigger: ".h2-welcome",    
+                endTrigger: ".content-text-bienvenue",                   
+                start: "top 10%",
+                end: "bottom 50%",
+                toggleActions: "play none none reverse",
+                scrub: 1.8,
+            },
+        }
+    );
+}
+
+/**
+ * Crée l'animation "In my world" pour xl desktop
+ * @param {Object} elements - Les éléments DOM bindés
+ * @returns {Object} - L'animation GSAP
+ */
+export function createXlDesktopInMyWorldAnimation(elements) {
+    return gsap.timeline({
+        scrollTrigger: {
+            trigger: elements.elementOfTitle.bordure,    
+            start: "top ",
+            endTrigger: elements.elementOfTitle.bordure,
+            end: "bottom ",
+            scrub: 1.4,
+        },
+    })
+    .fromTo(".h3-in-my-world", 
+        {
+            opacity: 0,
+            y: 1000,
+            scale: 0,
+        },
+        {
+            opacity: 0.5,
+            y: -180,
+            duration: 0.8,
+            ease: "linear.inOut",
+            scale: 1,
+        }
+    )
+    .to(".h3-in-my-world", {
+        opacity: 1,
+        scale: 0.8,
+        duration: 1.4,
+        ease: "power2.out",
+    })
+    .to(".h3-in-my-world", {
+        opacity: 1,
+        scale: 1,
+        duration: 0.8,
+        ease: "power2.out",
+    });
 }
 
 /**
@@ -183,8 +536,6 @@ export function initWelcomeAnimations(currentSize, elements, selection) {
                 splittingAnimation: createSmallMobileSplittingAnimation(selection),
                 timelineInMyWorld: createSmallMobileInMyWorldAnimation(elements)
             };
-        case 'mediumMobile':
-            return createMediumMobileAnimations(elements, selection);
         case 'mobile':
             return createMobileAnimations(elements, selection);
         case 'tablet':
@@ -193,6 +544,8 @@ export function initWelcomeAnimations(currentSize, elements, selection) {
             return createDesktopAnimations(elements, selection);
         case 'largeDesktop':
             return createLargeDesktopAnimations(elements, selection);
+        case 'xlDesktop':
+            return createXlDesktopAnimations(elements, selection);
         default:
             return {};
     }

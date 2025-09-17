@@ -270,6 +270,7 @@ export function createLargeDesktopSaturneAnimation() {
     });
 }
 
+
 /**
  * Initialise l'animation de Saturne selon la taille d'écran
  * @param {string} currentSize - La taille d'écran actuelle
@@ -279,8 +280,6 @@ export function initSaturneAnimation(currentSize) {
     switch (currentSize) {
         case 'smallMobile':
             return createSmallMobileSaturneAnimation();
-        case 'mediumMobile':
-            return createMediumMobileSaturneAnimation();
         case 'mobile':
             return createMobileSaturneAnimation();
         case 'tablet':

@@ -6,7 +6,7 @@
     
     // Variables pour les étoiles
     const stars = [];
-    const numStars = 60;
+    const numStars = 100;
     const baseSpeed = 2;
     let currentSpeed = baseSpeed;
     let curve = 0;
