@@ -158,8 +158,7 @@
                 style="z-index: {circleData.titleZIndex}"
                 bind:this={title}
             >
-                <span class="title-part1">Codeur</span><span class="title-part2"
-                    >Base.fr</span
+                <span class="title-part1">CodeurBase.fr</span
                 >
             </h1>
         </div>
@@ -513,6 +512,7 @@
 
     .title-part1, .title-part2 {
         white-space: nowrap;
+
     }
 
     /* Media queries basées sur le store centralisé */
@@ -562,16 +562,14 @@
     
     /* Desktop (1024px à 1399px) */
     @media (min-width: 1024px) and (max-width: 1399px) {
-        .container {
-            border: 1px solid red;
-        }
+   
         .container-title-screen-and-balayage {
             border: 1px solid green;
             height: clamp(100px, 40svh, 40dvh);
         }
         .bordure {
             top: -30%;
-            border: 1px solid green;
+            border: 3px solid green;
         }
         .title {
             flex-wrap: nowrap;
@@ -588,7 +586,7 @@
             height: clamp(100px, 40svh, 40dvh);
         }
         .bordure {
-            top: -30%;
+            top: -37%;
         }
         .title {
             flex-wrap: nowrap;

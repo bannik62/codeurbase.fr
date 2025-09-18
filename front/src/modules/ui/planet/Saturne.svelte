@@ -190,7 +190,7 @@
         }
         
         .saturne-container-inner {
-            top: -20%;
+            top: -50%;
             width: 100%;
         }
         

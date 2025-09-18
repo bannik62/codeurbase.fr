@@ -497,12 +497,11 @@
         </div>
 
         <div class="space-one">
-        
-            <!-- <div class="repéres" style="position: absolute; top: -20; left: 0; z-index: 1000; color: red;">space-one top</div>    -->
-            <Title />
+           <Title />
             <Saturne />
             <Bienvenues />
         </div>
+      
         <div class="space-two">
 
             <div class="content-space-two">
@@ -900,15 +899,25 @@
         }
 
         .space-one {
-            height: 200dvh;
+            height: 400dvh;
         }
 
         .space-two {
             height: 200dvh;
         }
+        .content-space-two {
+            position: relative;
+            top: 25%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
 
         .space-three {
-            height: 160dvh;
+            height: 110dvh;
+        }
+        .atmo-one {
+            height: 100%;
         }
 
         .atmo-one img {
@@ -917,7 +926,11 @@
             width: 70%;
             height: clamp(100%, 110%, 120%);
         }
-
+        .container-detection-one {
+            border: 1px solid yellow;
+            height: 10%;
+            bottom: 0;
+        }
         .container-status {
             font-size: clamp(1.3rem, 2.5vw, 1.8rem);
             min-height: 120px;
