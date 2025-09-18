@@ -174,7 +174,6 @@ export function createDesktopTitleAnimation(elements) {
             end: "bottom 20%",
             scrub: 0.3,
             toggleActions: "play none none none",
-            markers: true,
         },
     })
     .to(".container-global-text-bienvenue h2", {
@@ -296,14 +295,13 @@ export function createLargeDesktopTitleAnimation(elements) {
             trigger: elements.elementOfTitle.container,
             start: "top 0%",
             endTrigger: elements.elementOfTitle.container,
-            end: "bottom 0%",
+            end: "bottom 90%",
             scrub: 0.9,
             toggleActions: "play none none none",
-            markers: true,
         },
     })
     .to(".container-global-text-bienvenue h2", {
-        yPercent: -15,
+        yPercent: -10,
         xPercent: -220,
         duration: 5,
         ease: "linear.inOut",
@@ -311,7 +309,7 @@ export function createLargeDesktopTitleAnimation(elements) {
         scale: 1,
     })
     .to(".container-global-text-bienvenue h2", {
-        yPercent: 15,
+        yPercent: 10,
         xPercent: -220,
         duration: 10,
         ease: "back.inOut(1)",
@@ -360,9 +358,9 @@ export function createLargeDesktopSplittingAnimation(selection) {
 export function createLargeDesktopInMyWorldAnimation(elements) {
     return gsap.timeline({
         scrollTrigger: {
-            trigger: elements.elementOfTitle.bordure,    
+            trigger: ".h2-welcome",    
             start: "top 0%",
-            endTrigger: elements.elementOfTitle.bordure,
+            endTrigger: ".h2-welcome",
             end: "bottom ",
             scrub: 2,
             toggleActions: "play none none none",
@@ -370,6 +368,7 @@ export function createLargeDesktopInMyWorldAnimation(elements) {
     })
     .fromTo(".h3-in-my-world", 
         {
+            onStart: () => console.log("Animation large desktop in my world démarrée"),
             opacity: 0,
             yPercent: 3,
             scale: 0,
