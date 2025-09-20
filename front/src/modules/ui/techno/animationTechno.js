@@ -244,7 +244,6 @@ export function createLargeDesktopTechnoAnimation(elements) {
             start: "top 0% +9050px",
             end: "bottom 99%",
             toggleActions: "play none none reverse",
-            markers: true,
         },
     })
     .fromTo(".box", 
