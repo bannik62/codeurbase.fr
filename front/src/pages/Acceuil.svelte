@@ -9,6 +9,7 @@
     import { gsap } from "gsap";
     import { ScrollTrigger } from "gsap/ScrollTrigger";
     import Bienvenues from "../modules/ui/header/Welcome.svelte";
+    import Techno from "../modules/ui/techno/Techno.svelte";
     import Cockpit from "../modules/ui/cockpit/Cockpit.svelte";
     import { initMediaQuery, useMediaQuery } from "../stores/mediaQuery.js";
     import {
@@ -416,6 +417,26 @@
                         duration: 2.0,
                         ease: "power2.out",
                     });
+
+                    gsap.timeline({
+                        scrollTrigger: {
+                            trigger: ".h3-en-cours-de-construction",
+                            start: "top 0%",
+                            end: "bottom 0%",
+                            scrub: 1,
+                            // markers: true,
+                        }
+                    })
+                    .to(".container-status", {
+                        onStart: () => {console.log("animation de la container-detection-one")},
+                        scale: 1.7,
+                        border: "1px solid crimson",
+                        borderRadius: "15px",
+                        boxShadow: "0px 0px 120px 10px crimson",
+                        backgroundColor: "transparent",
+                        duration: 2,
+                        ease: "power2.out",
+                    });
                 break;
 
             case "xlDesktop":
@@ -496,10 +517,11 @@
             <Stars {canvas} bind:ctx />
         </div>
 
+        <Saturne />
         <div class="space-one">
            <Title />
-            <Saturne />
-            <Bienvenues />
+           <Techno />
+           <Bienvenues />
         </div>
       
         <div class="space-two">
@@ -903,14 +925,19 @@
         }
 
         .space-two {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* border: 1px solid red; */
             height: 200dvh;
         }
         .content-space-two {
+            /* border: 1px solid blue; */
             position: relative;
-            top: 25%;
+            top: -20%;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 50%;
+            height: 50%;
         }
 
         .space-three {
@@ -927,8 +954,7 @@
             height: clamp(100%, 110%, 120%);
         }
         .container-detection-one {
-            border: 1px solid yellow;
-            height: 10%;
+            height: 20%;
             bottom: 0;
         }
         .container-status {

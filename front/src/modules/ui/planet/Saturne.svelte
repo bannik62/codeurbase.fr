@@ -82,9 +82,9 @@
         transform-style: preserve-3d;
     }
     .saturne-container-inner img {
-        transform: translate3d(0, 0, -2000px); /* Position initiale très loin */
+        transform: translate3d(0, 0, -200px); /* Position initiale moins loin */
         position: relative;
-        top: 90%;
+        top: 10%; /* Commence plus haut */
         left: 0;
         aspect-ratio: 1/1;
         width: clamp(100px, 80%, 100%);
@@ -92,16 +92,48 @@
         opacity: 0; /* Commence invisible */
         scale: 0.01; /* Commence très petit (10px) */
         /* backdrop-filter: shadow(50px 0px 10px rgba(230, 220, 128, 0.5)); */
-        filter: drop-shadow(0px -100px 20px rgba(95, 164, 198, 0.5));
+        /* filter: drop-shadow(0px -100px 20px rgba(95, 164, 198, 0.5)); */
         /* opacity: 0.5; */
-        animation: graduateFilter 10s forwards;
+        animation: graduateFilter 0.1s forwards;
     }
     @keyframes graduateFilter {
         0% {
-            filter: drop-shadow(0px -10px 20px rgba(95, 164, 198, 0));
+            filter: 
+                drop-shadow(0px 0px 6px rgba(176, 196, 222, 0)) /* Bleu acier pâle */
+                drop-shadow(0px 1px 8px rgba(244, 164, 96, 0))   /* Beige sable */
+                drop-shadow(0px 2px 10px rgba(230, 230, 250, 0));  /* Lavande pâle */
+        }
+        25% {
+            filter: 
+                drop-shadow(-1px -2px 8px rgba(176, 196, 222, 0.15))
+                drop-shadow(0px -1px 10px rgba(244, 164, 96, 0.12))
+                drop-shadow(1px 0px 12px rgba(230, 230, 250, 0.1))
+                drop-shadow(2px 1px 14px rgba(245, 222, 179, 0.08))
+                drop-shadow(3px 2px 16px rgba(245, 245, 220, 0.05));
+        }
+        50% {
+            filter: 
+                drop-shadow(-2px -3px 10px rgba(176, 196, 222, 0.25))
+                drop-shadow(-1px -2px 12px rgba(244, 164, 96, 0.2))
+                drop-shadow(0px -1px 14px rgba(230, 230, 250, 0.18))
+                drop-shadow(1px 0px 16px rgba(245, 222, 179, 0.15))
+                drop-shadow(2px 1px 18px rgba(245, 245, 220, 0.12));
+        }
+        75% {
+            filter: 
+                drop-shadow(-3px -4px 12px rgba(176, 196, 222, 0.35))
+                drop-shadow(-2px -3px 14px rgba(244, 164, 96, 0.3))
+                drop-shadow(-1px -2px 16px rgba(230, 230, 250, 0.25))
+                drop-shadow(0px -1px 18px rgba(245, 222, 179, 0.2))
+                drop-shadow(1px 0px 20px rgba(245, 245, 220, 0.18));
         }
         100% {
-            filter: drop-shadow(-20px -100px 20px rgba(95, 164, 198, 0.5));
+            filter: 
+                drop-shadow(-3px -4px 14px rgba(176, 196, 222, 0.4)) /* Bleu acier pâle */
+                drop-shadow(-2px -3px 16px rgba(185, 139, 131, 0.35))   /* Brun rosé */
+                drop-shadow(-1px -2px 18px rgba(230, 230, 250, 0.3))  /* Lavande pâle */
+                drop-shadow(0px -1px 20px rgba(245, 222, 179, 0.25))  /* Blé pâle */
+                drop-shadow(1px 0px 22px rgba(245, 245, 220, 0.2));   /* Beige naturel */
         }
     }
 
@@ -121,7 +153,7 @@
         
         .saturne-container-inner img {
             top: 0%;
-            filter: drop-shadow(0px -80px 15px rgba(95, 164, 198, 0.4));
+            /* filter: drop-shadow(0px -80px 15px rgba(95, 164, 198, 0.4)); */
         }
     }
     
@@ -138,8 +170,7 @@
         
         .saturne-container-inner img {
             top: 88%;
-            filter: drop-shadow(0px -90px 18px rgba(95, 164, 198, 0.45));
-        }
+           }
     }
     
     /* Mobile (768px à 1023px) */
@@ -155,7 +186,7 @@
         
         .saturne-container-inner img {
             top: 90%;
-            filter: drop-shadow(0px -95px 20px rgba(95, 164, 198, 0.5));
+            /* filter: drop-shadow(0px -95px 20px rgba(95, 164, 198, 0.5)); */
         }
     }
     
@@ -172,7 +203,7 @@
         
         .saturne-container-inner img {
             top: 90%;
-            filter: drop-shadow(0px -100px 20px rgba(95, 164, 198, 0.5));
+            /* filter: drop-shadow(0px -100px 20px rgba(95, 164, 198, 0.5)); */
         }
     }
     
@@ -186,17 +217,28 @@
     /* Large Desktop (1400px à 1799px) */
     @media (min-width: 1400px) and (max-width: 1799px) {
         .saturne-container {
-            height: 100%;
+            position: absolute;
+            height: 60dvh;
+            top: 30%;
         }
         
         .saturne-container-inner {
-            top: -50%;
+            position: absolute;
+            top: 50%;
+            left: 0%;
             width: 100%;
+            height: 100%;
+            z-index: -5000;
         }
         
-        .saturne-container-inner img {
-            top: 90%;
-            filter: drop-shadow(0px -100px 20px rgba(95, 164, 198, 0.5));
+        .saturne-container-inner img {  
+            position: absolute;
+            left: 0%;
+            top: 0%;
+            height: 300px;
+            width: 300px;
+            z-index: -5000;
+
         }
     }
 </style>

@@ -339,9 +339,9 @@ export function createLargeDesktopSplittingAnimation(selection) {
             stagger: 3,
             ease: "back.out(1.7)",
             scrollTrigger: {
-                trigger: ".h2-welcome",    
+                trigger: ".h3-in-my-world",    
                 endTrigger: ".content-text-bienvenue",                   
-                start: "top 10%",
+                start: "top 90%",
                 end: "bottom 50%",
                 toggleActions: "play none none reverse",
                 scrub: 1.5,
@@ -360,41 +360,40 @@ export function createLargeDesktopInMyWorldAnimation(elements) {
         scrollTrigger: {
             trigger: ".h2-welcome",    
             start: "top 0%",
-            endTrigger: ".h2-welcome",
-            end: "bottom ",
-            scrub: 2,
+            endTrigger: "h3-in-my-world",
+            end: "top 0",
+            scrub: 5,
             toggleActions: "play none none none",
+            // markers: true,
         },
     })
-    .fromTo(".h3-in-my-world", 
-        {
-            onStart: () => console.log("Animation large desktop in my world démarrée"),
-            opacity: 0,
-            yPercent: 3,
-            scale: 0,
-            duration: 1.5,
-        },
-        {
-            opacity: 0.5,
-            yPercent: -80,
-            duration: 2,
-            ease: "elastic.out(1, 0.3)",
-            scale: 1,
-        }
-    )
-    .to(".h3-in-my-world", {
-        opacity: 1,
-        scale: 0.7,
-        duration: 1.5,
-        ease: "linear.Out",
+    .set(".h3-in-my-world", {
+        opacity: 0,
+        yPercent: 180,
+        scale: 0,
+        duration: 2,
     })
     .to(".h3-in-my-world", {
         opacity: 1,
+        yPercent: -280,
+        duration: 4,
+        ease: "elastic.out(0.1, 0.1)",
         scale: 1,
-        duration: 1.4,
-        ease: "linear.Out",
-        pin: true,
-    });
+    })
+    .to(".h3-in-my-world", {
+         zPercent: -1000,
+         yPercent:-100,
+         duration: 1,
+         ease: "linear.inOut",
+         onComplete: () => console.log("Animation large desktop in my world end"),
+    })
+    // .to(".h3-in-my-world", {
+    //     opacity: 1,
+    //     scale: 1,
+    //     duration: 1.4,
+    //     ease: "linear.Out",
+    //     pin: true,
+    // });
 }
 
 /**
