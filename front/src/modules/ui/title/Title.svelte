@@ -70,7 +70,7 @@
         console.log("🎯 Taille d'écran détectée:", currentSize);
         let bordureAnimation = initBordureAnimation(currentSize);
 
-        // Test d'accès aux éléments de Bienvenues via le store (optimisé)
+        // CORRECTION FUITE MÉMOIRE : Test d'accès aux éléments de Bienvenues via le store (optimisé)
         let bienvenuElement;
         const unsubscribeBienvenu = elementsStore.subscribe(store => {
             bienvenuElement = store.elementOfBienvenu?.h2Welcome;
@@ -99,10 +99,10 @@
             // Tuer l'animation de bordure
             cleanupBordureAnimation(bordureAnimation);
             
-            // Arrêter l'animation des cercles
-            circleStore.stopAnimation();
+            // CORRECTION FUITE MÉMOIRE : Nettoyer complètement l'animation des cercles
+            circleStore.cleanup();
             
-            // Se désabonner des stores
+            // CORRECTION FUITE MÉMOIRE : Se désabonner des stores
             unsubscribe();
             unsubscribeBienvenu();
         };

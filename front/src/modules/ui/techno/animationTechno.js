@@ -240,11 +240,11 @@ export function createDesktopTechnoAnimation(elements) {
 export function createLargeDesktopTechnoAnimation(elements) {
     return gsap.timeline({
         scrollTrigger: {
-            trigger: ".h3-in-my-world",
-            start: "top 0% -550px",
-            end: "bottom 85%",
+            trigger: elements.elementOfBienvenu.h3InMyWorld,
+            start: "top 0% +9050px",
+            end: "bottom 99%",
             toggleActions: "play none none reverse",
-            // markers: true,
+            markers: true,
         },
     })
     .fromTo(".box", 
@@ -260,23 +260,23 @@ export function createLargeDesktopTechnoAnimation(elements) {
             y: 0,
             scale: 1,
             rotation: 0,
-            duration: 1,
-            stagger: 0.7,
+            duration: 0.7,
+            stagger: 0.35,
             ease: "elastic.out(1, 1.1)",
         }
     )
     .to(".box", {
         y: -60,
         scale: 1.3,
-        duration: 0.5,
-        stagger: 0.3,
+        duration: 0.25,
+        stagger: 0.15,
         ease: "power2.out",
     })
     .to(".box", {
         y: 0,
         scale: 1,
-        duration: 0.5,
-        pin: true,
+        duration: 0.25,
+        stagger: 0.15,
         ease: "bounce.out",
         onComplete: () => console.log("Animation large desktop techno end"),
     });

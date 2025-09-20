@@ -151,8 +151,7 @@
         top: 45%;
         left: 0;
         width: 100%;
-        height: 50svh;
-        max-height: 90svh;
+        height: clamp(50svh, 105svh, 100%);
     }
     .content-text-bienvenue p {
         font-family: "Orbitron", cursive;
@@ -194,7 +193,6 @@
      
         .container-global-text-bienvenue {
             top: 0;
-            height: 100%;
         }
         .container-global-text-bienvenue h2 {
             top: 20%;
@@ -213,8 +211,6 @@
             backdrop-filter: blur(2px);
             top: 42%;
             /* height: 100svh; */
-            min-height: 95svh;
-            max-height: 100svh;
         }
         .content-text-bienvenue p {
             position: relative;

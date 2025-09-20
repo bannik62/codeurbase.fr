@@ -3,7 +3,7 @@
     import { gsap } from "gsap";
     import { ScrollTrigger } from "gsap/ScrollTrigger";
     import saturne from "../../../assets/saturne.png";
-    import { elementsStore } from "../../../stores/elements.js";
+    import { elementsStore, isModuleReady } from "../../../stores/elements.js";
     import { initMediaQuery, useMediaQuery } from "../../../stores/mediaQuery.js";
     import { initSaturneAnimation, cleanupSaturneAnimation } from "./animationsSaturne.js";
     
@@ -14,13 +14,12 @@
         elements = store;
     });
 
+    // Vérifier si le module Bienvenu est prêt
+    const isBienvenuReady = isModuleReady('elementOfBienvenu');
+
     onMount(() => {
         console.log("chargé saturne.svelte");
         gsap.registerPlugin(ScrollTrigger);
-    
-        // Vérification des éléments du store
-        console.log("Elements disponibles:", elements);
-        console.log("contentTextBienvenue:", elements?.elementOfBienvenu?.contentTextBienvenue);
 
         // Initialiser le store media query
         const cleanupMediaQuery = initMediaQuery();
@@ -37,8 +36,28 @@
             cleanup: cleanupMediaQueryStores
         } = useMediaQuery();
 
-        // Animation de Saturne selon la taille d'écran
-        let saturneAnimation = initSaturneAnimation(currentSize);
+        // Initialiser l'animation de Saturne
+        let saturneAnimation = null;
+        
+        // Fonction pour initialiser l'animation quand les éléments sont prêts
+        const initAnimation = () => {
+            console.log("Elements disponibles:", elements);
+            console.log("contentTextBienvenue:", elements?.elementOfBienvenu?.contentTextBienvenue);
+            
+            if (elements?.elementOfBienvenu?.contentTextBienvenue && !saturneAnimation) {
+                saturneAnimation = initSaturneAnimation(currentSize);
+            }
+        };
+
+        // Initialiser immédiatement si les éléments sont déjà disponibles
+        initAnimation();
+        
+        // S'abonner aux changements du module Bienvenu
+        const unsubscribeBienvenuReady = isBienvenuReady.subscribe(isReady => {
+            if (isReady) {
+                initAnimation();
+            }
+        });
 
         // Fonction de nettoyage
         return () => {
@@ -48,11 +67,14 @@
             // Nettoyer le store media query
             cleanupMediaQuery();
             
-            // Tuer l'animation de Saturne
-            cleanupSaturneAnimation(saturneAnimation);
+            // Tuer l'animation de Saturne si elle existe
+            if (saturneAnimation) {
+                cleanupSaturneAnimation(saturneAnimation);
+            }
             
             // Se désabonner des stores
             unsubscribeBienvenu();
+            unsubscribeBienvenuReady();
         };
     });
 </script>
