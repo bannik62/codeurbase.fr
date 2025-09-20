@@ -90,21 +90,20 @@
             fois mes projets, mes expériences et mes découvertes dans le développement
             web. Ici, tu trouveras :<br /><br />
 
-            📝 <span class="red">Un blog</span> pour explorer des sujets techniques, des tutos et des
+            📝 <span class="red">Un blog :</span> pour explorer des sujets techniques, des tutos et des
             réflexions autour du code.<br /><br />
 
-            💼 <span class="red">Un portfolio</span> pour découvrir mes réalisations et mon parcours.<br
-            />
+            💼 <span class="red">Un portfolio :</span> pour découvrir mes réalisations et mon parcours.<br
+            /><br/>
 
-            🚀 Un espace d'expérimentation où j'expérimente de nouvelles
+            🚀 <span class="red">Un espace d'expérimentation :</span> où j'expérimente de nouvelles
             technologies et outils.<br /><br />
 
-            Mon objectif est simple : créer, apprendre et partager. Bonne visite
+            🎯 <span class="red">Mon objectif est simple :</span> créer, apprendre et partager. Bonne visite
             et bienvenue dans mon univers digital. <br /><span class="span-globe">🌐</span><br />
         </p>
         <h3 class="h3-en-cours-de-construction" style="font-size: clamp(1rem, 6.5vw, 4rem);color: crimson;" bind:this={h3EnCoursDeConstruction}>
-            en cours de construction
-        </h3>
+            en cours de construction responsive :'|        </h3>
     </div>
 </div>
 
