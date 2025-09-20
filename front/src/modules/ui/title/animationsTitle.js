@@ -124,18 +124,24 @@ export function createDesktopBordureAnimation() {
  */
 export function createLargeDesktopBordureAnimation() {
     return gsap.to(".bordure", {
-        yPercent: 0,
-        xPercent: 60,
+        yPercent: 100,
+        xPercent: 0,
         opacity: 1,
+        z: -1000,
+        scale: 0,
         duration: 0.4,
+        onStart: () => console.log("Animation large title"),
         scrollTrigger: {
             trigger: ".container",
             start: "top 0%",
-            end: "bottom 90%",
+            endTrigger: ".container",
+            end: "bottom 99%",
             scrub: 0.3,
+            // markers: true,
         },
+
         ease: "power2.inOut",
-        onStart: () => console.log("Animation large desktop bordure démarrée"),
+        onComplete: () => console.log("Animation large desktop bordure démarrée"),
     });
 }
 

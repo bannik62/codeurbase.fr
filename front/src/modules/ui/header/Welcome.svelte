@@ -277,18 +277,19 @@
     /* Desktop (1024px à 1399px) */
     @media (min-width: 1024px) and (max-width: 1399px) {
         .container-global-text-bienvenue {
-            top: 32%;; /* Ajustement pour desktop */
+            top: 20%;; /* Ajustement pour desktop */
         }
     }
     
     /* Large Desktop (1400px à 1799px) */
     @media (min-width: 1400px) and (max-width: 1799px) {
         .container-global-text-bienvenue {
-            top: 33%; /* Ajustement pour large desktop */
+            top: 18%; /* Ajustement pour large desktop */
+            height: 150%;
         }
         
         .container-global-text-bienvenue h2 {
-            top:-8%; /* Ajustement pour large desktop */
+            top:3%; /* Ajustement pour large desktop */
         }
         
         .content-text-bienvenue {
@@ -296,7 +297,7 @@
         }
         .h3-in-my-world {
             position: relative;
-             top: -25%;        
+             top: -23%;        
         }
     }
 </style>

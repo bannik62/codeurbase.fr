@@ -580,7 +580,7 @@
     /* Large Desktop (1400px à 1799px) */
     @media (min-width: 1400px) and (max-width: 1799px) {
         .container {
-            height: 100%;
+            height: 50%;
         }
         .container-title-screen-and-balayage {
             height: clamp(100px, 40svh, 40dvh);
