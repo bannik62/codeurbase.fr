@@ -169,10 +169,25 @@ const createCircleStore = () => {
         }
     }
 
+    // CORRECTION FUITE MÉMOIRE : Fonction pour nettoyer complètement le store
+    function cleanup() {
+        stopAnimation();
+        // Réinitialiser l'état des cercles
+        set({
+            circles: [
+                { x: 0, y: 0, z: 0, zIndex: 1002, vx: 0, vy: 0, vz: 0, ax: 0, ay: 0 },
+                { x: 0, y: 0, z: 0, zIndex: 1002, vx: 0, vy: 0, vz: 0, ax: 0, ay: 0 },
+                { x: 0, y: 0, z: 0, zIndex: 1002, vx: 0, vy: 0, vz: 0, ax: 0, ay: 0 }
+            ],
+            titleZIndex: 1004
+        });
+    }
+
     return {
         subscribe,
         startAnimation,
         stopAnimation,
+        cleanup, // CORRECTION FUITE MÉMOIRE : Ajouter la fonction de nettoyage
         // Méthodes utilitaires optimisées
         getCirclePosition: (index) => {
             let pos;

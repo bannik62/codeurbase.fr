@@ -23,6 +23,9 @@
     let showLoader = false;
     let loaderProgress = 0;
     let succes = false;
+    
+    // CORRECTION FUITE MÉMOIRE : Variable pour stocker l'interval du loader
+    let progressInterval = null;
 
     // Fonction pour générer une vitesse aléatoire (minimum 0.6s)
     function getRandomSpeed() {
@@ -94,15 +97,19 @@
         const interval = 50; // Mise à jour toutes les 50ms
         const increment = 100 / (duration / interval);
 
-        const progressInterval = setInterval(() => {
+        progressInterval = setInterval(() => {
             loaderProgress += increment;
             if (loaderProgress >= 100) {
                 loaderProgress = 100;
                 clearInterval(progressInterval);
+                progressInterval = null; // CORRECTION FUITE MÉMOIRE
                 // Marquer le succès à la fin
                 succes = true;
             }
         }, interval);
+        
+        // Stocker la référence pour le nettoyage
+        return progressInterval;
     }
 
     // Fonction pour nettoyer les timeouts d'animation
@@ -110,6 +117,11 @@
         // Nettoyer tous les timeouts
         animationTimeouts.forEach((timeout) => clearTimeout(timeout));
         animationTimeouts = [];
+        // CORRECTION FUITE MÉMOIRE : Nettoyer l'interval du loader
+        if (progressInterval) {
+            clearInterval(progressInterval);
+            progressInterval = null;
+        }
         // Réinitialiser l'état des lettres
         visibleLetters = [];
         // Réinitialiser le flag d'animation

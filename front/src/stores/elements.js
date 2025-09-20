@@ -18,12 +18,24 @@ export const elementsStore = writable({
     },
     elementOfSaturne: {
         // À définir selon les éléments de Saturne
+    },
+    elementOfTechno: {
+        technoContainer: null
     }
 });
 
 // Store dérivé pour vérifier si tous les modules sont prêts
 export const isElementsReady = derived(elementsStore, $elements => {
     return Object.values($elements).every(module => 
-        Object.values(module).some(el => el !== null)
+        Object.values(module).some(el => el !== null && el !== undefined)
     );
 });
+
+// Store dérivé pour vérifier si un module spécifique est prêt
+export const isModuleReady = (moduleName) => {
+    return derived(elementsStore, $elements => {
+        const module = $elements[moduleName];
+        if (!module) return false;
+        return Object.values(module).some(el => el !== null && el !== undefined);
+    });
+};

@@ -6,7 +6,7 @@
     
     // Variables pour les étoiles
     const stars = [];
-    const numStars = 100;
+    const numStars = 200;
     const baseSpeed = 2;
     let currentSpeed = baseSpeed;
     let curve = 0;
@@ -28,7 +28,10 @@
     }
 
     function drawStars() {
-        if (!ctx) return;
+        if (!ctx) {
+            console.log("🌟 Stars - Pas de contexte canvas, arrêt de l'animation");
+            return;
+        }
         
         // Effacer le canvas une seule fois
         ctx.fillStyle = "black";
@@ -91,7 +94,11 @@
     }
 
     onMount(() => {
+        console.log("🌟 Stars - onMount démarré");
+        console.log("🌟 Stars - Canvas reçu:", canvas);
+        
         if (canvas) {
+            console.log("🌟 Stars - Canvas trouvé:", canvas);
             canvasWidth = window.innerWidth;
             canvasHeight = window.innerHeight;
             canvas.width = canvasWidth;
@@ -100,30 +107,68 @@
             halfHeight = canvasHeight * 0.5;
             ctx = canvas.getContext("2d");
             
+            console.log("🌟 Stars - Contexte canvas:", ctx);
             initStars();
+            console.log("🌟 Stars - Étoiles initialisées:", stars.length);
             drawStars();
-            
-            // Gestion du resize avec throttling
-            let resizeTimeout;
-            window.addEventListener("resize", () => {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(handleResize, 100);
-            });
-            
-            // Scroll pour les étoiles avec throttling
-            let scrollTimeout;
-            window.addEventListener("scroll", () => {
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(updateStars, 16); // ~60fps
-            });
+            console.log("🌟 Stars - Animation démarrée");
+        } else {
+            console.log("🌟 Stars - Canvas non trouvé, attente...");
+            // Attendre que le canvas soit disponible
+            const checkCanvas = () => {
+                if (canvas) {
+                    console.log("🌟 Stars - Canvas trouvé après attente:", canvas);
+                    canvasWidth = window.innerWidth;
+                    canvasHeight = window.innerHeight;
+                    canvas.width = canvasWidth;
+                    canvas.height = canvasHeight;
+                    halfWidth = canvasWidth * 0.5;
+                    halfHeight = canvasHeight * 0.5;
+                    ctx = canvas.getContext("2d");
+                    
+                    initStars();
+                    drawStars();
+                } else {
+                    setTimeout(checkCanvas, 100);
+                }
+            };
+            checkCanvas();
         }
+        
+        // Gestion du resize avec throttling - CORRECTION FUITE MÉMOIRE
+        let resizeTimeout;
+        const handleResizeThrottled = () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(handleResize, 100);
+        };
+        window.addEventListener("resize", handleResizeThrottled);
+        
+        // Scroll pour les étoiles avec throttling - CORRECTION FUITE MÉMOIRE
+        let scrollTimeout;
+        const updateStarsThrottled = () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(updateStars, 16); // ~60fps
+        };
+        window.addEventListener("scroll", updateStarsThrottled);
+        
+        // Fonction de nettoyage retournée par onMount
+        return () => {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+            // Nettoyer les timeouts
+            if (resizeTimeout) clearTimeout(resizeTimeout);
+            if (scrollTimeout) clearTimeout(scrollTimeout);
+            // Supprimer les event listeners avec les bonnes références
+            window.removeEventListener("resize", handleResizeThrottled);
+            window.removeEventListener("scroll", updateStarsThrottled);
+        };
     });
 
     onDestroy(() => {
+        // CORRECTION : Nettoyage de sécurité pour onDestroy
         if (animationId) {
             cancelAnimationFrame(animationId);
         }
-        window.removeEventListener("resize", handleResize);
-        window.removeEventListener("scroll", updateStars);
     });
 </script>

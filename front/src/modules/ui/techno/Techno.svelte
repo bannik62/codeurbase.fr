@@ -3,12 +3,31 @@
     import { gsap } from 'gsap';
     import { ScrollTrigger } from 'gsap/ScrollTrigger';
     import { initMediaQuery, useMediaQuery } from '../../../stores/mediaQuery.js';
+    import { elementsStore, isModuleReady } from '../../../stores/elements.js';
     import { initTechnoAnimations, cleanupTechnoAnimations } from './animationTechno.js';
 
     gsap.registerPlugin(ScrollTrigger);
 
     // Variables pour les éléments bindés
     let technoContainer;
+    
+    // CORRECTION : Mettre à jour le store des éléments
+    $: elementsStore.update(store => ({
+        ...store,
+        elementOfTechno: {
+            technoContainer
+        }
+    }));
+    
+    // CORRECTION : S'abonner au store pour accéder aux autres éléments
+    let elements;
+    const unsubscribeElements = elementsStore.subscribe(store => {
+        elements = store;
+    });
+
+    // Vérifier si les modules nécessaires sont prêts
+    const isBienvenuReady = isModuleReady('elementOfBienvenu');
+    const isTechnoReady = isModuleReady('elementOfTechno');
 
     onMount(() => {
         // Initialiser le store media query
@@ -26,18 +45,35 @@
             cleanup: cleanupMediaQueryStores
         } = useMediaQuery();
 
-        // Créer l'objet elements pour les animations
-        const elements = {
-            technoContainer
+        // Initialiser les animations
+        let animations = {};
+        
+        // Fonction pour initialiser les animations quand les éléments sont prêts
+        const initAnimations = () => {
+            console.log("🔧 Techno - Éléments disponibles:", elements);
+            console.log("🔧 Techno - H2Welcome:", elements?.elementOfBienvenu?.h2Welcome);
+            console.log("🔧 Techno - TechnoContainer:", elements?.elementOfTechno?.technoContainer);
+            
+            if (elements?.elementOfBienvenu?.h2Welcome && elements?.elementOfTechno?.technoContainer && (!animations || Object.keys(animations).length === 0)) {
+                animations = initTechnoAnimations(currentSize, elements);
+            }
         };
 
-        // Animations selon la taille d'écran
-        let animations = {};
-
-        // currentSize est déjà déterminé par useMediaQuery()
-        setTimeout(() => {
-            animations = initTechnoAnimations(currentSize, elements);
-        }, 100);
+        // Initialiser immédiatement si les éléments sont déjà disponibles
+        initAnimations();
+        
+        // S'abonner aux changements des modules
+        const unsubscribeBienvenuReady = isBienvenuReady.subscribe(isReady => {
+            if (isReady) {
+                initAnimations();
+            }
+        });
+        
+        const unsubscribeTechnoReady = isTechnoReady.subscribe(isReady => {
+            if (isReady) {
+                initAnimations();
+            }
+        });
 
         // Fonction de nettoyage
         return () => {
@@ -46,6 +82,11 @@
             
             // Nettoyer le store media query
             cleanupMediaQuery();
+            
+            // CORRECTION : Se désabonner du store des éléments
+            unsubscribeElements();
+            unsubscribeBienvenuReady();
+            unsubscribeTechnoReady();
             
             // Tuer les animations
             cleanupTechnoAnimations(animations);

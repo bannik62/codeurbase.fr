@@ -12,12 +12,7 @@
     import Techno from "../modules/ui/techno/Techno.svelte";
     import Cockpit from "../modules/ui/cockpit/Cockpit.svelte";
     import { initMediaQuery, useMediaQuery } from "../stores/mediaQuery.js";
-    import {
-        initLenis,
-        stopLenis,
-        startLenis,
-        lenis,
-    } from "../stores/lenis.js";
+    import { initLenis } from "../stores/lenis.js";
     let canvas;
     let ctx;
     let atmoOne;
@@ -25,8 +20,6 @@
 
     // Variables pour la détection étape par étape
     let showDetector = true;
-
-    let hasTriggered = false; // Protection contre les déclenchements multiples
 
     onMount(() => {
         // Initialiser le store media query
@@ -51,12 +44,18 @@
         // Initialiser Lenis dans la page principale
         const lenisInstance = initLenis();
         lenisInstance.on("scroll", ScrollTrigger.update);
-        // Animation loop pour Lenis
+        
+        // CORRECTION : Lenis a besoin de sa propre boucle requestAnimationFrame
+        let rafId = null;
+        let isRafActive = true;
+        
         function raf(time) {
-            lenisInstance.raf(time);
-            requestAnimationFrame(raf);
+            if (isRafActive) {
+                lenisInstance.raf(time);
+                rafId = requestAnimationFrame(raf);
+            }
         }
-        requestAnimationFrame(raf);
+        rafId = requestAnimationFrame(raf);
 
         // Forcer un refresh de ScrollTrigger après le chargement complet
         setTimeout(() => {
@@ -67,6 +66,59 @@
         gsap.set(".nuages-one", { opacity: 0, scale: 0.1 });
         gsap.set(".intro-cloud-container", { opacity: 0, scale: 0.1 });
 
+        // OPTIMISATION : Fonction pour créer les animations communes
+        function createCloudAnimations(triggerStart, triggerEnd, planetY, planetScale, planetWidth, planetHeight) {
+            const cloudAnimation = gsap.to(".nuages-one", {
+                opacity: 1,
+                scale: 1,
+                duration: 2,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: ".atmo-one",
+                    start: triggerStart,
+                    end: triggerEnd,
+                    toggleActions: "play none none reverse",
+                },
+            });
+
+            const cloudContentAnimation = gsap.to(".intro-cloud-container", {
+                opacity: 1,
+                scale: 1,
+                duration: 2,
+                ease: "back.out(1.7)",
+                scrollTrigger: {
+                    trigger: ".atmo-one",
+                    start: triggerStart,
+                    end: triggerEnd,
+                    toggleActions: "play none none reverse",
+                },
+            });
+
+            const planetAnimation = gsap.timeline({
+                scrollTrigger: {
+                    trigger: ".atmo-one",
+                    start: triggerStart,
+                    end: triggerEnd,
+                    scrub: 1,
+                },
+            });
+
+            planetAnimation
+                .to(".atmo-one img", {
+                    y: planetY,
+                    duration: 1.5,
+                    ease: "power2.out",
+                })
+                .to(".atmo-one img", {
+                    scale: planetScale,
+                    width: planetWidth,
+                    height: planetHeight,
+                    duration: 2.0,
+                    ease: "power2.out",
+                });
+
+            return { cloudAnimation, cloudContentAnimation, planetAnimation };
+        }
 
         // Animation Cloud avec switch selon la taille d'écran
         let cloudAnimation;
@@ -76,55 +128,9 @@
         switch (currentSize) {
             case "smallMobile":
                 // Très petits écrans (≤ 475px)
-                cloudAnimation = gsap.to(".nuages-one", {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 2,
-                    ease: "power2.out",
-                    scrollTrigger: {
-                        trigger: ".atmo-one",
-                        start: "top 70%",
-                        end: "bottom 30%",
-                        toggleActions: "play none none reverse",
-                    },
-                });
-
-                cloudContentAnimation = gsap.to(".intro-cloud-container", {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 2,
-                    ease: "back.out(1.7)",
-                    scrollTrigger: {
-                        trigger: ".atmo-one",
-                        start: "top 70%",
-                        end: "bottom 30%",
-                        toggleActions: "play none none reverse",
-                    },
-                });
-
-                // Animation parallaxe planète
-                planetAnimation = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: ".atmo-one",
-                        start: "top 70%",
-                        end: "bottom 30%",
-                        scrub: 1,
-                    },
-                });
-
-                planetAnimation
-                    .to(".atmo-one img", {
-                        y: -100,
-                        duration: 1.5,
-                        ease: "power2.out",
-                    })
-                    .to(".atmo-one img", {
-                        scale: 8.0,
-                        width: "300%",
-                        height: "300%",
-                        duration: 2.0,
-                        ease: "power2.out",
-                    });
+                ({ cloudAnimation, cloudContentAnimation, planetAnimation } = createCloudAnimations(
+                    "top 70%", "bottom 30%", -100, 8.0, "300%", "300%"
+                ));
 
                 // Animation directe
                 gsap.timeline({
@@ -144,10 +150,6 @@
                         ease: "power1.in",
                         onStart: () => {
                             showDetector = true;
-                            console.log(
-                                "Animation de démarrage:",
-                                showDetector
-                            );
                         },
                     })
                     .to(".container-detection-one", {
@@ -164,10 +166,6 @@
                             ease: "power2.out",
                             onComplete: () => {
                                 showDetector = true;
-                                console.log(
-                                    "Animation terminée:",
-                                    showDetector
-                                );
                             },
                         },
                         1.4
@@ -176,55 +174,9 @@
 
             case "mediumMobile":
                 // Medium mobile (476px - 767px)
-                cloudAnimation = gsap.to(".nuages-one", {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 2,
-                    ease: "power2.out",
-                    scrollTrigger: {
-                        trigger: ".atmo-one",
-                        start: "top 70%",
-                        end: "bottom 30%",
-                        toggleActions: "play none none reverse",
-                    },
-                });
-
-                cloudContentAnimation = gsap.to(".intro-cloud-container", {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 2,
-                    ease: "back.out(1.7)",
-                    scrollTrigger: {
-                        trigger: ".atmo-one",
-                        start: "top 70%",
-                        end: "bottom 30%",
-                        toggleActions: "play none none reverse",
-                    },
-                });
-
-                // Animation parallaxe planète
-                planetAnimation = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: ".atmo-one",
-                        start: "top 70%",
-                        end: "bottom 30%",
-                        scrub: 1,
-                    },
-                });
-
-                planetAnimation
-                    .to(".atmo-one img", {
-                        y: -80,
-                        duration: 1.5,
-                        ease: "power2.out",
-                    })
-                    .to(".atmo-one img", {
-                        scale: 7.0,
-                        width: "280%",
-                        height: "280%",
-                        duration: 2.0,
-                        ease: "power2.out",
-                    });
+                ({ cloudAnimation, cloudContentAnimation, planetAnimation } = createCloudAnimations(
+                    "top 70%", "bottom 30%", -80, 7.0, "280%", "280%"
+                ));
 
                 // Animation directe
                 gsap.timeline({
@@ -268,55 +220,9 @@
 
             case "mobile":
                 // Mobile (768px - 1023px)
-                cloudAnimation = gsap.to(".nuages-one", {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 2,
-                    ease: "power2.out",
-                    scrollTrigger: {
-                        trigger: ".atmo-one",
-                        start: "top 70%",
-                        end: "bottom 30%",
-                        toggleActions: "play none none reverse",
-                    },
-                });
-
-                cloudContentAnimation = gsap.to(".intro-cloud-container", {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 2,
-                    ease: "back.out(1.7)",
-                    scrollTrigger: {
-                        trigger: ".atmo-one",
-                        start: "top 70%",
-                        end: "bottom 30%",
-                        toggleActions: "play none none reverse",
-                    },
-                });
-
-                // Animation parallaxe planète
-                planetAnimation = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: ".atmo-one",
-                        start: "top 70%",
-                        end: "bottom 30%",
-                        scrub: 1,
-                    },
-                });
-
-                planetAnimation
-                    .to(".atmo-one img", {
-                        y: -60,
-                        duration: 1.5,
-                        ease: "power2.out",
-                    })
-                    .to(".atmo-one img", {
-                        scale: 6.0,
-                        width: "260%",
-                        height: "260%",
-                        duration: 2.0,
-                        ease: "power2.out",
-                    });
+                ({ cloudAnimation, cloudContentAnimation, planetAnimation } = createCloudAnimations(
+                    "top 70%", "bottom 30%", -60, 6.0, "260%", "260%"
+                ));
 
                 // Animation directe
                 gsap.timeline({
@@ -359,64 +265,18 @@
                 break;
 
             case "tablet":
-                // Tablette (1024px - 1399px) - Vide
-                break;
-
             case "desktop":
-                // Desktop (1400px+) - Vide
+                // Tablette et Desktop - Utiliser les valeurs par défaut
+                ({ cloudAnimation, cloudContentAnimation, planetAnimation } = createCloudAnimations(
+                    "top 70%", "bottom 30%", -50, 5.0, "250%", "250%"
+                ));
                 break;
 
             case "largeDesktop":
                 // Large Desktop (1400px-1799px)
-                cloudAnimation = gsap.to(".nuages-one", {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 2,
-                    ease: "power2.out",
-                    scrollTrigger: {
-                        trigger: ".atmo-one",
-                        start: "top 60%",
-                        end: "bottom 40%",
-                        toggleActions: "play none none reverse",
-                    },
-                });
-
-                cloudContentAnimation = gsap.to(".intro-cloud-container", {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 2,
-                    ease: "back.out(1.7)",
-                    scrollTrigger: {
-                        trigger: ".atmo-one",
-                        start: "top 60%",
-                        end: "bottom 40%",
-                        toggleActions: "play none none reverse",
-                    },
-                });
-
-                // Animation parallaxe planète
-                planetAnimation = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: ".atmo-one",
-                        start: "top 60%",
-                        end: "bottom 40%",
-                        scrub: 1.2,
-                    },
-                });
-
-                planetAnimation
-                    .to(".atmo-one img", {
-                        y: -50,
-                        duration: 1.5,
-                        ease: "power2.out",
-                    })
-                    .to(".atmo-one img", {
-                        scale: 5.0,
-                        width: "60%",
-                        height: "60%",
-                        duration: 2.0,
-                        ease: "power2.out",
-                    });
+                ({ cloudAnimation, cloudContentAnimation, planetAnimation } = createCloudAnimations(
+                    "top 60%", "bottom 40%", -50, 5.0, "60%", "60%"
+                ));
 
                     gsap.timeline({
                         scrollTrigger: {
@@ -428,7 +288,6 @@
                         }
                     })
                     .to(".container-status", {
-                        onStart: () => {console.log("animation de la container-detection-one")},
                         scale: 1.7,
                         border: "1px solid crimson",
                         borderRadius: "15px",
@@ -441,55 +300,9 @@
 
             case "xlDesktop":
                 // XL Desktop (≥1800px)
-                cloudAnimation = gsap.to(".nuages-one", {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 2,
-                    ease: "power2.out",
-                    scrollTrigger: {
-                        trigger: ".atmo-one",
-                        start: "top 55%",
-                        end: "bottom 45%",
-                        toggleActions: "play none none reverse",
-                    },
-                });
-
-                cloudContentAnimation = gsap.to(".intro-cloud-container", {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 2,
-                    ease: "back.out(1.7)",
-                    scrollTrigger: {
-                        trigger: ".atmo-one",
-                        start: "top 55%",
-                        end: "bottom 45%",
-                        toggleActions: "play none none reverse",
-                    },
-                });
-
-                // Animation parallaxe planète
-                planetAnimation = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: ".atmo-one",
-                        start: "top 55%",
-                        end: "bottom 45%",
-                        scrub: 1.5,
-                    },
-                });
-
-                planetAnimation
-                    .to(".atmo-one img", {
-                        y: -40,
-                        duration: 1.5,
-                        ease: "power2.out",
-                    })
-                    .to(".atmo-one img", {
-                        scale: 4.5,
-                        width: "50%",
-                        height: "50%",
-                        duration: 2.0,
-                        ease: "power2.out",
-                    });
+                ({ cloudAnimation, cloudContentAnimation, planetAnimation } = createCloudAnimations(
+                    "top 55%", "bottom 45%", -40, 4.5, "50%", "50%"
+                ));
                 break;
         }
 
@@ -499,6 +312,13 @@
 
             // Nettoyer le store media query
             cleanupMediaQuery();
+
+            // CORRECTION : Arrêter la boucle requestAnimationFrame de Lenis
+            isRafActive = false;
+            if (rafId) {
+                cancelAnimationFrame(rafId);
+                rafId = null;
+            }
 
             // Tuer les animations Cloud
             if (cloudAnimation) cloudAnimation.kill();
@@ -586,6 +406,7 @@
         width: 100%;
         height: 100%;
         display: block;
+        background: rgba(0, 0, 50, 0.1); /* DEBUG: Fond bleu très léger pour voir le canvas */
     }
 
     .space-one,
@@ -595,7 +416,6 @@
         width: 100%;
     }
     .space-one {
-        /* border: 1px solid red; */
         height: 100svh;
     }
     .space-two {
@@ -605,11 +425,6 @@
         position: relative;
         height: 100svh;
         width: 100%;
-        /* background: rgba(0, 255, 0, 0.05); */
-        /* display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;  */
     }
     .content-space-two {
         position: relative;
@@ -627,7 +442,6 @@
         left: 0%;
         width: 100%;
         height: 50svh;
-        /* z-index: 10; */
     }
 
     .atmo-one img {
@@ -652,18 +466,6 @@
         z-index: 20;
         width: 100%;
         height: 100%;
-        /* GSAP gère l'animation, pas de transition CSS */
-    }
-
-    @keyframes toInvisible {
-        0% {
-            top: -10svh;
-            opacity: 1;
-        }
-        100% {
-            top: 0;
-            opacity: 0;
-        }
     }
 
     @keyframes toInvisible {
@@ -700,7 +502,6 @@
     }
    
     .container-status {
-        /* border: 1x solid yellow; */
         position: relative;
         display: flex;
         justify-content: center;
@@ -711,7 +512,6 @@
         font-family: "Orbitron", sans-serif;
         font-size: clamp(1rem, 4vw, 1.2rem);
         font-weight: bold;
-        /* filter: drop-shadow(10px 0 10px rgba(110, 239, 34, 0.5)); */
     }
 
     /* ===== MEDIA QUERIES RESPONSIVE ===== */
@@ -728,29 +528,22 @@
 
         .space-one {
             height: 150svh;
-            /* border: solid 1px red; */
-            
         }
 
         .space-two {
-            /* border: solid 1px yellow; */
             top: 0%;
             height: 100svh;
         }
         .space-three {
-            /* border:solid 1px orange; */
-            /* display:flex; */
             position: relative;
             width: 100%;
             height: 100svh;
         }
         .atmo-one {
             top:17%;
-            /* border: 1px solid blue; */
             height: 100%;
         }
         .atmo-one img {
-            /* top: -50%; */
             left: 0%;
             width: 120%;
             height: clamp(120%, 150%, 170%);
@@ -881,38 +674,6 @@
         }
     }
 
-    /* Desktop (1024px à 1399px) */
-    @media (min-width: 1024px) and (max-width: 1399px) {
-        .content_space {
-            height: auto;
-        }
-
-        .space-one {
-            border: 1px solid yellow;
-            height: 200dvh;
-        }
-
-        .space-two {
-            border: 1px solid orange;
-            height:160dvh;
-        }
-        .space-three {
-            border: 1px solid green;
-            height: 160dvh;
-        }
-
-        .atmo-one img {
-            top: 65%;
-            left: 75%;
-            width: 70%;
-            height: clamp(100%, 110%, 120%);
-        }
-
-        .container-status {
-            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
-            min-height: 120px;
-        }
-    }
     
     /* Large Desktop (1400px à 1799px) */
     @media (min-width: 1400px) and (max-width: 1799px) {
@@ -928,11 +689,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* border: 1px solid red; */
             height: 200dvh;
         }
         .content-space-two {
-            /* border: 1px solid blue; */
             position: relative;
             top: -20%;
             left: 0;
