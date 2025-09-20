@@ -189,7 +189,7 @@
     /* Très petits écrans (jusqu'à 475px) */
     @media (max-width: 475px) {
         .sec2 {
-            top: -2%;
+            top: -3%;
             left: 0%;
             height: 10%;
             width: 100dvw;
