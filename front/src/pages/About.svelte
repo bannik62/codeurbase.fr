@@ -1,5 +1,5 @@
 <script>
-    import Navbar from '../modules/ui/navbar/Navbar.svelte';
+    import Navbar from '../modules/ui/portfolio/navbar/Navbar.svelte';
 </script>
 
 <Navbar />

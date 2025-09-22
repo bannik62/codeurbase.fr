@@ -1,12 +1,12 @@
 <script>
-    import screen from "../../../assets/sl_021821_40890_09.jpg";
+    import screen from "../../../../assets/sl_021821_40890_09.jpg";
     import { onMount } from "svelte";
     import Bienvenues from "../header/Welcome.svelte";
     import { gsap } from "gsap";
     import { ScrollTrigger } from "gsap/ScrollTrigger";
-    import { initMediaQuery, useMediaQuery } from "../../../stores/mediaQuery.js";
-    import { circleStore } from "../../../stores/circleMove.js";
-    import { elementsStore } from "../../../stores/elements.js";
+    import { initMediaQuery, useMediaQuery } from "../../../../stores/mediaQuery.js";
+    import { circleStore } from "../../../../stores/circleMove.js";
+    import { elementsStore } from "../../../../stores/elements.js";
     import { initBordureAnimation, cleanupBordureAnimation } from "./animationsTitle.js";
 
     // Enregistrer le plugin ScrollTrigger

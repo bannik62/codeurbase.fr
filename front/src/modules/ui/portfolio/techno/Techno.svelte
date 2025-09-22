@@ -2,8 +2,8 @@
     import { onMount } from 'svelte';   
     import { gsap } from 'gsap';
     import { ScrollTrigger } from 'gsap/ScrollTrigger';
-    import { initMediaQuery, useMediaQuery } from '../../../stores/mediaQuery.js';
-    import { elementsStore, isModuleReady } from '../../../stores/elements.js';
+    import { initMediaQuery, useMediaQuery } from '../../../../stores/mediaQuery.js';
+    import { elementsStore, isModuleReady } from '../../../../stores/elements.js';
     import { initTechnoAnimations, cleanupTechnoAnimations } from './animationTechno.js';
 
     gsap.registerPlugin(ScrollTrigger);
@@ -175,7 +175,7 @@
 
     .mcp {
         background-color: transparent;
-        background-image: url('../../../assets/mcp.png');
+        background-image: url('../../../../assets/mcp.png');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;

@@ -1,16 +1,16 @@
 <script>
     import { onMount } from "svelte";
-    import Cloud from "../modules/ui/clouds/Cloud.svelte";
+    import Cloud from "../modules/ui/portfolio/clouds/Cloud.svelte";
     import planet from "../assets/Planet-No-Background.png";
-    import Detector from "../modules/ui/detection/Detector.svelte";
-    import Title from "../modules/ui/title/Title.svelte";
-    import Saturne from "../modules/ui/planet/Saturne.svelte";
-    import Stars from "../modules/ui/stars/Stars.svelte";
+    import Detector from "../modules/ui/portfolio/detection/Detector.svelte";
+    import Title from "../modules/ui/portfolio/title/Title.svelte";
+    import Saturne from "../modules/ui/portfolio/planet/Saturne.svelte";
+    import Stars from "../modules/ui/portfolio/stars/Stars.svelte";
     import { gsap } from "gsap";
     import { ScrollTrigger } from "gsap/ScrollTrigger";
-    import Bienvenues from "../modules/ui/header/Welcome.svelte";
-    import Techno from "../modules/ui/techno/Techno.svelte";
-    import Cockpit from "../modules/ui/cockpit/Cockpit.svelte";
+    import Bienvenues from "../modules/ui/portfolio/header/Welcome.svelte";
+    import Techno from "../modules/ui/portfolio/techno/Techno.svelte";
+    import Cockpit from "../modules/ui/portfolio/cockpit/Cockpit.svelte";
     import { initMediaQuery, useMediaQuery } from "../stores/mediaQuery.js";
     import { initLenis } from "../stores/lenis.js";
     let canvas;
