@@ -1,7 +1,7 @@
 <script>
     import { onMount } from 'svelte';
-    import ServicesOK from '../../services/ServicesOK.svelte';
-    import { currentPage } from '../../../stores/router';
+    import ServicesOK from '../../../services/ServicesOK.svelte';
+    import { currentPage } from '../../../../stores/router';
     onMount(() => {
        
     });
