@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import Navbar from '../modules/ui/navbar/Navbar.svelte';
+    import Navbar from '../modules/ui/portfolio/navbar/Navbar.svelte';
   let email = '';
   let message = '';
   let isSubmitted = false;
