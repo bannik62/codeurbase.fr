@@ -2,9 +2,9 @@
     import { onMount } from "svelte";
     import { gsap } from "gsap";
     import { ScrollTrigger } from "gsap/ScrollTrigger";
-    import saturne from "../../../assets/saturne.png";
-    import { elementsStore, isModuleReady } from "../../../stores/elements.js";
-    import { initMediaQuery, useMediaQuery } from "../../../stores/mediaQuery.js";
+    import saturne from "../../../../assets/saturne.png";
+    import { elementsStore, isModuleReady } from "../../../../stores/elements.js";
+    import { initMediaQuery, useMediaQuery } from "../../../../stores/mediaQuery.js";
     import { initSaturneAnimation, cleanupSaturneAnimation } from "./animationsSaturne.js";
     
     gsap.registerPlugin(ScrollTrigger);

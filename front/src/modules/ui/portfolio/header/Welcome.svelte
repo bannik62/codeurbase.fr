@@ -3,8 +3,8 @@
     import { gsap } from "gsap";
     import { ScrollTrigger } from "gsap/ScrollTrigger";
     import Splitting from "splitting";
-    import { initMediaQuery, useMediaQuery } from "../../../stores/mediaQuery.js";
-    import { elementsStore } from "../../../stores/elements.js";
+    import { initMediaQuery, useMediaQuery } from "../../../../stores/mediaQuery.js";
+    import { elementsStore } from "../../../../stores/elements.js";
     import { initWelcomeAnimations, cleanupWelcomeAnimations } from "./animationsWelcome.js";
 
     // Variables pour les éléments bindés
