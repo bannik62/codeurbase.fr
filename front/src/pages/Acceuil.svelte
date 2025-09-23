@@ -12,14 +12,29 @@
     import Techno from "../modules/ui/portfolio/techno/Techno.svelte";
     import Cockpit from "../modules/ui/portfolio/cockpit/Cockpit.svelte";
     import { initMediaQuery, useMediaQuery } from "../stores/mediaQuery.js";
-    import { initLenis } from "../stores/lenis.js";
+    import { initLenis, stopLenis, startLenis } from "../stores/lenis.js";
     let canvas;
     let ctx;
     let atmoOne;
     let nuagesOne;
 
     // Variables pour la détection étape par étape
-    let showDetector = true;
+    let showDetector = false;
+
+    // Fonctions pour bloquer/débloquer le scroll avec Lenis
+    function disableScroll() {
+        // Bloquer Lenis
+        stopLenis();
+        // Bloquer aussi le scroll natif du body pour plus de sécurité
+        document.body.style.overflow = 'hidden';
+    }
+
+    function enableScroll() {
+        // Redémarrer Lenis
+        startLenis();
+        // Restaurer le scroll natif du body
+        document.body.style.overflow = 'auto';
+    }
 
     onMount(() => {
         // Initialiser le store media query
@@ -280,21 +295,48 @@
 
                     gsap.timeline({
                         scrollTrigger: {
-                            trigger: ".h3-en-cours-de-construction",
-                            start: "top 0%",
-                            end: "bottom 0%",
-                            scrub: 1,
+                            trigger: ".content-space-two",
+                            start: "top +=40%",
+                            // endTrigger: ".content-space-two",
+                            end: "bottom 70%",
+                            scrub: 0.1,
                             // markers: true,
+                            toggleActions: "play none none reverse",
+
                         }
                     })
-                    .to(".container-status", {
-                        scale: 1.7,
+                    .fromTo(".container-status", {
+                        scale: 0,
+                        border: "0px solid crimson",
+                        borderRadius: "15px", 
+                        duration: 0.9,
+                        ease: "power2.in",
+                    }, {
+                        scale: 2.7,
                         border: "1px solid crimson",
                         borderRadius: "15px",
                         boxShadow: "0px 0px 120px 10px crimson",
-                        backgroundColor: "transparent",
-                        duration: 2,
+                        background: "radial-gradient(circle, rgba(191, 217, 180, 1) 0%, rgba(4, 196, 20, 1) 35%, rgba(39, 71, 0, 1) 100%)",
+                        duration:1,
+                        position: "absolute",
                         ease: "power2.out",
+                    })
+                    .to(".container-status", {
+                        y: "100%",
+                        duration: 2.5,
+                        ease: "power2.out",
+                    }).to(".container-status", {
+                        x: "350%",
+                        duration: 1.5,
+                        ease: "power2.out",
+                        onComplete: () => {
+                            showDetector = true;
+                            disableScroll(); // Bloquer le scroll
+                            setTimeout(() => {
+                                showDetector = false;
+                                enableScroll(); // Débloquer le scroll après 5 secondes
+                            }, 8000);
+                        },
                     });
                 break;
 
@@ -347,19 +389,22 @@
         <div class="space-two">
 
             <div class="content-space-two">
+         
             <div class="container-detection-one">
                 <div class="container-status">
                     <p>"Status: Détection activée..."</p>
                 </div>
             </div>
+
             <div class="container-detector">
                 {#if showDetector === true}
                     <Detector />
                 {/if}
             </div>        
+           </div>
+        
         </div>
-        </div>
-      
+        
         <div class="space-three">
       
             <div class="atmo-one">
@@ -371,6 +416,7 @@
     
     </div>
 </div>
+   
 
     <!-- <Cockpit /> -->
 </section>
@@ -420,6 +466,7 @@
     }
     .space-two {
         height: 100svh;
+        /* border: 1px solid red; */
     }
     .space-three {
         position: relative;
@@ -485,13 +532,12 @@
         align-items: center;position: absolute;
         top: 0%;
         left: 0;
-        background: rgba(28, 173, 105, 0.219);
         position: relative;
         width: 100%;
         height: 10%;
         padding: 20px;
         border-radius: 15px;
-        filter: drop-shadow(0px 2px 35px rgba(110, 239, 34, 0.5));
+        /* filter: drop-shadow(0px 2px 35px rgba(110, 239, 34, 0.5)); */
     }
     .container-detector{
         position: absolute;
@@ -692,13 +738,27 @@
             height: 200dvh;
         }
         .content-space-two {
+            /* border: 1px solid green; */
             position: relative;
-            top: -20%;
+            top: -25%;
             left: 0;
             width: 50%;
             height: 50%;
         }
-
+        .container-detection-one {
+            /* border: 1px solid blue; */
+            position: relative;
+            left: 0%;
+        width: 100%;
+        height: 100%;
+        top: 0%;
+        padding: 20px;
+        }
+        .container-status {
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+            min-height: 120px;
+        }
+    
         .space-three {
             height: 110dvh;
         }
@@ -712,14 +772,7 @@
             width: 70%;
             height: clamp(100%, 110%, 120%);
         }
-        .container-detection-one {
-            height: 20%;
-            bottom: 0;
-        }
-        .container-status {
-            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
-            min-height: 120px;
-        }
+
     }
     
     /* XL Desktop (1800px et plus) */

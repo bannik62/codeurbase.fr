@@ -51,7 +51,7 @@
         // Fonction pour initialiser les animations quand les éléments sont prêts
         const initAnimations = () => {
             console.log("🔧 Techno - Éléments disponibles:", elements);
-            console.log("🔧 Techno - H2Welcome:", elements?.elementOfBienvenu?.h2Welcome);
+            console.log("🔧 Techno - H2Welcome:", elements?.elementOfBienvenu?.h3EnCoursDeConstruction);
             console.log("🔧 Techno - TechnoContainer:", elements?.elementOfTechno?.technoContainer);
             
             if (elements?.elementOfBienvenu?.h2Welcome && elements?.elementOfTechno?.technoContainer && (!animations || Object.keys(animations).length === 0)) {
