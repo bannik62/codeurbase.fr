@@ -360,23 +360,22 @@ export function createLargeDesktopInMyWorldAnimation(elements) {
         scrollTrigger: {
             trigger: ".h2-welcome",    
             start: "top 0%",
-            endTrigger: "h3-in-my-world",
-            end: "top 0%",
+            endTrigger: ".h3-in-my-world",
+            end: "bottom 95%",
             scrub: 3,
             toggleActions: "play none none none",
-            // markers: true,
         },
     })
     .set(".h3-in-my-world", {
         opacity: 0,
-        yPercent: 160,
+        y: 160,
         z: 0,
         scale: 0,
         duration: 2,
     })
     .to(".h3-in-my-world", {
         opacity: 1,
-        yPercent: -240,
+        y: -540,
         z: 0,
         duration: 4,
         ease: "elastic.out(0.1, 0.1)",
@@ -384,7 +383,7 @@ export function createLargeDesktopInMyWorldAnimation(elements) {
     })
     .to(".h3-in-my-world", {
          z: -1000,
-         yPercent:-80,
+         y: -200,
          duration:1.5,
          ease: "linear.inOut",
          onComplete: () => console.log("Animation large desktop in my world end"),
