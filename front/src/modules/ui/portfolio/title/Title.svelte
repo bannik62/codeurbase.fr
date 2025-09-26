@@ -14,18 +14,8 @@
 
  
 
-    // Variables réactives optimisées pour les positions des cercles
-    let circleData = {
-        circles: [
-            { x: 0, y: 0, z: 0, zIndex: 1002 },
-            { x: 0, y: 0, z: 0, zIndex: 1002 },
-            { x: 0, y: 0, z: 0, zIndex: 1002 }
-        ],
-        titleZIndex: 1004
-    };
-
-    // Variables pré-calculées pour optimiser les performances
-    let circleStyles = ['', '', ''];
+    // Variable pour le z-index du titre
+    let titleZIndex = 1004;
 
     // Variables pour les éléments bindés
     let container;
@@ -70,24 +60,16 @@
         console.log("🎯 Taille d'écran détectée:", currentSize);
         let bordureAnimation = initBordureAnimation(currentSize);
 
-        // CORRECTION FUITE MÉMOIRE : Test d'accès aux éléments de Bienvenues via le store (optimisé)
         let bienvenuElement;
         const unsubscribeBienvenu = elementsStore.subscribe(store => {
             bienvenuElement = store.elementOfBienvenu?.h2Welcome;
         });
 
 
-        // S'abonner au store des cercles avec optimisation
+        // S'abonner au store des cercles uniquement pour le z-index du titre
         const unsubscribe = circleStore.subscribe(data => {
-            circleData = data;
-            // Pré-calculer les styles pour éviter les recalculs dans le template
-            circleStyles = data.circles.map(circle => 
-                `left: ${circle.x}%; top: ${circle.y}%; transform: translateZ(${circle.z}px); z-index: ${circle.zIndex};`
-            );
+            titleZIndex = data.titleZIndex;
         });
-
-        // Démarrer l'animation des cercles
-        circleStore.startAnimation();
 
         return () => {
             // Nettoyer les abonnements aux stores media query
@@ -134,15 +116,15 @@
             </div>
 
             <div class="cadre top-right">
-                <div class="rond-move rond-1" style={circleStyles[0]}></div>
+                <div class="rond-move" style="left: 70%; top: 20%;"></div>
             </div>
 
             <div class="cadre bottom-left">
-                <div class="rond-move rond-2" style={circleStyles[1]}></div>
+                <div class="rond-move" style="left: 20%; top: 70%;"></div>
             </div>
 
             <div class="cadre bottom-right">
-                <div class="rond-move rond-3" style={circleStyles[2]}></div>
+                <div class="rond-move" style="left: 80%; top: 80%;"></div>
             </div>
 
             <div class="contain-balayage">
@@ -155,7 +137,7 @@
             <h1
                 class="title glitch-base"
                 data-text="CodeurBase.fr"
-                style="z-index: {circleData.titleZIndex}"
+                style="z-index: {titleZIndex}"
                 bind:this={title}
             >
                 <span class="title-part1">CodeurBase.fr</span
@@ -220,7 +202,7 @@
         letter-spacing: 0.5em;
         color: crimson;
         position: absolute;
-        top: -2%;
+        top: 0;
         left: 0;
         width: 100%;
         clip-path: polygon(
@@ -419,18 +401,11 @@
 
     .rond-move {
         position: absolute;
-        top: 0;
-        left: 0;
-        width:2%;
+        width: 2%;
         height: 10%;
-        background: radial-gradient(circle, rgba(28, 173, 105, 0.14) 90%, rgba(212, 61, 44, 1) 100%);
-        filter: drop-shadow(0 0 50px rgb(28, 173, 105));
+        background: rgba(28, 173, 105, 0.14);
+        border: 1px solid rgba(212, 61, 44, 0.5);
         border-radius: 50%;
-        backdrop-filter: blur(10px);
-        background-position: top right;
-        padding: 2px;
-        transform-style: preserve-3d;
-        will-change: transform, z-index;
     }
         
     
@@ -498,7 +473,7 @@
         text-align: center;
         text-transform: uppercase;
         font-family: "Bungee Shade", "Orbitron", cursive;
-        transform: scaleX(1);
+        transform: scaleX(1) translateZ(0); /* Ajout de translateZ pour forcer l'accélération matérielle */
         animation: glitch-p 5s linear 3 forwards;
         background-color: transparent;
         isolation: isolate;
@@ -508,6 +483,7 @@
         justify-content: center;
         align-items: center;
         line-height: 1.2;
+        will-change: transform; /* Optimisation des performances */
     }
 
     .title-part1, .title-part2 {
@@ -586,7 +562,7 @@
             height: clamp(100px, 40svh, 40dvh);
         }
         .bordure {
-            top: -37%;
+            top: -30%;
         }
         .title {
             flex-wrap: nowrap;
@@ -619,7 +595,7 @@
         left: 0;
         text-align: center;
         
-        transform: translateX(calc(var(--left) * 100%));
+        transform: translateX(calc(var(--left) * 100%)) translateZ(0);
         
         filter: drop-shadow(0 0 transparent);
         
@@ -628,6 +604,8 @@
         
         background-color: transparent;
         clip-path: polygon(0% var(--t-cut), 100% var(--t-cut), 100% var(--b-cut), 0% var(--b-cut));
+        will-change: transform, clip-path;
+        backface-visibility: hidden;
     }
     
     .title::before {
@@ -721,31 +699,31 @@
     /* Animations de glitch */
     @keyframes glitch-p {
         0% {
-            transform: scaleX(1);
+            transform: scaleX(1) translateZ(0);
             opacity: 1;
         }
         17% { 
-            transform: scaleX(.95);
+            transform: scaleX(.95) translateZ(0);
             opacity: 0.9;
         }
         31% { 
-            transform: scaleX(1.05);
+            transform: scaleX(1.05) translateZ(0);
             opacity: 1;
         }
         37% { 
-            transform: scaleX(1.1);
+            transform: scaleX(1.1) translateZ(0);
             opacity: 0.9;
         }
         47% { 
-            transform: scaleX(.98);
+            transform: scaleX(.98) translateZ(0);
             opacity: 0.85;
         }
         87% { 
-            transform: scaleX(1);
+            transform: scaleX(1) translateZ(0);
             opacity: 1;
         }
         100% {
-            transform: scaleX(1);
+            transform: scaleX(1) translateZ(0);
             opacity: 1;
         }
     }

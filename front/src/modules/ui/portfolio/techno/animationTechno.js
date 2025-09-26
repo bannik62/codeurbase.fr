@@ -243,7 +243,7 @@ export function createLargeDesktopTechnoAnimation(elements) {
             trigger: elements.elementOfBienvenu.h3InMyWorld,
             start: "top 0% +9050px",
             end: "bottom 99%",
-            toggleActions: "play none none reverse",
+            toggleActions: "play none none none",
         },
     })
     .fromTo(".box", 
@@ -265,15 +265,15 @@ export function createLargeDesktopTechnoAnimation(elements) {
         }
     )
     .to(".box", {
-        y: -60,
-        scale: 1.3,
+        y: -40,
+        scale: 1.2,
         duration: 0.25,
         stagger: 0.15,
         ease: "power2.out",
     })
     .to(".box", {
         y: 0,
-        scale: 1,
+        scale: 0.9,
         duration: 0.25,
         stagger: 0.15,
         ease: "bounce.out",
@@ -305,25 +305,25 @@ export function createXlDesktopTechnoAnimation(elements) {
         {
             opacity: 1,
             y: 0,
-            scale: 1,
+            scale: 0.11,
             rotation: 0,
-            duration: 4.5,
-            stagger: 0.8,
+            duration: 2,
+            stagger: 0.1,
             ease: "elastic.out(1, 1.3)",
         }
     )
     .to(".box", {
-        y: -70,
-        scale: 1.35,
+        y: -50,
+        scale: 1.2,
         duration: 2,
-        stagger: 0.35,
+        stagger: 0.1,
         ease: "power2.out",
     })
     .to(".box", {
         y: 0,
         scale: 1,
         duration: 2,
-        stagger: 0.35,
+        stagger: 0.1,
         ease: "bounce.out",
     });
 }

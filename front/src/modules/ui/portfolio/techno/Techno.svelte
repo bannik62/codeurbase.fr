@@ -110,7 +110,7 @@
     }
     .techno-container {
         position: absolute;
-        top: 10%;
+        top: 8%;
         left: 7%;
         display: flex;
         flex-direction: row;

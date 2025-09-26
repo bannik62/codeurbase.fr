@@ -600,11 +600,47 @@
             transform: translateY(0);
         }
     }
+    /* Très petits écrans (jusqu'à 475px) */
     @media (max-width: 475px) {
          .intro-cloud-container {
             height: clamp(50%, 100%, 100%);
         }
 
+        .child-div {
+            height: clamp(65%, 70%, 90%);
+        } 
+    }
+
+    /* Medium Mobile (476px à 767px) */
+    @media (min-width: 476px) and (max-width: 767px) {
+        .child-div {
+            height: clamp(65%, 70%, 90%);
+        } 
+    }
+
+    /* Tablette (768px à 1023px) */
+    @media (min-width: 768px) and (max-width: 1023px) {
+        .child-div {
+            height: clamp(65%, 70%, 90%);
+        } 
+    }
+
+    /* Desktop (1024px à 1399px) */
+    @media (min-width: 1024px) and (max-width: 1399px) {
+        .child-div {
+            height: clamp(65%, 70%, 90%);
+        } 
+    }
+
+    /* Large Desktop (1400px à 1799px) */
+    @media (min-width: 1400px) and (max-width: 1799px) {
+        .child-div {
+            height: 100%;
+        } 
+    }
+
+    /* XL Desktop (1800px et plus) */
+    @media (min-width: 1800px) and (max-width: 2199px) {
         .child-div {
             height: clamp(65%, 70%, 90%);
         } 

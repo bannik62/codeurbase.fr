@@ -82,7 +82,7 @@
 <div class="container-global-text-bienvenue" bind:this={containerGlobalTextBienvenue}>
 
     <h2 class="h2-welcome" bind:this={h2Welcome}>Welcome</h2>
-    <h3 class="h3-in-my-world" bind:this={h3InMyWorld}>In my world</h3>
+    <h3 class="h3-in-my-world" bind:this={h3InMyWorld}>To my world</h3>
     <div class="content-text-bienvenue" bind:this={contentTextBienvenue}>
         <p class="p-bienvenue" data-splitting bind:this={pBienvenue}>
             Bienvenue sur <span class="red">CodeurBase</span>.<br /><br />
@@ -138,7 +138,7 @@
     }
     .h3-in-my-world {
         font-family: "Orbitron", "Bungee Shade", cursive;
-        font-size: clamp(1rem, 15vw, 12rem);
+        font-size: clamp(1rem, 12vw, 12rem);
         font-weight: 800;
         color: crimson;
         margin: 0;
@@ -150,7 +150,7 @@
         top: 45%;
         left: 0;
         width: 100%;
-        height: clamp(50svh, 105svh, 100%);
+        height: clamp(50svh, 115svh, 100%);
     }
     .content-text-bienvenue p {
         font-family: "Orbitron", cursive;
