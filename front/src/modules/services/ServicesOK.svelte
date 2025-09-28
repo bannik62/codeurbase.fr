@@ -87,7 +87,9 @@
 
 <style>
    .services-ok {
-    position: relative;
+    position: absolute;
+    top: 100%;
+    right: 2%;
     display: flex;
     flex-direction: column;
     justify-content: center;
