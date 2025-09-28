@@ -1,5 +1,5 @@
 <script>
-    import screen from "../../../../assets/sl_021821_40890_09.jpg";
+    import screen from "../../../../assets/background/sl_021821_40890_09.jpg";
     import { onMount } from "svelte";
     import Bienvenues from "../header/Welcome.svelte";
     import { gsap } from "gsap";

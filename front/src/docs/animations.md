@@ -127,3 +127,4 @@ Chaque breakpoint ajuste :
 - Les positions des éléments
 - Les échelles d'animation
 - Les points de déclenchement ScrollTrigger
+

@@ -17,6 +17,7 @@
     let ctx;
     let atmoOne;
     let nuagesOne;
+  
     let pStatus;
 
     // Variables pour la détection étape par étape

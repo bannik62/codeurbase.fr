@@ -8,9 +8,18 @@
   const welcomeMessage = writable('Bienvenue sur notre site !');
 
   onMount(() => {
-    // Logique d'initialisation si nécessaire
+    currentPage.refresh();
   });
 </script>
+
+
+
+<section class="home-container">
+  <Navbar />
+  <h1>{$welcomeMessage}</h1>
+  <p>Découvrez nos services et produits innovants.</p>
+</section>
+
 
 <style>
   .home-container {
@@ -33,9 +42,3 @@
     color: #666;
   }
 </style>
-
-<section class="home-container">
-  <Navbar />
-  <h1>{$welcomeMessage}</h1>
-  <p>Découvrez nos services et produits innovants.</p>
-</section>

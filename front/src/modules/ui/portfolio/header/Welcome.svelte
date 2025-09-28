@@ -80,7 +80,6 @@
 </script>
 
 <div class="container-global-text-bienvenue" bind:this={containerGlobalTextBienvenue}>
-
     <h2 class="h2-welcome" bind:this={h2Welcome}>Welcome</h2>
     <h3 class="h3-in-my-world" bind:this={h3InMyWorld}>To my world</h3>
     <div class="content-text-bienvenue" bind:this={contentTextBienvenue}>
@@ -104,7 +103,7 @@
         </p>
         <h3 class="h3-en-cours-de-construction" style="font-size: clamp(1rem, 6.5vw, 4rem);color: crimson;" bind:this={h3EnCoursDeConstruction}>
             en cours de construction responsive :'|        </h3>
-    </div>
+        </div>
 </div>
 
 <style>
