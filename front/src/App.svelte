@@ -50,6 +50,10 @@
     setTimeout(() => {
       buttonVisible = true;
     }, 1000);
+    if ( currentPage.get() === 'acceuil') {
+      currentPage.set('acceuilPortfolioBis');
+    }
+
   });
 
   onDestroy(() => {
@@ -66,14 +70,6 @@
 
 <div class="app_wrapper">
   {#if $currentPage === 'acceuilPortfolioBis'}
-   {#if buttonVisible}
-     <button 
-       on:click={() => currentPage.set('acceuil')}
-       class:visible={buttonVisible}
-     >
-       Press echap or press this, to skip
-     </button>
-   {/if}
    <Acceuilbis />
 {:else if $currentPage === 'acceuil'}
   <Acceuil />

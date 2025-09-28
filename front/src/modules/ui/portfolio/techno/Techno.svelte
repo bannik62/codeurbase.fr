@@ -1,12 +1,27 @@
 <script>
-    import { onMount } from 'svelte';   
-    import { gsap } from 'gsap';
-    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    import { onMount } from 'svelte';
+    
+    // Préchargement des images
+    const preloadImages = () => {
+        const images = [
+            '/src/assets/logos/svelte-logo.svg',
+            '/src/assets/logos/nodejs-logo.png',
+            '/src/assets/logos/css-logo.webp',
+            '/src/assets/logos/docker-logo.svg',
+            '/src/assets/logos/mcp.png'
+        ];
+        
+        images.forEach(src => {
+            const img = new Image();
+            img.src = src;
+        });
+    };
     import { initMediaQuery, useMediaQuery } from '../../../../stores/mediaQuery.js';
     import { elementsStore, isModuleReady } from '../../../../stores/elements.js';
     import { initTechnoAnimations, cleanupTechnoAnimations } from './animationTechno.js';
 
-    gsap.registerPlugin(ScrollTrigger);
+    let gsap;
+    let ScrollTrigger;
 
     // Variables pour les éléments bindés
     let technoContainer;
@@ -29,7 +44,18 @@
     const isBienvenuReady = isModuleReady('elementOfBienvenu');
     const isTechnoReady = isModuleReady('elementOfTechno');
 
-    onMount(() => {
+    onMount(async () => {
+        // Précharger les images
+        preloadImages();
+        
+        // Charger GSAP de manière dynamique
+        const gsapModule = await import('gsap');
+        const scrollTriggerModule = await import('gsap/ScrollTrigger');
+        
+        gsap = gsapModule.gsap;
+        ScrollTrigger = scrollTriggerModule.ScrollTrigger;
+        gsap.registerPlugin(ScrollTrigger);
+
         // Initialiser le store media query
         const cleanupMediaQuery = initMediaQuery();
         
@@ -116,7 +142,6 @@
         flex-direction: row;
         justify-content: space-between;
         align-items: flex-start;
-        background-color: #3a3a3c32;
         backdrop-filter: blur(10px);
         width: clamp(70%, 80%, 90%);
         margin: auto;
@@ -135,47 +160,44 @@
     }
     
     .svelte {
-        background-color: transparent;
-        background-image: url('https://logo.svgcdn.com/d/svelte-original-wordmark.svg');
+        background-color: white;
+        border: 4px solid crimson;
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        border: 4px solid crimson;
-        background-color: white
+        background-image: url('/src/assets/logos/svelte-logo.svg');
     }
     .js {
-        background-color: transparent;
-        background-image: url('https://images.seeklogo.com/logo-png/26/2/node-js-logo-png_seeklogo-269242.png');
+        background-color: white;
+        border: 4px solid crimson;
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        border: 4px solid crimson;
-        background-color: white
+        background-image: url('/src/assets/logos/nodejs-logo.png');
     }
 
     .css {
-        background-color: transparent;
-        background-image: url('https://t4.ftcdn.net/jpg/00/75/92/23/360_F_75922336_Jz2QgNOx7dnRea9ZI6yQTDtn1vHq5ejF.jpg');
+        background-color: white;
+        border: 4px solid crimson;
         background-size: auto 90%;
         background-position: center;
         background-repeat: no-repeat;
-        border: 4px solid crimson;
-        background-color: white
+        background-image: url('/src/assets/logos/css-logo.webp');
     }
 
 
     .docker {
+        background-color: white;
         border: 4px solid crimson;
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        background-image: url('https://static.cdnlogo.com/logos/d/56/docker.svg');
-        background-color: white
+        background-image: url('/src/assets/logos/docker-logo.svg');
     }
 
     .mcp {
         background-color: transparent;
-        background-image: url('../../../../assets/mcp.png');
+        background-image: url('/src/assets/logos/mcp.png');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -258,7 +280,7 @@
     /* Large Desktop (1400px à 1799px) */
     @media (min-width: 1400px) and (max-width: 1799px) {
         .sec2 {
-            top: 4%;
+            top:6%;
             left: 0%;
             height: 10%;
             width: 100dvw;

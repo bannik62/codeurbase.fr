@@ -1,12 +1,28 @@
 import { writable } from 'svelte/store';
 
 // On lit la valeur du localStorage au démarrage
-const initialPage = localStorage.getItem('currentPage') || 'acceuilPortfolioBis';
+const initialPage =  'acceuilPortfolioBis';
 
-// On crée le store avec la valeur initiale
-export const currentPage = writable(initialPage);
+// Création d'un store personnalisé
+function createCurrentPageStore() {
+  const { subscribe, set: originalSet } = writable(initialPage);
 
-// À chaque changement du store, on sauvegarde dans localStorage
-currentPage.subscribe((value) => {
-  localStorage.setItem('currentPage', value);
-});
+  return {
+    subscribe,
+    set: (value) => {
+      // Mise à jour du localStorage
+      localStorage.setItem('currentPage', value);
+      // Mise à jour du store
+      originalSet(value);
+    },
+    // Méthode pour forcer une mise à jour depuis le localStorage
+    refresh: () => {
+      const currentValue = localStorage.getItem('currentPage');
+      if (currentValue) {
+        originalSet(currentValue);
+      }
+    }
+  };
+}
+
+export const currentPage = createCurrentPageStore();
