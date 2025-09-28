@@ -6,83 +6,104 @@
   import { currentPage } from './stores/router';
   import Contact from './pages/Contact.svelte';
   import { onDestroy } from 'svelte';
-  import { lenis, initLenis } from './stores/lenis.js';
-
+  import Navbar from './modules/ui/portfolio/navbar/Navbar.svelte';
+  import { lenis } from './stores/lenis.js';
   let buttonVisible = false;
-  let scrollTimeout;
-  let lenisInstance;
-  let isScrolling = false;
-  let unsubscribe;
-
-  function handleScroll(e) {
-    if (!isScrolling) {
-      isScrolling = true;
-      buttonVisible = false;
+  let showPortfolio = true;
+  
+  // Log quand la page change
+  $: {
+    console.log('App: currentPage changed to:', $currentPage);
+    console.log('App: will try to render:', $currentPage === 'acceuilPortfolioBis' ? 'AcceuilPortfolioBis' : $currentPage === 'acceuil' ? 'Acceuil' : 'other');
+    
+    // Mise à jour explicite selon la page
+    if ($currentPage === 'acceuilPortfolioBis') {
+      showPortfolio = true;
+    } else {
+      showPortfolio = false;
     }
+  }
 
+  let scrollTimeout;
+  let isScrolling = false;
+
+  function handleScroll() {
+    // Cache le bouton pendant le scroll
+    buttonVisible = false;
+    isScrolling = true;
+    
+    // Annule le timeout précédent
     clearTimeout(scrollTimeout);
     
+    // Définit un nouveau timeout
     scrollTimeout = setTimeout(() => {
       isScrolling = false;
       buttonVisible = true;
-    }, 1000);
+    }, 1000); // Montre le bouton 1 seconde après l'arrêt du scroll
+  }
+
+  function navigateToAcceuil() {
+    currentPage.set('acceuil');
+    // Scroll en haut avant le reload
+    window.scrollTo(0, 0);
+    window.location.reload();
   }
 
   function DetectEchap(event) {
     if (event.key === 'Escape') {
-      console.log('Escape');
-      currentPage.set('acceuil');
+      navigateToAcceuil();
     }
+  }
+
+  function handleButtonClick() {
+    navigateToAcceuil();
   }
 
   onMount(() => {
     window.addEventListener('keydown', DetectEchap);
     
-    // S'abonner au store Lenis
-    unsubscribe = lenis.subscribe(instance => {
+    // S'abonne aux événements de scroll via Lenis
+    const unsubscribe = lenis.subscribe(instance => {
       if (instance) {
-        lenisInstance = instance;
         instance.on('scroll', handleScroll);
       }
     });
 
-    // Initialiser le bouton comme invisible au démarrage
+    // Initialise le bouton comme visible
     setTimeout(() => {
       buttonVisible = true;
     }, 1000);
-    if ( currentPage.get() === 'acceuil') {
-      currentPage.set('acceuilPortfolioBis');
-    }
 
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   });
 
   onDestroy(() => {
     window.removeEventListener('keydown', DetectEchap);
-    if (unsubscribe) unsubscribe();
-    clearTimeout(scrollTimeout);
-    
-    if (lenisInstance) {
-      lenisInstance.off('scroll', handleScroll);
-    }
   });
 
 </script>
 
 <div class="app_wrapper">
   {#if $currentPage === 'acceuilPortfolioBis'}
-   <Acceuilbis />
-{:else if $currentPage === 'acceuil'}
-  <Acceuil />
-{:else if $currentPage === 'about'}
-  <About />
-{:else if $currentPage === 'contact'}
-  <Contact />
-{:else}
-  <div>Page inconnue</div>
-{/if}
+    <button class:visible={buttonVisible} on:click={handleButtonClick}>
+      Press this or Echap
+    </button>
+    <Acceuilbis />
+  {:else}
+    <Navbar />
+    {#if $currentPage === 'acceuil'}
+      <Acceuil />
+    {:else if $currentPage === 'about'}
+      <About />
+    {:else if $currentPage === 'contact'}
+      <Contact />
+    {:else}
+      <div>Page inconnue</div>
+    {/if}
+  {/if}
 </div>
-
-
 
 <style>
   .app_wrapper {

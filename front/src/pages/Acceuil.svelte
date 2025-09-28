@@ -1,25 +1,28 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import { writable } from 'svelte/store';
   import { currentPage } from '../stores/router';
-  import Navbar from '../modules/ui/portfolio/navbar/Navbar.svelte';
+
+  console.log('Acceuil: component instantiated');
 
   // Store pour gérer l'état de la page d'accueil
   const welcomeMessage = writable('Bienvenue sur notre site !');
-
   onMount(() => {
-    currentPage.refresh();
+    console.log('Acceuil: onMount START');
+;
+    // window.location.reload();
+    console.log('Acceuil: onMount END');
+  });
+
+  onDestroy(() => {
+    console.log('Acceuil: onDestroy');
   });
 </script>
 
-
-
 <section class="home-container">
-  <Navbar />
   <h1>{$welcomeMessage}</h1>
   <p>Découvrez nos services et produits innovants.</p>
 </section>
-
 
 <style>
   .home-container {
@@ -27,7 +30,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    height: 200vh;
     background-color: #f0f0f0;
     text-align: center;
   }

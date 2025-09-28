@@ -86,7 +86,7 @@
 </script>
 
 {#if isVisible}
-<div class="detection" transition:fade={{ duration: 100 }}>
+<div class="detection" transition:fade={{ duration: 500 }}>
     {#if showContent}
     <div class="detection-content" transition:scale={{ duration: 500, start: 0.2 }}>
         <h1>Detection Rapport </h1>
@@ -104,17 +104,17 @@
         
         {#if showCustomContent}
         <div class="custom-content">
-            <!-- Ici vous pouvez ajouter votre HTML personnalisé -->
-            <p class="blink-slow p-life" >Life Detected <br> Navigation automatique</p>
-           <div class="blink-normal">
+ 
+            <p class="blink-slow p-life" >
+                Life Detected <br> Navigation automatique
+            </p>
+          
+            <div class="blink-normal">
                <svg width="150" height="150" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                    <path d="M12 16L6 10H18L12 16Z" fill="crimson"/>
                </svg>
            </div>
-           <style>
-    
 
-           </style>
         </div>
         {/if}
     </div>
@@ -184,12 +184,17 @@
     }
     
     .custom-content {
+        position: relative;
+        top: -10%;
+        left: 0;
+        width: 150%;
+        height: 100%;
         margin-top: 2rem;
         text-align: center;
     }
     
     .p-life {
-        font-size:clamp(1rem, 3vw, 3.2rem);
+        font-size:clamp(1rem, 3vw, 3.1rem);
         margin-bottom: 1rem;
         color: orange;   
      }
