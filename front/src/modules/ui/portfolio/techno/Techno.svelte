@@ -23,6 +23,15 @@
     let gsap;
     let ScrollTrigger;
 
+    // Fonction pour charger GSAP de manière asynchrone
+    const loadGsap = async () => {
+        const gsapModule = await import('gsap');
+        const scrollTriggerModule = await import('gsap/ScrollTrigger');
+        gsap = gsapModule.gsap;
+        ScrollTrigger = scrollTriggerModule.ScrollTrigger;
+        gsap.registerPlugin(ScrollTrigger);
+    };
+
     // Variables pour les éléments bindés
     let technoContainer;
     
@@ -44,17 +53,12 @@
     const isBienvenuReady = isModuleReady('elementOfBienvenu');
     const isTechnoReady = isModuleReady('elementOfTechno');
 
-    onMount(async () => {
+    onMount(() => {
         // Précharger les images
         preloadImages();
         
-        // Charger GSAP de manière dynamique
-        const gsapModule = await import('gsap');
-        const scrollTriggerModule = await import('gsap/ScrollTrigger');
-        
-        gsap = gsapModule.gsap;
-        ScrollTrigger = scrollTriggerModule.ScrollTrigger;
-        gsap.registerPlugin(ScrollTrigger);
+        // Charger GSAP
+        loadGsap();
 
         // Initialiser le store media query
         const cleanupMediaQuery = initMediaQuery();

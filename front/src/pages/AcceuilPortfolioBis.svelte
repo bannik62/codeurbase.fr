@@ -1,5 +1,5 @@
 <script>
-    import { onMount } from "svelte";
+    import { onMount, onDestroy } from "svelte";
     import Cloud from "../modules/ui/portfolio/clouds/Cloud.svelte";
     import planet from "../assets/Planet-No-Background.png";
     import Detector from "../modules/ui/portfolio/detection/Detector.svelte";
@@ -7,6 +7,7 @@
     import Saturne from "../modules/ui/portfolio/planet/Saturne.svelte";
     import Stars from "../modules/ui/portfolio/stars/Stars.svelte";
     import { gsap } from "gsap";
+    import Navbar from "../modules/ui/portfolio/navbar/Navbar.svelte";
     import { ScrollTrigger } from "gsap/ScrollTrigger";
     import Bienvenues from "../modules/ui/portfolio/header/Welcome.svelte";
     import Techno from "../modules/ui/portfolio/techno/Techno.svelte";
@@ -38,7 +39,25 @@
         document.body.style.overflow = 'auto';
     }
 
+    onDestroy(() => {
+        console.log('AcceuilPortfolioBis: onDestroy START');
+        // Forcer le nettoyage de tout
+        if (typeof window !== 'undefined') {
+            document.body.style.overflow = 'auto';
+            ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+            ScrollTrigger.clearMatchMedia();
+            stopLenis();
+        }
+        console.log('AcceuilPortfolioBis: onDestroy END');
+    });
+
     onMount(() => {
+        console.log('AcceuilPortfolioBis: onMount START');
+        // Initialiser l'opacité du texte à 0
+        if (pStatus) {
+            pStatus.style.opacity = 0;
+        }
+
         // Initialiser le store media query
         const cleanupMediaQuery = initMediaQuery();
 
@@ -186,6 +205,7 @@
                             duration: 0.5,
                             ease: "power2.out",
                             onComplete: () => {
+                                disableScroll();
                                 showDetector = true;
                             },
                         },
@@ -306,7 +326,6 @@
                             // endTrigger: ".content-space-two",
                             end: "bottom 70%",
                             // scrub: 1.5,
-                            // markers: true,
                             toggleActions: "play none none none",
 
                         }
@@ -314,9 +333,14 @@
                     .fromTo(".container-status", {
                         scale: 0,
                         opacity: 0,
-                        duration: 0.5,
+                        duration: 0.1,
                         ease: "power2.in",
-                        y: "-50%",
+                        y: "0%",
+                        onStart: () => {
+                            if (pStatus) {
+                                pStatus.style.display = "none";
+                            }
+                        },
                     }, {
                         y: "-180%",
                         scale: 2.5,
@@ -329,7 +353,6 @@
                         onComplete: () => {
                             if (pStatus) {
                                 pStatus.style.opacity = 0;
-                                disableScroll(); // Bloquer le scroll
                             }
                         },
                  
@@ -374,6 +397,7 @@
                         borderRadius: "10%",
                         boxShadow: "0px 0px 100px 10px crimson",
                         onComplete: () => {
+                            disableScroll(); // Bloquer le scroll avant d'afficher le détecteur
                             showDetector = true;
                             setTimeout(() => {
                                 showDetector = false;
@@ -391,26 +415,39 @@
                 break;
         }
 
+        console.log('AcceuilPortfolioBis: onMount END');
+        
         return () => {
+            console.log('AcceuilPortfolioBis: cleanup START');
+            
             // Nettoyer les abonnements aux stores media query
             cleanupMediaQueryStores();
-
-            // Nettoyer le store media query
             cleanupMediaQuery();
 
-            // CORRECTION : Arrêter la boucle requestAnimationFrame de Lenis
+            // Arrêter Lenis et nettoyer
             isRafActive = false;
             if (rafId) {
                 cancelAnimationFrame(rafId);
                 rafId = null;
             }
+            if (lenisInstance) {
+                lenisInstance.destroy();
+            }
 
-            // Tuer les animations Cloud
+            // Tuer toutes les animations GSAP
             if (cloudAnimation) cloudAnimation.kill();
             if (cloudContentAnimation) cloudContentAnimation.kill();
             if (planetAnimation) planetAnimation.kill();
-
+            
+            // Nettoyer ScrollTrigger
+            ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+            ScrollTrigger.clearMatchMedia();
+            
+            // Réactiver le scroll
+            document.body.style.overflow = 'auto';
+            
             // Le composant Stars gère maintenant le nettoyage des event listeners
+            console.log('AcceuilPortfolioBis: cleanup END');
         };
     });
 </script>
@@ -523,6 +560,14 @@
         width: 100%;
         height: 100%;
     }
+    .container-detector {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+    }
     .atmo-one {
         display: flex;
         justify-content: center;
@@ -591,7 +636,7 @@
     }
    
     .container-status {
-        position: relative;
+        opacity: 0;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -604,7 +649,6 @@
     }
 
     .p-status {
-        opacity: auto;
         color: crimson;
         font-size: clamp(0.9rem, 4vw, 1.9rem);
     }

@@ -1,27 +1,40 @@
 import { writable } from 'svelte/store';
 
-// On lit la valeur du localStorage au démarrage
-const initialPage =  'acceuilPortfolioBis';
-
-// Création d'un store personnalisé
 function createCurrentPageStore() {
-  const { subscribe, set: originalSet } = writable(initialPage);
+  // Valeurs de pages autorisées
+  const validPages = ['acceuil', 'acceuilPortfolioBis', 'about', 'contact'];
+  
+  // Lire la valeur du localStorage au démarrage
+  const storedPage = typeof window !== 'undefined' ? localStorage.getItem('currentPage') : null;
+  const initialPage = validPages.includes(storedPage) ? storedPage : 'acceuil';
+  
+  const store = writable(initialPage);
+  let currentValue = initialPage;
+
+  // Initialiser le localStorage
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('currentPage', initialPage);
+  }
 
   return {
-    subscribe,
-    set: (value) => {
-      // Mise à jour du localStorage
-      localStorage.setItem('currentPage', value);
-      // Mise à jour du store
-      originalSet(value);
-    },
-    // Méthode pour forcer une mise à jour depuis le localStorage
-    refresh: () => {
-      const currentValue = localStorage.getItem('currentPage');
-      if (currentValue) {
-        originalSet(currentValue);
+    subscribe: store.subscribe,
+    set: (newValue) => {
+      // Vérifier si la nouvelle valeur est valide
+      if (!validPages.includes(newValue)) {
+        console.error(`Invalid page value: ${newValue}`);
+        return;
       }
-    }
+
+      // Ne mettre à jour que si la valeur change réellement
+      if (currentValue !== newValue) {
+        store.set(newValue);
+        currentValue = newValue;
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('currentPage', newValue);
+        }
+      }
+    },
+    get: () => currentValue
   };
 }
 
