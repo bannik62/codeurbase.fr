@@ -2,8 +2,7 @@
   import { onMount, onDestroy } from 'svelte';
   import { writable } from 'svelte/store';
   import { currentPage } from '../stores/router';
-  import Navbar from '../modules/ui/portfolio/navbar/Navbar.svelte';
-
+  import ServicesOK from '../modules/services/ServicesOK.svelte';
   console.log('Acceuil: component instantiated');
 
   // Store pour gérer l'état de la page d'accueil
@@ -22,7 +21,7 @@
 
 <section class="home-container">
   <h1>{$welcomeMessage}</h1>
-  <Navbar />
+  <ServicesOK />
   <p>Découvrez nos services et produits innovants.</p>
 </section>
 
