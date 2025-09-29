@@ -162,7 +162,7 @@
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        background-image: url('../../../../assets/logos/svelte-logo.svg');
+        background-image: url('../../../../assets/logos/nodejs-logo.png');
     }
 
     .css {
