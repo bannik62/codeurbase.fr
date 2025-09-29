@@ -15,13 +15,13 @@
     let widthMin = 50;
 
     let itsOkBackend = false;
-    let itsOkN8n = false;
+    let itsOkN8n = true;
     console.log("BACKEND_URL", BACKEND_URL);
-
+    console.log("N8N_URL", N8N_URL);
     
-    console.log("Starting health checks with URL:", BACKEND_URL);
-    // setInterval(() => {
-        console.log("Attempting health check...");
+    console.log("Starting health checks with URL:", BACKEND_URL , N8N_URL);
+
+    console.log("Attempting health check...");
         axios
             .get(BACKEND_URL)
             .then((response) => {
@@ -39,7 +39,19 @@
                 });
                 itsOkBackend = false;
             });
-    // }, 7000);
+            axios
+            .get(N8N_URL)
+            .then((response) => {
+                itsOkN8n = response.data;
+            })
+            .catch((error) => {
+                console.log("Health check failed:", {
+                    timestamp: new Date().toISOString(),
+                    error: error.message,
+                    config: error.config?.url
+                });
+                itsOkN8n = false;
+            });
 
 </script>
 
@@ -74,12 +86,28 @@
 </div>
 
 <div class="n8n-power">
-    <div class="n8n-power-title" style="width: {widthMin}%;">n8n</div>
+        <div
+            class="n8n-power-title"
+            style="width: {!itsOkN8n
+                ? widthTotal
+                : widthMin}%;transition: width 0.5s ease-in-out;"
+        >
+            n8n
+        </div>
     <div
         class="n8n-power-content"
-        style="background-color: {itsOkN8n ? backgroundOK : backgroundKO};"
+        style="background-color: {itsOkN8n ? backgroundOK : backgroundKO};width: {itsOkN8n
+            ? widthMin
+            : zero}%;transition: width 0.5s ease-in-out;"
     >
-        <div class="n8n-power-content-item">🤖</div>
+        <div
+            class="n8n-power-content-item"
+            style="opacity:{itsOkN8n
+                ? '1'
+                : '0'};transition: opacity 2s ease-in-out;"
+        >
+            🤖
+        </div>
     </div>
 </div>
 </div>
@@ -207,7 +235,6 @@
         justify-content: center;
         align-items: center;
         background-color: #555;
-        width: 50%;
         height: 100%;
         border-radius: 0 10px 10px 0;
         display: flex;
@@ -231,11 +258,4 @@
         align-items: center;
     }
 
-    .n8n-power-content-item {
-        width: 0px;
-        font-size: 2rem;
-        font-weight: 600;
-        color: #fff;
-        height: 100%;
-    }
 </style>
