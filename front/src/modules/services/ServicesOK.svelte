@@ -40,8 +40,7 @@
                 itsOkBackend = false;
             });
     // }, 7000);
-    onMount(() => {
-});
+
 </script>
 
 <div class="services-ok">
@@ -87,9 +86,9 @@
 
 <style>
    .services-ok {
-    position: absolute;
-    top: 100%;
-    right: 2%;
+    position: relative;
+    top: 0;
+    left: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
