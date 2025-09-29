@@ -4,10 +4,17 @@ const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 
 // Charger les variables d'environnement
-dotenv.config();
+dotenv.config({ path: '/app/.env' });
+
+// Debug des variables d'environnement
+console.log('Variables d\'environnement chargées:', {
+  PORT: process.env.PORT,
+  NODE_ENV: process.env.NODE_ENV,
+  FRONTEND_URL: process.env.FRONTEND_URL
+});
 
 const app = express();
-const port = process.env.PORT ;
+const port = process.env.PORT;
 
 // Middleware
 app.use(cors({
