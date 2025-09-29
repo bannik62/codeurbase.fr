@@ -7,7 +7,10 @@
   import Contact from './pages/Contact.svelte';
   import { onDestroy } from 'svelte';
   import Navbar from './modules/ui/portfolio/navbar/Navbar.svelte';
-  import { lenis } from './stores/lenis.js';
+  import { lenis, stopLenis } from './stores/lenis.js';
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
   let buttonVisible = false;
   let showPortfolio = true;
   
@@ -43,8 +46,16 @@
   }
 
   function navigateToAcceuil() {
+    // Nettoyage des animations GSAP
+    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    ScrollTrigger.clearMatchMedia();
+    gsap.killTweensOf("*"); // Arrête toutes les animations GSAP
+
+    // Nettoyage de Lenis
+    stopLenis();
+    document.body.style.overflow = 'auto';
+    
     currentPage.set('acceuil');
-    // Scroll en haut avant le reload
     window.scrollTo(0, 0);
     window.location.reload();
   }
