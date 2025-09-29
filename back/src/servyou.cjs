@@ -33,6 +33,6 @@ app.get('/n8n', (req, res) => {
 });
 // Start the server
 app.listen(port, () => {
-  console.log(`Server is running on ${port}`);
-  console.log(`Environment: ${process.env.NODE_ENV || 'Production'}`);
+  console.log(`*********************Server is running on ${port} *************************`);
+  console.log(`Environment: ${process.env.NODE_ENV}`);
 });
