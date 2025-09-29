@@ -18,7 +18,7 @@
     let itsOkN8n = false;
     console.log("BACKEND_URL", BACKEND_URL);
 
-    onMount(() => {
+    
     console.log("Starting health checks with URL:", BACKEND_URL);
     // setInterval(() => {
         console.log("Attempting health check...");
@@ -40,6 +40,7 @@
                 itsOkBackend = false;
             });
     // }, 7000);
+    onMount(() => {
 });
 </script>
 
