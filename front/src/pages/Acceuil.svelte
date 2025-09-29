@@ -2,6 +2,7 @@
   import { onMount, onDestroy } from 'svelte';
   import { writable } from 'svelte/store';
   import { currentPage } from '../stores/router';
+  import Navbar from '../modules/ui/portfolio/navbar/Navbar.svelte';
 
   console.log('Acceuil: component instantiated');
 
@@ -21,6 +22,7 @@
 
 <section class="home-container">
   <h1>{$welcomeMessage}</h1>
+  <Navbar />
   <p>Découvrez nos services et produits innovants.</p>
 </section>
 
