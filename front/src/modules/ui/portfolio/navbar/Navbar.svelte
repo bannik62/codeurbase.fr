@@ -1,6 +1,6 @@
 <script>
     import { onDestroy } from 'svelte';
-    import ServicesOK from '../../../services/ServicesOK.svelte';
+    // import ServicesOK from '../../../services/ServicesOK.svelte';
     import { currentPage } from '../../../../stores/router';
 
     let activePage;
@@ -47,7 +47,7 @@
         >
             Portfolio
         </button>
-        <ServicesOK />
+        <!-- <ServicesOK /> -->
     </div>
 </nav>
 
