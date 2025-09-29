@@ -3,6 +3,8 @@
     import axios from "axios";
 
     // ⚡ Variables d'environnement Vite
+    console.log("Toutes les variables d'env:", import.meta.env);
+    
     const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
     const N8N_URL     = import.meta.env.VITE_N8N_URL;
 
@@ -14,6 +16,7 @@
 
     let itsOkBackend = false;
     let itsOkN8n = false;
+    console.log("BACKEND_URL", BACKEND_URL);
 
     onMount(() => {
         setInterval(() => {
@@ -21,7 +24,7 @@
                 .get(BACKEND_URL)
                 .then((response) => {
                     itsOkBackend = response.data;
-                    console.log(itsOkBackend);
+                    console.log("itsOkBackend", itsOkBackend);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -87,7 +90,9 @@
 
 <style>
    .services-ok {
-    position: relative;
+    position: absolute;
+    top: 100%;
+    right: 2%;
     display: flex;
     flex-direction: column;
     justify-content: center;
