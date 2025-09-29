@@ -1,6 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const dotenv = require('dotenv');
+
+// Charger les variables d'environnement
+dotenv.config();
 
 // Debug des variables d'environnement
 console.log('Variables d\'environnement chargées:', {
