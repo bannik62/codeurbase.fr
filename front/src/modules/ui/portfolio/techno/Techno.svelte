@@ -13,15 +13,6 @@
     let gsap;
     let ScrollTrigger;
 
-    // Fonction pour charger GSAP de manière asynchrone
-    const loadGsap = async () => {
-        const gsapModule = await import('gsap');
-        const scrollTriggerModule = await import('gsap/ScrollTrigger');
-        gsap = gsapModule.gsap;
-        ScrollTrigger = scrollTriggerModule.ScrollTrigger;
-        gsap.registerPlugin(ScrollTrigger);
-    };
-
     // Variables pour les éléments bindés
     let technoContainer;
     
@@ -43,12 +34,16 @@
     const isBienvenuReady = isModuleReady('elementOfBienvenu');
     const isTechnoReady = isModuleReady('elementOfTechno');
 
-    onMount(() => {
-        // Précharger les images
-        preloadImages();
+    onMount(async () => {
+        // Les images sont maintenant importées directement
         
-        // Charger GSAP
-        loadGsap();
+        // Charger GSAP de manière dynamique
+        const gsapModule = await import('gsap');
+        const scrollTriggerModule = await import('gsap/ScrollTrigger');
+        
+        gsap = gsapModule.gsap;
+        ScrollTrigger = scrollTriggerModule.ScrollTrigger;
+        gsap.registerPlugin(ScrollTrigger);
 
         // Initialiser le store media query
         const cleanupMediaQuery = initMediaQuery();
@@ -123,14 +118,6 @@
   </div>
 </section>
 <style>
-    :root {
-        --svelte-logo: url('{sveltelogo}');
-        --nodejs-logo: url('{nodejslogo}');
-        --css-logo: url('{csslogo}');
-        --docker-logo: url('{dockerlogo}');
-        --mcp-logo: url('{mcplogo}');
-    }
-    
     .sec2 {
         position: relative;
         width: 100%;
@@ -167,7 +154,7 @@
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        background-image: var(--svelte-logo);
+        background-image: url('../../../../assets/logos/svelte-logo.svg');
     }
     .js {
         background-color: white;
@@ -175,7 +162,7 @@
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        background-image: var(--nodejs-logo);
+        background-image: url('../../../../assets/logos/nodejs-logo.png');
     }
 
     .css {
@@ -184,8 +171,9 @@
         background-size: auto 90%;
         background-position: center;
         background-repeat: no-repeat;
-        background-image: var(--css-logo);
+        background-image: url('../../../../assets/logos/css-logo.webp');
     }
+
 
     .docker {
         background-color: white;
@@ -193,12 +181,12 @@
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        background-image: var(--docker-logo);
+        background-image: url('../../../../assets/logos/docker-logo.svg');
     }
 
     .mcp {
         background-color: transparent;
-        background-image: var(--mcp-logo);
+        background-image: url('../../../../assets/logos/mcp.png');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
