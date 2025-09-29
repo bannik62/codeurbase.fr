@@ -1,21 +1,11 @@
 <script>
     import { onMount } from 'svelte';
     
-    // Préchargement des images
-    const preloadImages = () => {
-        const images = [
-            '/src/assets/logos/svelte-logo.svg',
-            '/src/assets/logos/nodejs-logo.png',
-            '/src/assets/logos/css-logo.webp',
-            '/src/assets/logos/docker-logo.svg',
-            '/src/assets/logos/mcp.png'
-        ];
-        
-        images.forEach(src => {
-            const img = new Image();
-            img.src = src;
-        });
-    };
+    import sveltelogo from '../../../../assets/logos/svelte-logo.svg';
+    import nodejslogo from '../../../../assets/logos/nodejs-logo.png';
+    import csslogo from '../../../../assets/logos/css-logo.webp';
+    import dockerlogo from '../../../../assets/logos/docker-logo.svg';
+    import mcplogo from '../../../../assets/logos/mcp.png';
     import { initMediaQuery, useMediaQuery } from '../../../../stores/mediaQuery.js';
     import { elementsStore, isModuleReady } from '../../../../stores/elements.js';
     import { initTechnoAnimations, cleanupTechnoAnimations } from './animationTechno.js';
@@ -133,6 +123,14 @@
   </div>
 </section>
 <style>
+    :root {
+        --svelte-logo: url('{sveltelogo}');
+        --nodejs-logo: url('{nodejslogo}');
+        --css-logo: url('{csslogo}');
+        --docker-logo: url('{dockerlogo}');
+        --mcp-logo: url('{mcplogo}');
+    }
+    
     .sec2 {
         position: relative;
         width: 100%;
@@ -169,7 +167,7 @@
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        background-image: url('/src/assets/logos/svelte-logo.svg');
+        background-image: var(--svelte-logo);
     }
     .js {
         background-color: white;
@@ -177,7 +175,7 @@
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        background-image: url('/src/assets/logos/nodejs-logo.png');
+        background-image: var(--nodejs-logo);
     }
 
     .css {
@@ -186,9 +184,8 @@
         background-size: auto 90%;
         background-position: center;
         background-repeat: no-repeat;
-        background-image: url('/src/assets/logos/css-logo.webp');
+        background-image: var(--css-logo);
     }
-
 
     .docker {
         background-color: white;
@@ -196,12 +193,12 @@
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        background-image: url('/src/assets/logos/docker-logo.svg');
+        background-image: var(--docker-logo);
     }
 
     .mcp {
         background-color: transparent;
-        background-image: url('/src/assets/logos/mcp.png');
+        background-image: var(--mcp-logo);
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
