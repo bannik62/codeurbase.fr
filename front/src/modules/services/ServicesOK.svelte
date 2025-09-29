@@ -19,32 +19,28 @@
     console.log("BACKEND_URL", BACKEND_URL);
 
     onMount(() => {
-        setInterval(() => {
-            axios
-                .get(BACKEND_URL)
-                .then((response) => {
-                    itsOkBackend = response.data;
-                    console.log("itsOkBackend", itsOkBackend);
-                })
-                .catch((error) => {
-                    console.log(error);
-                    itsOkBackend = false;
+    console.log("Starting health checks with URL:", BACKEND_URL);
+    // setInterval(() => {
+        console.log("Attempting health check...");
+        axios
+            .get(BACKEND_URL)
+            .then((response) => {
+                itsOkBackend = response.data;
+                console.log("Health check success:", {
+                    timestamp: new Date().toISOString(),
+                    status: itsOkBackend
                 });
-
-            // axios
-            //     .get(N8N_URL)
-            //     .then((response) => {
-            //         itsOkN8n = response.data;
-            //         console.log("itsOkN8n", itsOkN8n);
-            //     })
-            //     .catch((error) => {
-            //         console.log(error);
-            //         itsOkN8n = false;
-            //     });
-
-        }, 7000);
-
-    });
+            })
+            .catch((error) => {
+                console.log("Health check failed:", {
+                    timestamp: new Date().toISOString(),
+                    error: error.message,
+                    config: error.config?.url
+                });
+                itsOkBackend = false;
+            });
+    // }, 7000);
+});
 </script>
 
 <div class="services-ok">
