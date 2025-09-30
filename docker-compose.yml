@@ -90,9 +90,10 @@ services:
       N8N_BASIC_AUTH_ACTIVE: "true"
       N8N_BASIC_AUTH_USER: ${N8N_USER}
       N8N_BASIC_AUTH_PASSWORD: ${N8N_PASSWORD}
-      N8N_HOST: localhost
-      N8N_PORT: 5678
+      N8N_HOST: n8n.codeurbase.fr
+      N8N_PORT: 443
       N8N_PROTOCOL: https
+      WEBHOOK_URL: https://n8n.codeurbase.fr/
     volumes:
       - n8n_data:/home/node/.n8n
     restart: always
