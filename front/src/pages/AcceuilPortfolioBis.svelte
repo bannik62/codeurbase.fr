@@ -352,6 +352,7 @@
                         ease: "power2.out",
                         onComplete: () => {
                             if (pStatus) {
+                                disableScroll(); // Bloquer le scroll avant d'afficher le détecteur
                                 pStatus.style.opacity = 0;
                             }
                         },
