@@ -447,7 +447,6 @@
             // Réactiver le scroll
             document.body.style.overflow = 'auto';
             
-            // Le composant Stars gère maintenant le nettoyage des event listeners
             console.log('AcceuilPortfolioBis: cleanup END');
         };
     });

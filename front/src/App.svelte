@@ -16,8 +16,8 @@
   
   // Log quand la page change
   $: {
-    console.log('App: currentPage changed to:', $currentPage);
-    console.log('App: will try to render:', $currentPage === 'acceuilPortfolioBis' ? 'AcceuilPortfolioBis' : $currentPage === 'acceuil' ? 'Acceuil' : 'other');
+    // console.log('App: currentPage changed to:', $currentPage);
+    // console.log('App: will try to render:', $currentPage === 'acceuilPortfolioBis' ? 'AcceuilPortfolioBis' : $currentPage === 'acceuil' ? 'Acceuil' : 'other');
     
     // Mise à jour explicite selon la page
     if ($currentPage === 'acceuilPortfolioBis') {
@@ -103,7 +103,9 @@
     </button>
     <Acceuilbis />
   {:else}
+  <div class="app_wrapper_content">
     <Navbar />
+    </div>
     {#if $currentPage === 'acceuil'}
       <Acceuil />
     {:else if $currentPage === 'about'}
@@ -121,6 +123,14 @@
     position: relative;
     width: 100%;
     height: 100%;
+    border: 1px solid rgb(120, 50, 117);
+  }
+  .app_wrapper_content {
+    position: relative;
+    width: 100%;
+    height: 12svh;
+    border: 1px solid rgb(120, 50, 117);
+    
   }
     button {
      position: fixed;
@@ -155,5 +165,12 @@
     box-shadow: 0 0 10px #ff1f1f,
                 0 0 20px #ff1f1f,
                 inset 0 0 10px #ff1f1f;
+  }
+  @media (max-width: 475px) {
+    .app_wrapper_content {
+      position: fixed;
+      bottom: 0;
+      height: 10svh;
+    }
   }
 </style>

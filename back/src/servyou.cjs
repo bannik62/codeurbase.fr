@@ -1,4 +1,6 @@
 const express = require('express');
+const n8nRouter = require('./router/n8nRouter');
+
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
@@ -10,7 +12,8 @@ dotenv.config();
 console.log('Variables d\'environnement chargées:', {
   PORT: process.env.PORT,
   NODE_ENV: process.env.NODE_ENV,
-  FRONTEND_URL: process.env.FRONTEND_URL
+  FRONTEND_URL: process.env.FRONTEND_URL,
+  N8N_WORKFLOW_HELLO_LOCAL: process.env.N8N_WORKFLOW_HELLO_LOCAL
 });
 
 const app = express();
@@ -20,9 +23,12 @@ const port = process.env.PORT;
 app.use(cors({
   origin: [
     process.env.FRONTEND_URL,
+    'http://127.0.0.1:5678',
+    'http://localhost:5678',
     'https://codeurbase.fr',
     'http://codeurbase.fr',
-    'http://localhost:5173'
+    'http://localhost:5173',
+    'http://127.0.0.1:5173'
   ].filter(Boolean),
   credentials: true
 }));
@@ -35,9 +41,7 @@ app.get('/', (req, res) => {
   res.json(true);
 });
 
-app.get('/n8n', (req, res) => {
-  res.json(false);
-});
+app.use('/codeurbaseApi/n8n', n8nRouter);
 // Start the server
 app.listen(port, () => {
   console.log(`*********************Server is running on ${port} *************************`);

@@ -6,7 +6,7 @@
     console.log("Toutes les variables d'env:", import.meta.env);
     
     const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-    const N8N_URL     = import.meta.env.VITE_N8N_URL;
+    const N8N_WORKFLOW_HELLO_LOCAL = import.meta.env.VITE_N8N_WORKFLOW_HELLO_LOCAL;
 
     let backgroundOK = "#05c605";
     let backgroundKO = "#e66841";
@@ -15,43 +15,55 @@
     let widthMin = 50;
 
     let itsOkBackend = false;
-    let itsOkN8n = true;
-    console.log("BACKEND_URL", BACKEND_URL);
-    console.log("N8N_URL", N8N_URL);
-    
-    console.log("Starting health checks with URL:", BACKEND_URL , N8N_URL);
+    let itsOkN8n = false;
 
-    console.log("Attempting health check...");
-        axios
-            .get(BACKEND_URL)
-            .then((response) => {
-                itsOkBackend = response.data;
-                console.log("Health check success:", {
-                    timestamp: new Date().toISOString(),
-                    status: itsOkBackend
-                });
-            })
-            .catch((error) => {
-                console.log("Health check failed:", {
-                    timestamp: new Date().toISOString(),
-                    error: error.message,
-                    config: error.config?.url
-                });
-                itsOkBackend = false;
+    
+    console.log("Starting health checks with URL:","and", N8N_WORKFLOW_HELLO_LOCAL);
+
+    // Fonction pour vérifier le backend
+    async function checkBackend() {
+        try {
+            console.log("Attempting health check...");
+            const response = await axios.get(BACKEND_URL);
+            itsOkBackend = response.data;
+            console.log("Health check success backend:", {
+                timestamp: new Date().toISOString(),
+                status: itsOkBackend
             });
-            axios
-            .get(N8N_URL)
-            .then((response) => {
-                itsOkN8n = response.data;
-            })
-            .catch((error) => {
-                console.log("Health check failed:", {
-                    timestamp: new Date().toISOString(),
-                    error: error.message,
-                    config: error.config?.url
-                });
-                itsOkN8n = false;
+        } catch (error) {
+            console.log("Health check failed backend:", {
+                timestamp: new Date().toISOString(),
+                error: error.message,
+                config: error.config?.url
             });
+            itsOkBackend = false;
+        }
+    }
+
+    // Fonction pour vérifier n8n
+    async function checkN8n() {
+        try {
+            const response = await axios.get(N8N_WORKFLOW_HELLO_LOCAL);
+            itsOkN8n = response.data.n8nResponse[0].message;
+            console.log("response.data 1", response.data);
+            console.log("response.data", response.data.route, "and", response.data.n8nResponse);
+            console.log("Health check success n8n:", response.data, {
+                timestamp: new Date().toISOString(),
+                status: itsOkN8n
+            });
+        } catch (error) {
+            console.log("Health check failed n8n:", {
+                timestamp: new Date().toISOString(),
+                error: error.message,
+                config: error.config?.url
+            });
+            itsOkN8n = false;
+        }
+    }
+
+    // Appeler les fonctions de vérification
+    checkBackend();
+    checkN8n();
 
 </script>
 
@@ -78,7 +90,7 @@
             class="backend-power-content-item"
             style="opacity:{itsOkBackend
                 ? '1'
-                : '0'};transition: opacity 2s ease-in-out;"
+                : '0'};transition: opacity 1s ease-in-out;"
         >
             🗄️
         </div>
@@ -96,16 +108,14 @@
         </div>
     <div
         class="n8n-power-content"
-        style="background-color: {itsOkN8n ? backgroundOK : backgroundKO};width: {itsOkN8n
+        style="background-color: {itsOkN8n ? backgroundOK : backgroundKO};
+        width: {itsOkN8n
             ? widthMin
             : zero}%;transition: width 0.5s ease-in-out;"
     >
         <div
             class="n8n-power-content-item"
-            style="opacity:{itsOkN8n
-                ? '1'
-                : '0'};transition: opacity 2s ease-in-out;"
-        >
+            style="opacity:{itsOkN8n? '1': '0'};transition: opacity 0.5s ease-in-out;">
             🤖
         </div>
     </div>
@@ -114,15 +124,14 @@
 
 <style>
    .services-ok {
-    position: relative;
-    top: 0;
-    left: 0;
+
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    width: 30%;
-    min-width: 400px;
+    width: 100%;
+    min-width: 350px;
     height: 400px;
     min-height: 100px;
     z-index: 1000;
@@ -130,18 +139,7 @@
     gap: 10px;
 
   }
-  .services-ok::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #3d3b647a;
-    filter:blur(10px);
-    /* backdrop-filter:blur(60px); */
-    z-index: -1;
-  }
+
     .backend-power {
         width: 50%;
         height: 20%;
