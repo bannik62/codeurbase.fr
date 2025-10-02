@@ -53,13 +53,14 @@
 
 <style>
     nav {
-        position: absolute;
+        /* position: relative; */
         top: 0;
         left: 0;
-        width: 100%;
+        width: clamp(350px, 100%, 100%);
         height: 10svh;
         display: flex;
         flex-direction: row;
+        flex-wrap: wrap;
         justify-content: space-around;
         align-items: center;
         padding: 10px;

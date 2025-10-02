@@ -90,10 +90,18 @@ services:
       N8N_BASIC_AUTH_ACTIVE: "true"
       N8N_BASIC_AUTH_USER: ${N8N_USER}
       N8N_BASIC_AUTH_PASSWORD: ${N8N_PASSWORD}
-      N8N_HOST: n8n.codeurbase.fr
-      N8N_PORT: 443
-      N8N_PROTOCOL: https
-      WEBHOOK_URL: https://n8n.codeurbase.fr/
+      N8N_HOST: localhost
+      N8N_PORT: 5678
+      N8N_PROTOCOL: http
+      WEBHOOK_URL: http://localhost:5678/
+      DB_TYPE: sqlite
+      DB_SQLITE_FILE: /home/node/.n8n/n8n.db
+      DB_SQLITE_POOL: 5
+      N8N_RUNNERS_ENABLED: "true"
+      N8N_TRUSTED_PROXIES: "true"
+      N8N_EXPRESS_TRUST_PROXY: "true"
+      N8N_TRUST_PROXY: "true"
+      N8N_CORS_ALLOW_ORIGIN: "*"
     volumes:
       - n8n_data:/home/node/.n8n
     restart: always
