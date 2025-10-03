@@ -10,8 +10,8 @@ dotenv.config();
 
 // Debug des variables d'environnement
 console.log('Variables d\'environnement chargées:', {
-  PORT: process.env.PORT,
   NODE_ENV: process.env.NODE_ENV,
+  PORT: process.env.PORT,
   FRONTEND_URL: process.env.FRONTEND_URL,
   N8N_WORKFLOW_HELLO_LOCAL: process.env.N8N_WORKFLOW_HELLO_LOCAL
 });
@@ -43,7 +43,11 @@ app.get('/', (req, res) => {
 
 app.use('/codeurbaseApi/n8n', n8nRouter);
 // Start the server
+
+
 app.listen(port, () => {
   console.log(`*********************Server is running on ${port} *************************`);
   console.log(`Environment: ${process.env.NODE_ENV}`);
+  console.log("Toutes les variables d'env:", process.env);
+
 });
