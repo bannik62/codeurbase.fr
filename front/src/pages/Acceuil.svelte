@@ -96,13 +96,13 @@
   }
 
   .home-container-content {
-    margin-top: 10%;
+    margin-top: 1%;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     /* align-items: center; */
     justify-content: space-around;
-    border: 1px solid green;
+    /* border: 1px solid green; */
     width: 100svw;
   }
 
@@ -112,7 +112,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: 1px solid blue;
+    /* border: 1px solid blue; */
     width: 35vw;
     min-width: 350px;
     color: #ffffff;
@@ -123,7 +123,7 @@
     flex-direction: column;
     align-items:  flex-start;
     justify-content: flex-start;
-    border: 1px solid green;
+    /* border: 1px solid green; */
     width: 35vw;
   }
 

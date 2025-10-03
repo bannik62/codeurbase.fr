@@ -6,7 +6,6 @@
     console.log("Toutes les variables d'env:", import.meta.env);
     
     const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-    const N8N_WORKFLOW_HELLO_LOCAL = import.meta.env.VITE_N8N_WORKFLOW_HELLO_LOCAL;
 
     let backgroundOK = "#05c605";
     let backgroundKO = "#e66841";
@@ -18,7 +17,6 @@
     let itsOkN8n = false;
 
     
-    console.log("Starting health checks with URL:","and", N8N_WORKFLOW_HELLO_LOCAL);
 
     // Fonction pour vérifier le backend
     async function checkBackend() {
@@ -40,16 +38,18 @@
         }
     }
 
-    // Fonction pour vérifier n8n
+    // Fonction pour vérifier n8n via le backend
     async function checkN8n() {
         try {
-            const response = await axios.get(N8N_WORKFLOW_HELLO_LOCAL);
-            itsOkN8n = response.data.n8nResponse[0].message;
+            const response = await axios.get(`${BACKEND_URL}/codeurbaseApi/n8n/helloWorld`);
+            const message = response.data.n8nResponse[0].message;
+            itsOkN8n = (message === "true");
             console.log("response.data 1", response.data);
-            console.log("response.data", response.data.route, "and", response.data.n8nResponse);
+            console.log("response.data", response.data.route);
             console.log("Health check success n8n:", response.data, {
                 timestamp: new Date().toISOString(),
-                status: itsOkN8n
+                status: itsOkN8n,
+                message: message
             });
         } catch (error) {
             console.log("Health check failed n8n:", {
@@ -63,7 +63,9 @@
 
     // Appeler les fonctions de vérification
     checkBackend();
-    checkN8n();
+    setTimeout(() => {
+        checkN8n();
+    }, 1000);
 
 </script>
 

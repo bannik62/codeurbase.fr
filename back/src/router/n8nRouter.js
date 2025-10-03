@@ -8,11 +8,11 @@ const router = express.Router();
  */
 router.get("/helloWorld", async (req, res) => {
   try {
-    const response = await axios.get(
-      process.env.N8N_WORKFLOW_HELLO_LOCAL,
+    console.log("req.query", req.query);
+    const response = await axios.get(process.env.N8N_WORKFLOW_HELLO_LOCAL,
       { params: req.query }
     );
-
+    console.log("response", response.data);
     res.json({
       route: "helloWorld",
       n8nResponse: response.data,

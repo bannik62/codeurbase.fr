@@ -1,8 +1,6 @@
 <script>
-    import Navbar from '../modules/ui/portfolio/navbar/Navbar.svelte';
 </script>
 
-<Navbar />
 <div class="about">
 
 <div class="about-content">
