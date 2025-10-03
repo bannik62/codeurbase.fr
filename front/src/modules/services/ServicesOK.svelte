@@ -45,9 +45,9 @@
         try {
             const response = await axios.get(`${BACKEND_URL}/codeurbaseApi/n8n/helloWorld`);
             
-            // Vérification de sécurité - n8nResponse est un objet, pas un array
-            if (response.data && response.data.n8nResponse) {
-                const message = response.data.n8nResponse.message;
+            // Vérification de sécurité - n8nResponse est un array
+            if (response.data && response.data.n8nResponse && Array.isArray(response.data.n8nResponse)) {
+                const message = response.data.n8nResponse[0]?.message;
                 itsOkN8n = (message === "true");
                 console.log("response.data 1", response.data);
                 console.log("response.data", response.data.route);
@@ -70,39 +70,45 @@
         }
     }
 
-    // Fonction pour vérifier phpMyAdmin
+    // Fonction pour vérifier phpMyAdmin via le backend
     async function checkPhpMyAdmin() {
         try {
-            // Vérification simple via une requête GET vers phpMyAdmin
-            const response = await axios.get('http://localhost:8080', { timeout: 5000 });
-            itsOkPhpMyAdmin = response.status === 200;
+            // Vérification via le backend pour éviter les problèmes CORS
+            const response = await axios.get(`${BACKEND_URL}/health/phpmyadmin`);
+            itsOkPhpMyAdmin = response.data.phpmyadmin === true;
             console.log("Health check success phpMyAdmin:", {
                 timestamp: new Date().toISOString(),
-                status: itsOkPhpMyAdmin
+                status: itsOkPhpMyAdmin,
+                response: response.data
             });
         } catch (error) {
             console.log("Health check failed phpMyAdmin:", {
                 timestamp: new Date().toISOString(),
-                error: error.message
+                error: error.message,
+                errorCode: error.code,
+                errorResponse: error.response?.data
             });
             itsOkPhpMyAdmin = false;
         }
     }
 
-    // Fonction pour vérifier Umami
+    // Fonction pour vérifier Umami via le backend
     async function checkUmami() {
         try {
-            // Vérification simple via une requête GET vers Umami
-            const response = await axios.get('http://localhost:3000', { timeout: 5000 });
-            itsOkUmami = response.status === 200;
+            // Vérification via le backend pour éviter les problèmes CORS
+            const response = await axios.get(`${BACKEND_URL}/health/umami`);
+            itsOkUmami = response.data.umami === true;
             console.log("Health check success Umami:", {
                 timestamp: new Date().toISOString(),
-                status: itsOkUmami
+                status: itsOkUmami,
+                response: response.data
             });
         } catch (error) {
             console.log("Health check failed Umami:", {
                 timestamp: new Date().toISOString(),
-                error: error.message
+                error: error.message,
+                errorCode: error.code,
+                errorResponse: error.response?.data
             });
             itsOkUmami = false;
         }
@@ -115,10 +121,10 @@
     }, 1000);
     setTimeout(() => {
         checkPhpMyAdmin();
-    }, 2000);
+    }, 1000);
     setTimeout(() => {
         checkUmami();
-    }, 3000);
+    }, 1000); // Augmenté à 10 secondes
 
 </script>
 
