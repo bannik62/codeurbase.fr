@@ -15,6 +15,8 @@
 
     let itsOkBackend = false;
     let itsOkN8n = false;
+    let itsOkPhpMyAdmin = false;
+    let itsOkUmami = false;
 
     
 
@@ -68,11 +70,55 @@
         }
     }
 
+    // Fonction pour vérifier phpMyAdmin
+    async function checkPhpMyAdmin() {
+        try {
+            // Vérification simple via une requête GET vers phpMyAdmin
+            const response = await axios.get('http://localhost:8080', { timeout: 5000 });
+            itsOkPhpMyAdmin = response.status === 200;
+            console.log("Health check success phpMyAdmin:", {
+                timestamp: new Date().toISOString(),
+                status: itsOkPhpMyAdmin
+            });
+        } catch (error) {
+            console.log("Health check failed phpMyAdmin:", {
+                timestamp: new Date().toISOString(),
+                error: error.message
+            });
+            itsOkPhpMyAdmin = false;
+        }
+    }
+
+    // Fonction pour vérifier Umami
+    async function checkUmami() {
+        try {
+            // Vérification simple via une requête GET vers Umami
+            const response = await axios.get('http://localhost:3000', { timeout: 5000 });
+            itsOkUmami = response.status === 200;
+            console.log("Health check success Umami:", {
+                timestamp: new Date().toISOString(),
+                status: itsOkUmami
+            });
+        } catch (error) {
+            console.log("Health check failed Umami:", {
+                timestamp: new Date().toISOString(),
+                error: error.message
+            });
+            itsOkUmami = false;
+        }
+    }
+
     // Appeler les fonctions de vérification
     checkBackend();
     setTimeout(() => {
         checkN8n();
     }, 1000);
+    setTimeout(() => {
+        checkPhpMyAdmin();
+    }, 2000);
+    setTimeout(() => {
+        checkUmami();
+    }, 3000);
 
 </script>
 
@@ -129,11 +175,60 @@
         </div>
     </div>
 </div>
+
+<div class="phpmyadmin-power">
+    <div
+        class="phpmyadmin-power-title"
+        style="width: {!itsOkPhpMyAdmin
+            ? widthTotal
+            : widthMin}%;transition: width 0.5s ease-in-out;"
+    >
+        phpMyAdmin
+    </div>
+    <div
+        class="phpmyadmin-power-content"
+        style="background-color: {itsOkPhpMyAdmin ? backgroundOK : backgroundKO};
+        width: {itsOkPhpMyAdmin
+            ? widthMin
+            : zero}%;transition: width 0.5s ease-in-out;"
+    >
+        <div
+            class="phpmyadmin-power-content-item"
+            style="opacity:{itsOkPhpMyAdmin? '1': '0'};transition: opacity 0.5s ease-in-out;">
+            🗃️
+        </div>
+    </div>
+</div>
+
+<div class="umami-power">
+    <div
+        class="umami-power-title"
+        style="width: {!itsOkUmami
+            ? widthTotal
+            : widthMin}%;transition: width 0.5s ease-in-out;"
+    >
+        Umami
+    </div>
+    <div
+        class="umami-power-content"
+        style="background-color: {itsOkUmami ? backgroundOK : backgroundKO};
+        width: {itsOkUmami
+            ? widthMin
+            : zero}%;transition: width 0.5s ease-in-out;"
+    >
+        <div
+            class="umami-power-content-item"
+            style="opacity:{itsOkUmami? '1': '0'};transition: opacity 0.5s ease-in-out;">
+            📊
+        </div>
+    </div>
+</div>
 </div>
 
 <style>
    .services-ok {
-
+    position: relative;
+    top: 4%;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -145,7 +240,7 @@
     min-height: 100px;
     z-index: 1000;
     padding: 10px;
-    gap: 10px;
+    gap: 15%;
 
   }
 
@@ -254,6 +349,120 @@
         /* background-color: #e66841; */
     }
     .n8n-power-content-item {
+        width: 0px;
+        font-size: 2rem;
+        font-weight: 600;
+        color: #fff;
+        height: 100%;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .phpmyadmin-power {
+        width: 50%;
+        height: 20%;
+        background-color: #0e0e0e;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid #fff;
+        padding: 10px;
+    }
+    .phpmyadmin-power-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #fff;
+        background-color: #555;
+        width: 50%;
+        height: 100%;
+        border-radius: 10px 0 0 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-bottom: 1px solid #fff;
+        border-left: 1px solid #fff;
+        border-top: 1px solid #fff;
+        box-shadow: 10px 0 10px rgba(0, 0, 0, 0.5) inset;
+    }
+    .phpmyadmin-power-content {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        background-color: #555;
+        height: 100%;
+        border-radius: 0 10px 10px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-bottom: 1px solid #fff;
+        border-right: 1px solid #fff;
+        border-top: 1px solid #fff;
+        box-shadow: -10px 0 10px rgba(0, 0, 0, 0.5) inset;
+        overflow: hidden;
+    }
+    .phpmyadmin-power-content-item {
+        width: 0px;
+        font-size: 2rem;
+        font-weight: 600;
+        color: #fff;
+        height: 100%;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .umami-power {
+        width: 50%;
+        height: 20%;
+        background-color: #0e0e0e;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid #fff;
+        padding: 10px;
+    }
+    .umami-power-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #fff;
+        background-color: #555;
+        width: 50%;
+        height: 100%;
+        border-radius: 10px 0 0 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-bottom: 1px solid #fff;
+        border-left: 1px solid #fff;
+        border-top: 1px solid #fff;
+        box-shadow: 10px 0 10px rgba(0, 0, 0, 0.5) inset;
+    }
+    .umami-power-content {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        background-color: #555;
+        height: 100%;
+        border-radius: 0 10px 10px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-bottom: 1px solid #fff;
+        border-right: 1px solid #fff;
+        border-top: 1px solid #fff;
+        box-shadow: -10px 0 10px rgba(0, 0, 0, 0.5) inset;
+        overflow: hidden;
+    }
+    .umami-power-content-item {
         width: 0px;
         font-size: 2rem;
         font-weight: 600;

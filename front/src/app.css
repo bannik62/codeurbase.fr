@@ -60,7 +60,6 @@ h1 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
 }
 .blink-slow {
   animation: blink-slow 2s infinite;

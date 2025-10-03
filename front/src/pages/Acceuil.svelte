@@ -84,6 +84,13 @@
 </section>
 
 <style>
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Orbitron", cursive;
+    font-weight: 500;
+    font-size: clamp(1rem, 4vw, 1.5rem);
+    color:crimson;
+  }
+
   .home-container {
     display: flex;
     flex-direction: column;
@@ -91,7 +98,6 @@
     /* justify-content: center; */
     height: auto;
     background-color: #322f2ff4;
-    text-align: center;
   }
 
   .home-container-content {
@@ -109,12 +115,11 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    /* align-items: center; */
+    /* justify-content: center; */
     /* border: 1px solid blue; */
     width: 35vw;
     min-width: 350px;
-    color: #ffffff;
   }
 
   .home-container-content-services {
@@ -128,7 +133,6 @@
 
   h1 {
     font-size: clamp(2rem, 5vw, 7rem);
-    color: rgb(255, 255, 255)181;
   }
 
   p {
