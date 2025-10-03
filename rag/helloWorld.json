@@ -1,0 +1,152 @@
+{
+  "name": "helloWorld",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "5716ed1f-9c1f-45b1-ad8f-ae49bda6addf",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -784,
+        -256
+      ],
+      "id": "887eb3fc-a0cf-47fd-a00d-0091c2077d24",
+      "name": "Webhook",
+      "webhookId": "5716ed1f-9c1f-45b1-ad8f-ae49bda6addf"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: { \n    message: \"true\",\n    name:$input.first().json.query.name,           query:$input.first().json.query.query  }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -256,
+        -352
+      ],
+      "id": "b3b298b2-0b0d-443a-ad3d-2f18684e2713",
+      "name": "Code in JavaScript",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4a6e6542-d15b-4623-bedb-d120ddb93752",
+              "leftValue": "={{ $json.query.name }}",
+              "rightValue": "=codeurbase.fr",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "667aa67f-6d06-446d-8a9a-0a5a3543734f",
+              "leftValue": "={{ $json.query.query }}",
+              "rightValue": "helloworld",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -576,
+        -256
+      ],
+      "id": "cd127a6e-6f9e-4284-bbe4-f581b653f8af",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: { \n    message: \"vous n' étes pas autorisé!\"\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -256,
+        -160
+      ],
+      "id": "e17096b4-1643-419e-bcfa-e9a231b5e37e",
+      "name": "Code in JavaScript1"
+    }
+  ],
+  "pinData": {
+    "Code in JavaScript": [
+      {
+        "json": {
+          "name": "First item",
+          "code": 1
+        }
+      },
+      {
+        "json": {
+          "name": "Second item",
+          "code": 2
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        []
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        []
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "saveExecutionProgress": true,
+    "errorWorkflow": "U7RGz9KtLY2M7Kat"
+  },
+  "versionId": "d5d2161d-22d8-4f3c-bc50-5b532a590549",
+  "meta": {
+    "instanceId": "d2741c9a56d9e8e75ce1e8394a9c06d988067ae6635153635f6dda69bba6f700"
+  },
+  "id": "U7RGz9KtLY2M7Kat",
+  "tags": []
+}

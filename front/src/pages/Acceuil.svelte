@@ -90,9 +90,8 @@
     /* align-items: center; */
     /* justify-content: center; */
     height: auto;
-    background-color: #322f2f;
+    background-color: #322f2ff4;
     text-align: center;
-    border: 1px solid red;
   }
 
   .home-container-content {
