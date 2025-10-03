@@ -34,77 +34,84 @@
     const isBienvenuReady = isModuleReady('elementOfBienvenu');
     const isTechnoReady = isModuleReady('elementOfTechno');
 
-    onMount(async () => {
-        // Les images sont maintenant importées directement
+    onMount(() => {
+        let cleanupFunctions = [];
         
-        // Charger GSAP de manière dynamique
-        const gsapModule = await import('gsap');
-        const scrollTriggerModule = await import('gsap/ScrollTrigger');
-        
-        gsap = gsapModule.gsap;
-        ScrollTrigger = scrollTriggerModule.ScrollTrigger;
-        gsap.registerPlugin(ScrollTrigger);
-
-        // Initialiser le store media query
-        const cleanupMediaQuery = initMediaQuery();
-        
-        // Utiliser la fonction centralisée pour les media queries
-        const {
-            currentSize,
-            currentIsSmallMobile,
-            currentIsMediumMobile,
-            currentIsMobile,
-            currentIsTablet,
-            currentIsDesktop,
-            currentIsLargeDesktop,
-            cleanup: cleanupMediaQueryStores
-        } = useMediaQuery();
-
-        // Initialiser les animations
-        let animations = {};
-        
-        // Fonction pour initialiser les animations quand les éléments sont prêts
-        const initAnimations = () => {
-            console.log("🔧 Techno - Éléments disponibles:", elements);
-            console.log("🔧 Techno - H2Welcome:", elements?.elementOfBienvenu?.h3EnCoursDeConstruction);
-            console.log("🔧 Techno - TechnoContainer:", elements?.elementOfTechno?.technoContainer);
+        // Fonction async pour initialiser tout
+        const initAsync = async () => {
+            // Les images sont maintenant importées directement
             
-            if (elements?.elementOfBienvenu?.h2Welcome && elements?.elementOfTechno?.technoContainer && (!animations || Object.keys(animations).length === 0)) {
-                animations = initTechnoAnimations(currentSize, elements);
-            }
+            // Charger GSAP de manière dynamique
+            const gsapModule = await import('gsap');
+            const scrollTriggerModule = await import('gsap/ScrollTrigger');
+            
+            gsap = gsapModule.gsap;
+            ScrollTrigger = scrollTriggerModule.ScrollTrigger;
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Initialiser le store media query
+            const cleanupMediaQuery = initMediaQuery();
+            cleanupFunctions.push(cleanupMediaQuery);
+            
+            // Utiliser la fonction centralisée pour les media queries
+            const {
+                currentSize,
+                currentIsSmallMobile,
+                currentIsMediumMobile,
+                currentIsMobile,
+                currentIsTablet,
+                currentIsDesktop,
+                currentIsLargeDesktop,
+                cleanup: cleanupMediaQueryStores
+            } = useMediaQuery();
+            cleanupFunctions.push(cleanupMediaQueryStores);
+
+            // Initialiser les animations
+            let animations = {};
+            
+            // Fonction pour initialiser les animations quand les éléments sont prêts
+            const initAnimations = () => {
+                console.log("🔧 Techno - Éléments disponibles:", elements);
+                console.log("🔧 Techno - H2Welcome:", elements?.elementOfBienvenu?.h3EnCoursDeConstruction);
+                console.log("🔧 Techno - TechnoContainer:", elements?.elementOfTechno?.technoContainer);
+                
+                if (elements?.elementOfBienvenu?.h2Welcome && elements?.elementOfTechno?.technoContainer && (!animations || Object.keys(animations).length === 0)) {
+                    animations = initTechnoAnimations(currentSize, elements);
+                }
+            };
+
+            // Initialiser immédiatement si les éléments sont déjà disponibles
+            initAnimations();
+            
+            // S'abonner aux changements des modules
+            const unsubscribeBienvenuReady = isBienvenuReady.subscribe(isReady => {
+                if (isReady) {
+                    initAnimations();
+                }
+            });
+            cleanupFunctions.push(unsubscribeBienvenuReady);
+            
+            const unsubscribeTechnoReady = isTechnoReady.subscribe(isReady => {
+                if (isReady) {
+                    initAnimations();
+                }
+            });
+            cleanupFunctions.push(unsubscribeTechnoReady);
+            
+            // Ajouter la fonction de nettoyage des animations
+            cleanupFunctions.push(() => cleanupTechnoAnimations(animations));
         };
-
-        // Initialiser immédiatement si les éléments sont déjà disponibles
-        initAnimations();
         
-        // S'abonner aux changements des modules
-        const unsubscribeBienvenuReady = isBienvenuReady.subscribe(isReady => {
-            if (isReady) {
-                initAnimations();
-            }
-        });
+        // Lancer l'initialisation async
+        initAsync();
         
-        const unsubscribeTechnoReady = isTechnoReady.subscribe(isReady => {
-            if (isReady) {
-                initAnimations();
-            }
-        });
-
-        // Fonction de nettoyage
+        // Fonction de nettoyage synchrone
         return () => {
             // Nettoyer les abonnements aux stores media query
-            cleanupMediaQueryStores();
-            
-            // Nettoyer le store media query
-            cleanupMediaQuery();
+            cleanupFunctions.forEach(cleanup => cleanup());
             
             // CORRECTION : Se désabonner du store des éléments
             unsubscribeElements();
-            unsubscribeBienvenuReady();
-            unsubscribeTechnoReady();
-            
-            // Tuer les animations
-            cleanupTechnoAnimations(animations);
         };
     });
 </script>

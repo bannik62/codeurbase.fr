@@ -123,13 +123,11 @@
     position: relative;
     width: 100%;
     height: 100%;
-    border: 1px solid rgb(120, 50, 117);
   }
   .app_wrapper_content {
     position: relative;
     width: 100%;
     height: 12svh;
-    border: 1px solid rgb(120, 50, 117);
     
   }
     button {
