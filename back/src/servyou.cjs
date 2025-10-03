@@ -11,13 +11,13 @@ dotenv.config();
 // Debug des variables d'environnement
 console.log('Variables d\'environnement chargées:', {
   NODE_ENV: process.env.NODE_ENV,
-  PORT: process.env.PORT,
+  PORT_BACKEND: process.env.PORT,
   FRONTEND_URL: process.env.FRONTEND_URL,
   N8N_WORKFLOW_HELLO_LOCAL: process.env.N8N_WORKFLOW_HELLO_LOCAL
 });
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT_BACKEND;
 
 // Middleware
 app.use(cors({
@@ -39,6 +39,30 @@ app.use(cookieParser());
 // Route de test pour vérifier que tout fonctionne
 app.get('/', (req, res) => {
   res.json(true);
+});
+
+// Route de health check pour Umami
+app.get('/health/umami', async (req, res) => {
+  try {
+    const axios = require('axios');
+    const umamiUrl = process.env.UMAMI_INTERNAL_URL || 'http://umami_Codeurbase:3001';
+    const response = await axios.get(umamiUrl, { timeout: 5000 });
+    res.json({ status: 'ok', umami: response.status === 200 || response.status === 307 });
+  } catch (error) {
+    res.json({ status: 'error', umami: false, error: error.message });
+  }
+});
+
+// Route de health check pour phpMyAdmin
+app.get('/health/phpmyadmin', async (req, res) => {
+  try {
+    const axios = require('axios');
+    const phpmyadminUrl = process.env.PHPMYADMIN_INTERNAL_URL || 'http://phpmyadmin_codeurbase:80';
+    const response = await axios.get(phpmyadminUrl, { timeout: 5000 });
+    res.json({ status: 'ok', phpmyadmin: response.status === 200 || response.status === 302 });
+  } catch (error) {
+    res.json({ status: 'error', phpmyadmin: false, error: error.message });
+  }
 });
 
 app.use('/codeurbaseApi/n8n', n8nRouter);
