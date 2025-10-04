@@ -46,10 +46,10 @@ app.get('/', (req, res) => {
 app.get('/health/umami', async (req, res) => {
   try {
     const axios = require('axios');
-    const umamiUrl =  process.env.UMAMI_INTERNAL_URL || 'http://umami_Codeurbase:3001' ;
+    const umamiUrl =  process.env.UMAMI_INTERNAL_URL_PROD || 'http://umami_Codeurbase:3001' ;
 
     // Ping minimal : on interroge la racine ou /api/heartbeat mais sans insérer de session
-    const response = await axios.get(`${umamiUrl}/api/heartbeat`, { timeout: 5000 });
+    const response = await axios.get(`${umamiUrl}`, { timeout: 5000 });
 
     // Si le serveur répond, on renvoie "true" textuel pour le front
     if (response.status === 200) {
