@@ -101,6 +101,7 @@
             // Vérification via le backend pour éviter les problèmes CORS
             const response = await axios.get(`${BACKEND_URL}/health/umami`);
             itsOkUmami = response.data.umami === true;
+            
             console.log("Health check success Umami:", {
                 timestamp: new Date().toISOString(),
                 status: itsOkUmami,

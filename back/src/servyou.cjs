@@ -45,12 +45,12 @@ app.get('/', (req, res) => {
 app.get('/health/umami', async (req, res) => {
   try {
     const axios = require('axios');
-    const umamiUrl = process.env.UMAMI_INTERNAL_URL || 'http://umami_Codeurbase:3001';
+    const umamiUrl = process.env.UMAMI_INTERNAL_URL || 'http://umami_Codeurbase:3000';
     const response = await axios.get(umamiUrl, { timeout: 5000 });
 
     // Renvoi en texte pour le frontend
     res.json({
-      umami: response.status === 200 ? "true" : "false",
+      umami: response.status  ? "true" : "false",
       message: response.status === 200 ? 'Umami OK' : 'Umami responded with error'
     });
   } catch (error) {
