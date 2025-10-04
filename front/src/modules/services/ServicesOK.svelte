@@ -97,26 +97,26 @@
 
     // Fonction pour vérifier Umami via le backend
     async function checkUmami() {
-        try {
-            // Vérification via le backend pour éviter les problèmes CORS
-            const response = await axios.get(`${BACKEND_URL}/health/umami`);
-            itsOkUmami = response.data.umami === true;
-            
-            console.log("Health check success Umami:", {
-                timestamp: new Date().toISOString(),
-                status: itsOkUmami,
-                response: response.data
-            });
-        } catch (error) {
-            console.log("Health check failed Umami:", {
-                timestamp: new Date().toISOString(),
-                error: error.message,
-                errorCode: error.code,
-                errorResponse: error.response?.data
-            });
-            itsOkUmami = false;
-        }
+    try {
+        const response = await axios.get(`${BACKEND_URL}/health/umami`);
+        // "true" ou "false" textuel
+        itsOkUmami = response.data.umami === "true";
+
+        console.log("Health check success Umami:", {
+            timestamp: new Date().toISOString(),
+            status: itsOkUmami,
+            response: response.data
+        });
+    } catch (error) {
+        console.log("Health check failed Umami:", {
+            timestamp: new Date().toISOString(),
+            error: error.message,
+            errorCode: error.code,
+            errorResponse: error.response?.data
+        });
+        itsOkUmami = false;
     }
+}
 
     // Appeler les fonctions de vérification
     checkBackend();
