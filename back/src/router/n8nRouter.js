@@ -7,24 +7,27 @@ const router = express.Router();
  * Exemple : /api/n8n/helloWorld?prenom=Yoann&nom=Vanherzecke
  */
 router.get("/helloWorld", async (req, res) => {
-  try {
-    console.log("req.query", req.query);
-    const response = await axios.get(process.env.N8N_WORKFLOW_HELLO_LOCAL,
-      { params: req.query }
-    );
-    console.log("response", response.data);
-    res.json({
-      route: "helloWorld",
-      n8nResponse: response.data,
-    });
-  } catch (error) {
-    console.error("Erreur appel N8N [helloWorld]:", error.message);
-    res.status(500).json({
-      error: "Impossible de joindre n8n",
-      details: error.message,
-    });
-  }
-});
+    try {
+      // Appel N8N
+      const response = await axios.get(process.env.N8N_WORKFLOW_HELLO_LOCAL, {
+        params: req.query
+      });
+  
+      // Toujours renvoyer le tableau N8N tel quel
+      res.json({
+        route: "helloWorld",
+        n8nResponse: response.data // tableau N8N intact
+      });
+  
+    } catch (error) {
+      console.error("Erreur appel N8N [helloWorld]:", error.message);
+      res.status(500).json({
+        error: "Impossible de joindre n8n",
+        details: error.message,
+      });
+    }
+  });
+  
 
 /**
  * Tu pourras ajouter d'autres routes similaires ici
