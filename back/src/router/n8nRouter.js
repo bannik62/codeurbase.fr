@@ -9,9 +9,8 @@ const router = express.Router();
 router.get("/helloWorld", async (req, res) => {
     try {
       // Appel N8N
-      const response = await axios.get(process.env.N8N_WORKFLOW_HELLO_LOCAL, {
-        params: req.query
-      });
+      const response = await axios.get(process.env.N8N_WORKFLOW_HELLO_LOCAL, { params: req.query });
+
   
       // Toujours renvoyer le tableau N8N tel quel
       res.json({

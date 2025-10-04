@@ -42,33 +42,36 @@
 
     // Fonction pour vérifier n8n via le backend
     async function checkN8n() {
-        try {
-            const response = await axios.get(`${BACKEND_URL}/codeurbaseApi/n8n/helloWorld`);
-            
-            // Vérification de sécurité - n8nResponse est un array
-            if (response.data && response.data.n8nResponse && Array.isArray(response.data.n8nResponse)) {
-                const message = response.data.n8nResponse[0]?.message;
-                itsOkN8n = (message === "true");
-                console.log("response.data 1", response.data);
-                console.log("response.data", response.data.route);
-                console.log("Health check success n8n:", response.data, {
-                    timestamp: new Date().toISOString(),
-                    status: itsOkN8n,
-                    message: message
-                });
-            } else {
-                console.log("Invalid response structure:", response.data);
-                itsOkN8n = false;
-            }
-        } catch (error) {
-            console.log("Health check failed n8n:", {
+    try {
+        const response = await axios.get(`${BACKEND_URL}/codeurbaseApi/n8n/helloWorld`);
+
+        // n8nResponse est un objet JSON
+        if (response.data && response.data.n8nResponse) {
+            const n8nResponse = response.data.n8nResponse;
+            const message = n8nResponse.message;
+            itsOkN8n = (message === "true");
+
+            console.log("response.data 1", response.data);
+            console.log("response.data route", response.data.route);
+            console.log("Health check success n8n:", {
                 timestamp: new Date().toISOString(),
-                error: error.message,
-                config: error.config?.url
+                status: itsOkN8n,
+                message: message
             });
+        } else {
+            console.log("Invalid response structure:", response.data);
             itsOkN8n = false;
         }
+    } catch (error) {
+        console.log("Health check failed n8n:", {
+            timestamp: new Date().toISOString(),
+            error: error.message,
+            config: error.config?.url
+        });
+        itsOkN8n = false;
     }
+}
+
 
     // Fonction pour vérifier phpMyAdmin via le backend
     async function checkPhpMyAdmin() {
