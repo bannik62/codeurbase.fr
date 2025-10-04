@@ -1,5 +1,6 @@
 const express = require('express');
 const n8nRouter = require('./router/n8nRouter');
+const axios = require('axios');
 
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -44,20 +45,13 @@ app.get('/', (req, res) => {
 // Route de health check pour Umami
 app.get('/health/umami', async (req, res) => {
   try {
-    const axios = require('axios');
-    const umamiUrl = process.env.UMAMI_INTERNAL_URL || 'http://umami_Codeurbase:3000';
+    const umamiUrl = process.env.UMAMI_INTERNAL_URL || 'http://umami_Codeurbase:3001/api/heartbeat';
     const response = await axios.get(umamiUrl, { timeout: 5000 });
 
-    // Renvoi en texte pour le frontend
-    res.json({
-      umami: response.status  ? "true" : "false",
-      message: response.status === 200 ? 'Umami OK' : 'Umami responded with error'
-    });
+    // Retourner "true" textuel si Umami est ok
+    res.json({ umami: response.status === 200 ? "true" : "false" });
   } catch (error) {
-    res.json({
-      umami: "false",
-      message: `Impossible de joindre Umami: ${error.message}`
-    });
+    res.json({ umami: "false", message: `Impossible de joindre Umami: ${error.message}` });
   }
 });
 
