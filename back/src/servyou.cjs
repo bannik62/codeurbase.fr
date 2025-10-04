@@ -47,11 +47,20 @@ app.get('/health/umami', async (req, res) => {
     const axios = require('axios');
     const umamiUrl = process.env.UMAMI_INTERNAL_URL || 'http://umami_Codeurbase:3001';
     const response = await axios.get(umamiUrl, { timeout: 5000 });
-    res.json({ status: 'ok', umami: response.status === 200 || response.status === 307 });
+
+    // Renvoi en texte pour le frontend
+    res.json({
+      umami: response.status === 200 ? "true" : "false",
+      message: response.status === 200 ? 'Umami OK' : 'Umami responded with error'
+    });
   } catch (error) {
-    res.json({ status: 'error', umami: false, error: error.message });
+    res.json({
+      umami: "false",
+      message: `Impossible de joindre Umami: ${error.message}`
+    });
   }
 });
+
 
 // Route de health check pour phpMyAdmin
 app.get('/health/phpmyadmin', async (req, res) => {
