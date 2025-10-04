@@ -46,13 +46,23 @@ app.get('/', (req, res) => {
 app.get('/health/umami', async (req, res) => {
   try {
     const axios = require('axios');
-    const umamiUrl = process.env.UMAMI_INTERNAL_URL ;
-    await axios.get(umamiUrl, { timeout: 5000 }); // on ne se soucie pas du contenu
-    res.json({ umami: "true", message: "Umami reachable" });
+    const umamiUrl =  'http://umami_Codeurbase:3001' ;
+
+    // Ping minimal : on interroge la racine ou /api/heartbeat mais sans insérer de session
+    const response = await axios.get(`${umamiUrl}/api/heartbeat`, { timeout: 5000 });
+
+    // Si le serveur répond, on renvoie "true" textuel pour le front
+    if (response.status === 200) {
+      console.log("response", response);
+      res.json({ umami: "true", message: "Umami ping OK" });
+    } else {
+      res.json({ umami: "false", message: "Umami ping NOK" });
+    }
   } catch (error) {
-    res.json({ umami: "false", message: "Impossible de joindre Umami" });
+    res.json({ umami: "false", message: `Impossible de joindre Umami: ${error.message}` });
   }
 });
+
 
 
 
