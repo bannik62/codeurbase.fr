@@ -120,6 +120,7 @@
         width: 99%;
         height: 100%;   
         /* overflow: hidden; */
+        
     }
     .h2-welcome {
         position: absolute;
@@ -150,6 +151,7 @@
         left: 0;
         width: 100%;
         height: clamp(50svh, 115svh, 100%);
+        padding: 5%;
     }
     .content-text-bienvenue p {
         font-family: "Orbitron", cursive;
@@ -204,7 +206,6 @@
      
         }
         .content-text-bienvenue {
-            /* border: 1px solid blue; */
             background-color: rgba(34, 33, 33, 0.128);
             backdrop-filter: blur(2px);
             top: 42%;

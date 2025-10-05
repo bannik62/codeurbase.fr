@@ -1,9 +1,11 @@
 <script>
-    import { onDestroy } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
     // import ServicesOK from '../../../services/ServicesOK.svelte';
     import { currentPage } from '../../../../stores/router';
 
     let activePage;
+    let isScrolling = false;
+    let scrollTimeout;
     
     // Souscrire aux changements du store
     const unsubscribe = currentPage.subscribe(value => {
@@ -16,12 +18,31 @@
         currentPage.set(page);
     }
 
+    function handleScroll() {
+        // Activer l'effet pendant le scroll
+        isScrolling = true;
+        
+        // Annuler le timeout précédent
+        clearTimeout(scrollTimeout);
+        
+        // Définir un nouveau timeout pour désactiver l'effet
+        scrollTimeout = setTimeout(() => {
+            isScrolling = false;
+        }, 150); // 150ms après l'arrêt du scroll
+    }
+
+    onMount(() => {
+        window.addEventListener('scroll', handleScroll);
+    });
+
     onDestroy(() => {
+        window.removeEventListener('scroll', handleScroll);
+        clearTimeout(scrollTimeout);
         unsubscribe();
     });
 </script>
 
-<nav>
+<nav class:scrolled={isScrolling}>
     <div class="nav-buttons">
         <button 
             class:active={activePage === 'acceuil'} 
@@ -33,13 +54,13 @@
             class:active={activePage === 'about'} 
             on:click={() => handleNavClick('about')}
         >
-            About
+            Blog
         </button>
         <button 
             class:active={activePage === 'contact'} 
             on:click={() => handleNavClick('contact')}
         >
-            Contact
+            ChatWithMe
         </button>
         <button 
             class:active={activePage === 'acceuilPortfolioBis'} 
@@ -47,13 +68,12 @@
         >
             Portfolio
         </button>
-        <!-- <ServicesOK /> -->
     </div>
 </nav>
 
 <style>
     nav {
-        /* position: relative; */
+        position: fixed;
         top: 0;
         left: 0;
         width: clamp(350px, 100%, 99%);
@@ -65,8 +85,16 @@
         align-items: center;
         padding: 10px;
         background-color: #333;
-        z-index: 1002;
-    }
+        z-index: 9999;
+        border-color: #ff1f1f;
+        border-style: solid;
+        border-width: 0 0 1px 0;
+        transition: filter 0.3s ease;
+      }
+
+    nav.scrolled {
+        filter: drop-shadow(0 0 20px #ff1f1f);
+      }
 
     .nav-buttons {
         display: flex;
@@ -85,6 +113,7 @@
         transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
+        font-family: "Orbitron", cursive;
     }
 
     button:hover {
@@ -116,6 +145,8 @@
             position: absolute;
             top: auto;
             bottom: 0;
+            opacity: 1 !important;
+            z-index: 9999;
         }
     }
 </style>

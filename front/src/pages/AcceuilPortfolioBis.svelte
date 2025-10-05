@@ -546,7 +546,6 @@
     }
     .space-two {
         height: 100svh;
-        /* border: 1px solid red; */
     }
     .space-three {
         position: relative;
@@ -839,7 +838,6 @@
             height: 50%;
         }
         .container-detection-one {
-            /* border: 1px solid blue; */
             position: relative;
             left: 0%;
         width: 100%;

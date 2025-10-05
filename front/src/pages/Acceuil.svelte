@@ -3,78 +3,63 @@
   import { writable } from "svelte/store";
   import { currentPage } from "../stores/router";
   import ServicesOK from "../modules/services/ServicesOK.svelte";
+  import Welcome from "../modules/ui/blog/Welcometo.svelte";
+  import { initLenis, stopLenis, destroyLenis } from "../stores/lenis.js";
+  
   console.log("Acceuil: component instantiated");
 
   // Store pour gérer l'état de la page d'accueil
-  const welcomeMessage = writable("Bienvenue sur notre site !");
+  const welcomeMessage = writable("Bienvenue sur Codeurbase !");
+  
+  // Variables pour gérer la boucle RAF de Lenis
+  let rafId = null;
+  let isRafActive = true;
+  let lenisInstance = null;
+
   onMount(() => {
+    console.log("Acceuil: onMount - Initializing Lenis");
+    
+    // Initialiser Lenis pour le scroll smooth
+    lenisInstance = initLenis();
+    
+    if (lenisInstance) {
+      console.log("Acceuil: Lenis initialized successfully");
+      
+      // CORRECTION : Lenis a besoin de sa propre boucle requestAnimationFrame
+      function raf(time) {
+        if (isRafActive) {
+          lenisInstance.raf(time);
+          rafId = requestAnimationFrame(raf);
+        }
+      }
+      rafId = requestAnimationFrame(raf);
+    }
+    
     // window.location.reload();
   });
 
   onDestroy(() => {
-    console.log("Acceuil: onDestroy");
+    console.log("Acceuil: onDestroy - Cleaning up Lenis");
+    
+    // Nettoyer la boucle requestAnimationFrame
+    isRafActive = false;
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+    
+    // Nettoyer Lenis lors de la destruction du composant
+    // Note: On utilise stopLenis() plutôt que destroyLenis() 
+    // pour permettre la réutilisation dans d'autres pages
+    stopLenis();
   });
 </script>
 
 <section class="home-container">
   <h1>{$welcomeMessage}</h1>
   <div class="home-container-content">
+    <Welcome />
   
-    <div class="home-container-content-title">
-      <section id="codeurbase">
-        <h2>CodeurBase</h2>
-        <p>CodeurBase sera mon espace numérique personnel, combinant à la fois :</p>
-      
-        <div class="feature">
-          <p><strong>Blog :</strong> partager mes découvertes, astuces et projets autour du développement.</p>
-          <p><strong>Portfolio :</strong> présenter mes réalisations, compétences et expériences.</p>
-        </div>
-      
-        <h3> Objectifs</h3>
-        <div class="objectives">
-          <p>Centraliser mes projets et mes expérimentations.</p>
-          <p>Partager du contenu technique et pédagogique.</p>
-          <p>Mettre en avant mes compétences de développeur web.</p>
-          <p>Créer une vitrine claire et professionnelle.</p>
-          <p>Créer un portfolio de mes réalisations.</p>
-          <p>Créer un blog pour partager mes découvertes, astuces et projets autour du développement.</p>
-          <p>Un point de contact pour me contacter.</p>
-        </div>
-      
-        <h3>Technologies utilisées</h3>
-        
-        <h4>Frontend</h4>
-        <div class="tech-stack">
-          <p>Svelte → Framework web moderne et réactif.</p>
-          <p>JavaScript (ES6) → Pour la logique applicative.</p>
-          <p>CSS / SCSS → Pour un design clair et maintenable.</p>
-          <p>Axios → Communication sécurisée entre frontend et backend.</p>
-        </div>
-      
-        <h4>Backend</h4>
-        <div class="tech-stack">
-          <p>Node.js (Express) → Gestion des API et logique serveur.</p>
-          <p>Sequelize (ORM) → Interaction avec la base de données SQL.</p>
-        </div>
-      
-        <h4>Base de données</h4>
-        <div class="tech-stack">
-          <p>PostgreSQL / MySQL (selon configuration).</p>
-        </div>
-      
-        <h4>Outils et déploiement</h4>
-        <div class="tech-stack">
-          <p>Docker & Docker Compose → Conteneurisation et orchestration.</p>
-          <p>Portainer → Gestion des conteneurs via interface web.</p>
-          <p>Apache (reverse proxy) → Accès au site via HTTPS.</p>
-          <p>Certbot (Let’s Encrypt) → Certificat SSL automatique.</p>
-          <p>N8n → Gestion des tâches automatisées.</p>
-          <p>Umami → Gestion des statistiques.</p>
-          <p>Phpmyadmin → Gestion de la base de données.</p>
-        </div>
-      </section>
-      
-    </div>
 
     <div class="home-container-content-services">
       <ServicesOK />
@@ -84,11 +69,12 @@
 </section>
 
 <style>
-  h1, h2, h3, h4, h5, h6 {
+  h1 {
     font-family: "Orbitron", cursive;
-    font-weight: 500;
+    font-weight: 700;
     font-size: clamp(1rem, 4vw, 1.5rem);
     color:crimson;
+    text-align: center;
   }
 
   .home-container {
@@ -96,7 +82,7 @@
     flex-direction: column;
     /* align-items: center; */
     /* justify-content: center; */
-    height: auto;
+    min-height: calc(100vh - 60px);
     background-color: #322f2ff4;
   }
 
@@ -111,16 +97,7 @@
     width: 100svw;
   }
 
-  .home-container-content-title {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    /* align-items: center; */
-    /* justify-content: center; */
-    /* border: 1px solid blue; */
-    width: 35vw;
-    min-width: 350px;
-  }
+
 
   .home-container-content-services {
     display: flex;
@@ -135,11 +112,47 @@
     font-size: clamp(2rem, 5vw, 7rem);
   }
 
-  p {
-    font-family: "Orbitron", cursive;
-    font-weight: 500;
-    font-size: clamp(1rem, 4vw, 1.5rem);
-    color: rgb(250, 245, 245)fff;
+  /* Media Queries Responsive */
+  @media (max-width: 480px) {
+    .home-container {
+      min-height: calc(100vh - 60px);
+      padding-bottom: 20px;
+    }
+
+    .home-container-content {
+      flex-direction: column;
+      width: 98w;
+      padding: 0 10px;
+      flex: 1;
+    }
+
+    .home-container-content-services {
+      width: 100vw;
+      max-width: 100vw;
+      margin-top: 20px;
+      margin-bottom: 40px; /* Plus d'espace pour la navbar */
+    }
+  }
+
+  @media (min-width: 481px) and (max-width: 768px) {
+    .home-container-content {
+      flex-direction: column;
+      width: 100vw;
+      padding: 0 15px;
+    }
+
+    .home-container-content-services {
+      width: 90vw;
+      max-width: 90vw;
+      margin-top: 20px;
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .home-container-content-services {
+      width: 45vw;
+      min-width: 400px;
+    }
   }
 
 </style>
