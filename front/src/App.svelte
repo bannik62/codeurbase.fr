@@ -123,6 +123,7 @@
     position: relative;
     width: 100%;
     height: 100%;
+    z-index: 1;
   }
   .app_wrapper_content {
     position: relative;
@@ -130,45 +131,51 @@
     height: 12svh;
     
   }
-    button {
-     position: fixed;
-     top: 5px;
-     right: 5px;
-     padding: 10px 20px;
-     background-color: transparent;
-     color: #fff;
-     cursor: pointer;
-     font-size: clamp(0.5rem, 3vw, 1.3rem);
-     font-weight: bold;
-     z-index: 1000;
+     button {
+      position: fixed;
+      top: 5px;
+      right: 5px;
+      padding: 10px 20px;
+      background-color: transparent;
+      color: #fff;
+      cursor: pointer;
+      font-size: clamp(0.5rem, 3vw, 1.3rem);
+      font-weight: bold;
+      z-index: 1000;
+      text-shadow: 0 0 5px #ff1f1f,
+                    0 0 10px #ff1f1f,
+                    0 0 20px #ff1f1f;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 1s ease;
+     }
+
+     button.visible {
+       opacity: 1;
+       transform: translateY(0);
+     }
+
+   button:hover {
+     background-color: rgba(255, 31, 31, 0.1);
      text-shadow: 0 0 5px #ff1f1f,
-                   0 0 10px #ff1f1f,
-                   0 0 20px #ff1f1f;
-     opacity: 0;
-     transform: translateY(-20px);
-     transition: all 1s ease;
-    }
-
-    button.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-  button:hover {
-    background-color: rgba(255, 31, 31, 0.1);
-    text-shadow: 0 0 5px #ff1f1f,
-                 0 0 10px #ff1f1f,
+                  0 0 10px #ff1f1f,
+                  0 0 20px #ff1f1f,
+                  0 0 40px #ff1f1f;
+     box-shadow: 0 0 10px #ff1f1f,
                  0 0 20px #ff1f1f,
-                 0 0 40px #ff1f1f;
-    box-shadow: 0 0 10px #ff1f1f,
-                0 0 20px #ff1f1f,
-                inset 0 0 10px #ff1f1f;
-  }
+                 inset 0 0 10px #ff1f1f;
+   }
   @media (max-width: 475px) {
+    .app_wrapper {
+      width: 103%;
+
+    }
     .app_wrapper_content {
       position: fixed;
       bottom: 0;
       height: 10svh;
+      width: 100%;
+      z-index: 9999;
     }
   }
 </style>

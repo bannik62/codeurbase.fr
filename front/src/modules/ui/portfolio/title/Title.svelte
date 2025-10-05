@@ -159,6 +159,7 @@
         --bg: #181717;
         --g-a: #ff00e1; /* magenta pour couche A */
         --g-b: #39ff14; /* vert néon pour couche B */
+
     }
 
     .container {
@@ -171,6 +172,8 @@
         perspective: 1000px;
         transform-style: preserve-3d;
         /* overflow: hidden; */
+                text-align: center;
+
     }
     .bordure {
         position: relative;
@@ -202,6 +205,11 @@
         letter-spacing: 0.5em;
         color: crimson;
         position: absolute;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
         top: 0;
         left: 0;
         width: 100%;
@@ -226,8 +234,11 @@
         letter-spacing: 0.1em;
         color: crimson;
         position: absolute;
-        left: 0;
-        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        left: 5%;   
+        bottom:0;
         /* background: rgba(189, 9, 9, 0.389); */
         clip-path: polygon(
             7% 1%,
@@ -361,7 +372,6 @@
         left: 4.5%;
         width: clamp(10px, 25%, 25%);
         height: clamp(10px, 60%, 60%);
-        border: 1px solid red;
         /* box-shadow: 0 0 10px crimson ; */
         filter: drop-shadow(0px 0 1px crimson);
         background: rgba(220, 20, 60, 0.328);
@@ -573,7 +583,6 @@
     /* XL Desktop (1800px et plus) */
     @media (min-width: 1800px) {
         .title {
-            border: 1px solid blue;
             flex-wrap: nowrap;
             gap: 0.6em;
         }

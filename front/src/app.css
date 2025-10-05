@@ -143,3 +143,18 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* Fix pour mobile - réduire l'espace blanc */
+@media (max-width: 415px) {
+  body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
+  
+  #app {
+    width: 100%;
+    min-height: 100vh;
+    padding-bottom: 80px; /* Espace pour la navbar en bas (10svh + marge) */
+  }
+}
