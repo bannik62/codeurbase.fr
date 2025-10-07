@@ -121,7 +121,7 @@
 
     .home-container-content {
       flex-direction: column;
-      width: 98w;
+      width: 98vw;
       padding: 0 10px;
       flex: 1;
     }
