@@ -5,6 +5,7 @@
  */
 
 import axios from 'axios';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 /**
  * Classe principale pour gérer la logique du chat
@@ -15,7 +16,7 @@ export class ChatManager {
         this.isLoading = false;
         this.isConnected = true;
         this.error = null;
-        this.apiEndpoint = `${process.env.BACKEND_URL}/codeurbaseApi/n8n/chatWithMe`;        
+        this.apiEndpoint = `${BACKEND_URL}/codeurbaseApi/n8n/chatWithMe`;        
         // Générer un sessionId unique pour cet utilisateur
         this.sessionId = this.generateSessionId();
         
