@@ -17,7 +17,7 @@
 
 
 <svelte:head>
-  <title>Contact Us - CodeurBase</title>
+  <title>Contact moi! - CodeurBase</title>
 </svelte:head>
 
 <section class="contact-section">
@@ -30,7 +30,7 @@
     justify-content: center;
     align-items: center;
     background-color: #322f2ff4;
-    width: 103vw;
+    width: 100vw;
   }
 
   /* .contact-container {

@@ -79,8 +79,6 @@ app.get('/health/phpmyadmin', async (req, res) => {
 });
 
 app.use('/codeurbaseApi/n8n', n8nRouter);
-// Start the server
-
 
 app.listen(port, () => {
   console.log(`*********************Server is running on ${port} *************************`);

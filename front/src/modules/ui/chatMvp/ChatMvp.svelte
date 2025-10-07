@@ -4,6 +4,8 @@
   import { ScrollTrigger } from "gsap/ScrollTrigger";
   import { initMediaQuery, useMediaQuery } from "../../../stores/mediaQuery.js";
   import { initChatAnimations, cleanupChatAnimations } from "./chatAnimation.js";
+  import { useChat, ChatUtils } from "./SpeackMe.js";
+  import { initLenis, lenis } from "../../../stores/lenis.js";
 
   // Enregistrer ScrollTrigger
   gsap.registerPlugin(ScrollTrigger);
@@ -12,8 +14,54 @@
   let container;
   let animations = {};
   let cleanupFunctions = [];
+  
+  // Variables pour le chat
+  let messageInput;
+  let messagesContainer;
+  let currentMessage = "";
+  let suggestions = ChatUtils.getMessageSuggestions();
+  let messages = []; // Variable réactive pour les messages
+  
+  // Initialiser le hook du chat
+  const chat = useChat();
+  
+  // Fonction pour mettre à jour les messages
+  function updateMessages() {
+    console.log("Mise à jour des messages:", chat.messages);
+    messages = [...chat.messages];
+    console.log("Messages mis à jour:", messages);
+    
+    // Scroll automatique après mise à jour
+    scrollToBottom();
+  }
 
   onMount(() => {
+    // Initialiser Lenis pour le scroll smooth
+    const lenisInstance = initLenis();
+    lenisInstance.on("scroll", ScrollTrigger.update);
+    
+    // Boucle requestAnimationFrame pour Lenis
+    let rafId = null;
+    let isRafActive = true;
+    
+    function raf(time) {
+      if (isRafActive) {
+        lenisInstance.raf(time);
+        rafId = requestAnimationFrame(raf);
+      }
+    }
+    rafId = requestAnimationFrame(raf);
+    
+    // Fonction de cleanup pour Lenis
+    const cleanupLenis = () => {
+      isRafActive = false;
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+      lenisInstance.destroy();
+    };
+    cleanupFunctions.push(cleanupLenis);
+    
     // Initialiser le store media query
     const cleanupMediaQuery = initMediaQuery();
     cleanupFunctions.push(cleanupMediaQuery);
@@ -27,6 +75,9 @@
 
     // Initialiser les animations selon la taille d'écran
     animations = initChatAnimations(currentSize);
+    
+    // Initialiser les messages
+    updateMessages();
   });
 
   onDestroy(() => {
@@ -44,6 +95,64 @@
       }
     });
   });
+
+  // Fonctions pour le chat
+  async function handleSendMessage() {
+    if (!currentMessage.trim()) return;
+    
+    try {
+      await chat.sendMessage(currentMessage);
+      currentMessage = "";
+      
+      // Mettre à jour l'affichage plusieurs fois pour être sûr
+      updateMessages();
+      setTimeout(updateMessages, 50); // Double mise à jour
+      
+      scrollToBottom();
+    } catch (error) {
+      console.error("Erreur lors de l'envoi du message:", error);
+      updateMessages();
+    }
+  }
+
+  function handleKeyPress(event) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      handleSendMessage();
+    }
+  }
+
+  function handleSuggestionClick(suggestion) {
+    currentMessage = suggestion;
+    handleSendMessage();
+  }
+
+  function scrollToBottom() {
+    if (messagesContainer) {
+      // Scroll immédiat
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      
+      // Scroll après un délai pour être sûr (cas où le DOM n'est pas encore mis à jour)
+      setTimeout(() => {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }, 50);
+      
+      // Scroll final après un délai plus long
+      setTimeout(() => {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }, 200);
+    }
+  }
+
+  function clearChat() {
+    chat.resetSession(); // Réinitialise la session ET efface la conversation
+    updateMessages(); // Mettre à jour l'affichage
+  }
+
+  // Fonction pour formater le contenu des messages
+  function formatMessageContent(content) {
+    return ChatUtils.sanitizeContent(content);
+  }
 </script>
 
 <div class="chat-container" bind:this={container}>
@@ -109,42 +218,80 @@
           </div>
         </div>
         
-        <div class="chat-messages">
-          <div class="message ai-message">
-            <div class="message-avatar">🤖</div>
-            <div class="message-content">
-              <div class="message-bubble">
-                <p>Bonjour ! Je suis votre assistant IA. Comment puis-je vous aider aujourd'hui ?</p>
+        <div class="chat-messages" bind:this={messagesContainer}>
+            {#if !chat.hasMessages || messages.length <= 1}
+            <div class="message-suggestions">
+              <p class="suggestions-title">Suggestions de questions :</p>
+              <div class="suggestion-buttons">
+                {#each suggestions.slice(0, 3) as suggestion}
+                  <button class="suggestion-btn" on:click={() => handleSuggestionClick(suggestion)}>
+                    {suggestion}
+                  </button>
+                {/each}
               </div>
-              <span class="message-time">14:32</span>
             </div>
-          </div>
+          {/if}
+       
+            {#each messages as message (message.id)}
+            <div class="message {message.type}-message" class:loading={message.isLoading} class:error={message.error}>
+              {#if message.type === 'ai'}
+                <div class="message-avatar">{message.avatar}</div>
+              {/if}
+              <div class="message-content">
+                <div class="message-bubble">
+                  {#if message.isLoading}
+                    <div class="loading-dots">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                  {:else if message.error}
+                    <p class="error-message">{@html formatMessageContent(message.content)}</p>
+                  {:else}
+                    <p>{@html formatMessageContent(message.content)}</p>
+                  {/if}
+                </div>
+                <span class="message-time">{chat.formatMessageTime(message.timestamp)}</span>
+              </div>
+            </div>
+          {/each}
           
-          <div class="message user-message">
-            <div class="message-content">
-              <div class="message-bubble">
-                <p>Salut ! Peux-tu m'expliquer ce qu'est l'intelligence artificielle ?</p>
-              </div>
-              <span class="message-time">14:35</span>
-            </div>
-          </div>
-          
-          <div class="message ai-message">
-            <div class="message-avatar">🤖</div>
-            <div class="message-content">
-              <div class="message-bubble">
-                <p>L'intelligence artificielle (IA) est un domaine de l'informatique qui vise à créer des systèmes capables d'effectuer des tâches qui nécessitent normalement l'intelligence humaine. Cela inclut l'apprentissage, le raisonnement, la perception et la compréhension du langage naturel.</p>
-              </div>
-              <span class="message-time">14:35</span>
-            </div>
-          </div>
+          <!-- Suggestions de messages -->
+
         </div>
         
         <div class="chat-input">
           <div class="input-container">
-            <button class="attach-btn">📎</button>
-            <input type="text" placeholder="Tapez votre message..." class="message-input" />
-            <button class="send-btn">➤</button>
+            <button class="attach-btn" title="Joindre un fichier">📎</button>
+            <input 
+              type="text" 
+              placeholder="Tapez votre message..." 
+              class="message-input"
+              bind:value={currentMessage}
+              on:keypress={handleKeyPress}
+              bind:this={messageInput}
+              disabled={chat.isLoading}
+            />
+            <button 
+              class="send-btn" 
+              on:click={handleSendMessage}
+              disabled={chat.isLoading || !currentMessage.trim()}
+              title="Envoyer le message"
+            >
+              {chat.isLoading ? '⏳' : '➤'}
+            </button>
+          </div>
+          
+          <!-- Indicateur de connexion -->
+          <div class="connection-status">
+            <span class="status-indicator" class:connected={chat.isConnected} class:disconnected={!chat.isConnected}>
+              {chat.isConnected ? '🟢 Connecté' : '🔴 Déconnecté'}
+            </span>
+            {#if chat.hasMessages}
+              <button class="clear-btn" on:click={clearChat} title="Effacer la conversation">
+                🗑️ Effacer
+              </button>
+            {/if}
           </div>
         </div>
       </div>
@@ -208,13 +355,14 @@
     padding: 20px;
     overflow-y: auto;
     backdrop-filter: blur(10px);
-    min-height: 80svh;
-    height: 100%;
+    height: 70svh;
+    max-height: 70svh;
   }
 
   .info-content {
-    height: 100%;
-    min-height: 80svh;
+    height: 70svh;
+    min-height: 70svh;
+    max-height: 70svh;
   }
 
   .info-title {
@@ -302,9 +450,10 @@
     border-radius: 15px;
     display: flex;
     flex-direction: column;
-    min-height: 80svh;
-    height: 100%;
+    height: 80svh;
+    max-height: 80svh;
     backdrop-filter: blur(10px);
+    overflow: hidden;
   }
 
   /* Header du chat */
@@ -372,6 +521,8 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+    max-height: calc(80svh - 140px); /* Hauteur totale moins header et input */
+    min-height: 0; /* Important pour le flex */
   }
 
   .message {
@@ -401,6 +552,7 @@
     flex-direction: column;
     gap: 5px;
     max-width: 70%;
+    min-width: 100px;
   }
 
   .message-bubble {
@@ -409,6 +561,9 @@
     font-family: "Orbitron", cursive;
     font-size: clamp(0.7rem, 1.2vw, 0.9rem);
     line-height: 1.4;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .ai-message .message-bubble {
@@ -510,6 +665,143 @@
     box-shadow: 0 4px 15px rgba(220, 20, 60, 0.5);
   }
 
+  .send-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .message-input:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  /* Styles pour les nouveaux éléments */
+  .loading-dots {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .loading-dots span {
+    width: 8px;
+    height: 8px;
+    background: crimson;
+    border-radius: 50%;
+    animation: loading-dots 1.4s infinite ease-in-out both;
+  }
+
+  .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+  .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+  @keyframes loading-dots {
+    0%, 80%, 100% {
+      transform: scale(0);
+    }
+    40% {
+      transform: scale(1);
+    }
+  }
+
+  .error-message {
+    color: #ff6b6b !important;
+    font-style: italic;
+  }
+
+  .message.loading .message-bubble {
+    background: rgba(220, 20, 60, 0.1);
+    border-color: rgba(220, 20, 60, 0.2);
+  }
+
+  .message.error .message-bubble {
+    background: rgba(255, 107, 107, 0.1);
+    border-color: rgba(255, 107, 107, 0.3);
+  }
+
+  /* Suggestions de messages */
+  .message-suggestions {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    border: 1px solid rgba(220, 20, 60, 0.2);
+  }
+
+  .suggestions-title {
+    font-family: "Orbitron", cursive;
+    color: crimson;
+    font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .suggestion-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .suggestion-btn {
+    background: rgba(220, 20, 60, 0.1);
+    border: 1px solid rgba(220, 20, 60, 0.3);
+    color: rgb(250, 245, 245);
+    padding: 8px 12px;
+    border-radius: 15px;
+    font-family: "Orbitron", cursive;
+    font-size: clamp(0.6rem, 1vw, 0.8rem);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+  }
+
+  .suggestion-btn:hover {
+    background: rgba(220, 20, 60, 0.2);
+    border-color: rgba(220, 20, 60, 0.5);
+    transform: translateX(5px);
+  }
+
+  /* Indicateur de connexion */
+  .connection-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    padding: 8px 0;
+  }
+
+  .status-indicator {
+    font-family: "Orbitron", cursive;
+    font-size: clamp(0.6rem, 1vw, 0.7rem);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .status-indicator.connected {
+    color: #4CAF50;
+  }
+
+  .status-indicator.disconnected {
+    color: #ff6b6b;
+  }
+
+  .clear-btn {
+    background: rgba(255, 107, 107, 0.1);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    color: #ff6b6b;
+    padding: 4px 8px;
+    border-radius: 10px;
+    font-family: "Orbitron", cursive;
+    font-size: clamp(0.6rem, 1vw, 0.7rem);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .clear-btn:hover {
+    background: rgba(255, 107, 107, 0.2);
+    border-color: rgba(255, 107, 107, 0.5);
+  }
+
   /* Media Queries Responsive */
   
   /* Small Mobile */
@@ -589,9 +881,10 @@
     }
 
     .chat-messenger {
-      min-height: 50svh;
-      height: 100%;
+      height: 50svh;
+      max-height: 50svh;
       border-radius: 10px;
+      overflow: hidden;
     }
 
     .chat-header {
@@ -618,6 +911,8 @@
 
     .chat-messages {
       padding: 12px;
+      max-height: calc(50svh - 100px);
+      min-height: 0;
     }
 
     .message-bubble {
@@ -649,6 +944,29 @@
       width: 30px;
       height: 30px;
       font-size: 1rem;
+    }
+
+    .suggestion-buttons {
+      gap: 6px;
+    }
+
+    .suggestion-btn {
+      padding: 6px 10px;
+      font-size: clamp(0.5rem, 2vw, 0.7rem);
+    }
+
+    .connection-status {
+      margin-top: 8px;
+      padding: 6px 0;
+    }
+
+    .status-indicator {
+      font-size: clamp(0.5rem, 1.5vw, 0.6rem);
+    }
+
+    .clear-btn {
+      padding: 3px 6px;
+      font-size: clamp(0.5rem, 1.5vw, 0.6rem);
     }
   }
 
@@ -873,11 +1191,29 @@
   /* Large Desktop */
   @media (min-width: 1441px) and (max-width: 1920px) {
     .chat-container {
-      width: 85vw;
+      width: 50%;
       min-width: 500px;
       padding: 2% 2% 8svh 2%;
-      min-height: 100svh;
+      /* height: auto; */
+    }
+    .chat_mvp {
+      width: 100%;
+      min-height: 100%;
       height: auto;
+    }
+    h2, .chat_title {
+      font-size: clamp(1.2rem, 9vw, 12rem);
+      margin-bottom: 25px;
+    }
+    .chat_description{
+      font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+    }
+    .chat_title {
+      font-size: clamp(1.2rem, 5vw, 12rem);
+      margin-bottom: 25px;
+    }
+    .chat_description {
+      font-size: clamp(0.8rem, 1.5vw, 0.9rem);
     }
 
     .chat-layout {
@@ -889,8 +1225,8 @@
 
     .chat-info-section {
       padding: 20px;
-      min-height: 85svh;
-      overflow-y: auto;
+      /* min-height: 85svh; */
+      overflow-y: hidden;
     }
 
     .info-cards {
@@ -899,9 +1235,20 @@
     }
 
     .chat-messenger {
-      min-height: 85svh;
-      height: 100%;
+      height: 85svh;
+      max-height: 85svh;
+      overflow: hidden;
     }
+    .info-title {
+      font-size: clamp(1.2rem, 2vw, 0.8rem);
+      margin-bottom: 25px;
+    }
+  }
+  .chat_description {
+    font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+  }
+  .message-bubble p {
+    font-size: clamp(0.8rem, 1.5vw, 0.9rem);
   }
 
   /* XL Desktop */
@@ -933,8 +1280,21 @@
     }
 
     .chat-messenger {
-      min-height: 85svh;
-      height: 100%;
+      height: 85svh;
+      max-height: 85svh;
+      overflow: hidden;
+    }
+
+    /* Fixer la taille des messages sur les très grands écrans */
+    .message-content {
+      max-width: 60%;
+      min-width: 150px;
+    }
+
+    .message-bubble {
+      max-height: 200px;
+      overflow-y: auto;
+      overflow-x: hidden;
     }
   }
 </style>

@@ -167,7 +167,7 @@
    }
   @media (max-width: 475px) {
     .app_wrapper {
-      width: 103%;
+      width: 100%;
 
     }
     .app_wrapper_content {
