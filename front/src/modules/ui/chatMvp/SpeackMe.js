@@ -15,8 +15,7 @@ export class ChatManager {
         this.isLoading = false;
         this.isConnected = true;
         this.error = null;
-        this.apiEndpoint = `http://localhost:3000/codeurbaseApi/n8n/chatWithMe`;
-        
+        this.apiEndpoint = `${process.env.BACKEND_URL}/codeurbaseApi/n8n/chatWithMe`;        
         // Générer un sessionId unique pour cet utilisateur
         this.sessionId = this.generateSessionId();
         
