@@ -32,10 +32,13 @@ router.get("/helloWorld", async (req, res) => {
   router.post("/chatWithMe", async (req, res) => {
     try {
       const { message, timestamp, sessionId } = req.body;
+      console.log("Message reçu du frontend:", message);
+      console.log("Timestamp reçu du frontend:", timestamp);
+      console.log("SessionId reçu du frontend:", sessionId);
       
       // Préparer les paramètres pour N8N (GET avec query parameters)
       // Récupérer la vraie IP du client (pas du proxy Docker)
-      const clientIP =  req.headers['x-real-ip'] || req.connection.remoteAddress || req.ip || 'anonymous';
+      const clientIP = req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || req.connection.remoteAddress || req.ip || 'anonymous';
       const cleanIP = clientIP.split(',')[0].trim(); // Prendre la première IP si plusieurs
       
       const n8nParams = {
