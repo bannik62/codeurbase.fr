@@ -46,25 +46,26 @@ router.get("/helloWorld", async (req, res) => {
         userId: cleanIP,
         sessionId: sessionId || `user-${cleanIP}` // Utiliser sessionId du frontend ou fallback IP
       };
-
-      console.log("SessionId reçu du frontend:", sessionId);
+  
       console.log("Envoi vers N8N:", n8nParams);
-
-      // Appel N8N avec GET (container Docker)
-      const n8nResponse = await axios.post(process.env.N8N_WORKFLOW_CHAT_WITH_ME_LOCAL || 'http://n8n_codeurbase:5678/webhook/98adabbc-d0a1-4b60-adbb-60b150d1bcb0', { 
-        params: n8nParams,
-        timeout: 30000 // 30 secondes de timeout
-      });
-
+  
+      // Appel N8N avec POST et JSON body
+      const n8nResponse = await axios.post(
+        process.env.N8N_WORKFLOW_CHAT_WITH_ME_LOCAL || 'http://n8n_codeurbase:5678/webhook/98adabbc-d0a1-4b60-adbb-60b150d1bcb0',
+        n8nParams, // <- JSON directement dans le body
+        { timeout: 30000 } // 30 secondes
+      );
+  
       console.log("Réponse N8N:", n8nResponse.data);
-
+  
+      // Renvoi la réponse reçue de N8N au frontend
       res.json({
         message: n8nResponse.data.message || n8nResponse.data.response || "Réponse générée avec succès",
         success: true,
         n8nResponse: n8nResponse.data,
         timestamp: new Date().toISOString()
       });
-
+  
     } catch (error) {
       console.error("Erreur appel N8N [chatWithMe POST]:", error.message);
       
@@ -77,6 +78,7 @@ router.get("/helloWorld", async (req, res) => {
       });
     }
   });
+  
 
 /**
  * Tu pourras ajouter d'autres routes similaires ici
