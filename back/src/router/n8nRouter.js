@@ -51,7 +51,7 @@ router.get("/helloWorld", async (req, res) => {
       console.log("Envoi vers N8N:", n8nParams);
 
       // Appel N8N avec GET (container Docker)
-      const n8nResponse = await axios.get(process.env.N8N_WORKFLOW_CHAT_WITH_ME_LOCAL || 'http://n8n_codeurbase:5678/webhook/98adabbc-d0a1-4b60-adbb-60b150d1bcb0', { 
+      const n8nResponse = await axios.post(process.env.N8N_WORKFLOW_CHAT_WITH_ME_LOCAL || 'http://n8n_codeurbase:5678/webhook/98adabbc-d0a1-4b60-adbb-60b150d1bcb0', { 
         params: n8nParams,
         timeout: 30000 // 30 secondes de timeout
       });
