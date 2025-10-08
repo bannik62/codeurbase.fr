@@ -60,11 +60,10 @@ router.get("/helloWorld", async (req, res) => {
   
       // Renvoi la réponse reçue de N8N au frontend
       res.json({
-        message: n8nResponse.data.message || n8nResponse.data.response || "Réponse générée avec succès",
-        success: true,
-        n8nResponse: n8nResponse.data,
+        ...n8nResponse.data,
         timestamp: new Date().toISOString()
       });
+      
   
     } catch (error) {
       console.error("Erreur appel N8N [chatWithMe POST]:", error.message);
