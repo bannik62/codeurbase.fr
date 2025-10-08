@@ -60,7 +60,7 @@ router.get("/helloWorld", async (req, res) => {
   
       // Renvoi la réponse reçue de N8N au frontend
       res.json({
-        ...n8nResponse.data,
+        ...n8nResponse.data[0],
         timestamp: new Date().toISOString()
       });
       
