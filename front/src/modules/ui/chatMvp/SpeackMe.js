@@ -146,7 +146,7 @@ export class ChatManager {
             console.log("Réponse reçue du backend:", response.data);
 
             // Modifier directement le message de chargement avec la réponse
-            loadingMsg.content = response.data.message || response.data.response || 'Désolé, je n\'ai pas pu générer de réponse.';
+            loadingMsg.content = response.data[0] || response.data.response || 'Désolé, je n\'ai pas pu générer de réponse.';
             loadingMsg.isLoading = false;
 
             this.isLoading = false;
