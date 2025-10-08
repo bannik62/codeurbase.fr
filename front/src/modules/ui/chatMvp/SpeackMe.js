@@ -132,7 +132,7 @@ export class ChatManager {
             const payload = {
                 message: userMessage.trim(),
                 timestamp: new Date().toISOString(),
-                sessionId: this.sessionId // Inclure le sessionId unique
+                sessionId: this.sessionId 
             };
             console.log("Payload envoyé au backend:", payload);
             
