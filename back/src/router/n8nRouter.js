@@ -36,7 +36,6 @@ router.get("/helloWorld", async (req, res) => {
       console.log("Timestamp reçu du frontend:", timestamp);
       console.log("SessionId reçu du frontend:", sessionId);
       
-      // Préparer les paramètres pour N8N (GET avec query parameters)
       // Récupérer la vraie IP du client (pas du proxy Docker)
       const clientIP = req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || req.connection.remoteAddress || req.ip || 'anonymous';
       const cleanIP = clientIP.split(',')[0].trim(); // Prendre la première IP si plusieurs
@@ -52,7 +51,7 @@ router.get("/helloWorld", async (req, res) => {
       console.log("Envoi vers N8N:", n8nParams);
 
       // Appel N8N avec GET (container Docker)
-      const n8nResponse = await axios.get('http://n8n_codeurbase:5678/webhook/98adabbc-d0a1-4b60-adbb-60b150d1bcb0', { 
+      const n8nResponse = await axios.get(process.env.N8N_WORKFLOW_CHAT_WITH_ME_LOCAL || 'http://n8n_codeurbase:5678/webhook/98adabbc-d0a1-4b60-adbb-60b150d1bcb0', { 
         params: n8nParams,
         timeout: 30000 // 30 secondes de timeout
       });
