@@ -64,10 +64,7 @@
     cleanupFunctions.push(cleanupMediaQuery);
     
     // Utiliser la fonction centralisée pour les media queries
-    const {
-      currentSize,
-      cleanup: cleanupMediaQueryStores,
-    } = useMediaQuery();
+    const {currentSize,cleanup: cleanupMediaQueryStores, } = useMediaQuery();
     cleanupFunctions.push(cleanupMediaQueryStores);
 
     // Initialiser les animations selon la taille d'écran
@@ -177,8 +174,7 @@
     flex-direction: column;
     width: 99vw;
     min-width: 350px;
-    padding: 2% 2% 15svh 2%;
-    min-height: 90svh;
+    /* padding: 2% 2% 15svh 2%; */
     height: auto;
   }
 
@@ -434,7 +430,10 @@
   @media (max-width: 480px) {
     .blog-container {
       width: 100vw;
-      padding: 1% 1% 12svh 1%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
     .blog-articles {
@@ -444,6 +443,13 @@
 
     .card-image {
       height: 180px;
+    }
+
+    .search-container {
+      width: 50%;
+    }
+    .search-icon {
+      right: -45px;
     }
   }
 

@@ -63,4 +63,10 @@
         border: 1px solid #fff;
         
     }
+
+    @media (max-width: 480px) {
+        .about {
+            padding: 0;
+        }
+    }
 </style>

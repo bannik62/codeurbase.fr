@@ -174,7 +174,7 @@
       position: fixed;
       bottom: 0;
       height: 10svh;
-      width: 100%;
+      width: 95%;
       z-index: 9999;
     }
   }
