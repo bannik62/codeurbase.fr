@@ -175,7 +175,7 @@
   .blog-container {
     display: flex;
     flex-direction: column;
-    width: 95vw;
+    width: 99vw;
     min-width: 350px;
     padding: 2% 2% 15svh 2%;
     min-height: 90svh;
@@ -478,7 +478,12 @@
   /* Large Desktop (1441px - 1920px) */
   @media (min-width: 1441px) and (max-width: 1920px) {
     .blog-container {
-      width: 85vw;
+      width: 100%;
+      height: 130vh;
+      margin-top: 10%;
+    }
+    .search-input {
+      width: 85%;
     }
 
     .blog-articles {
