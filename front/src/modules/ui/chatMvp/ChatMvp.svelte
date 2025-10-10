@@ -833,11 +833,17 @@
   /* Small Mobile */
   @media (max-width: 480px) {
     .chat-container {
-      width: 103vw;
+      width: 100vw;
       min-width: 300px;
       padding: 1% 1% 12svh 1%;
-      min-height: 190svh;
       height: auto;
+    }
+
+    h2, .chat_title {
+      font-size: clamp(1.8rem, 4vw, 1.2rem);
+    }
+    .chat_description {
+      font-size: clamp(0.8rem, 4vw, 1rem);
     }
 
     .chat-layout {
@@ -849,9 +855,10 @@
     }
 
     .chat-info-section {
-      padding: 10px;
+      padding: 3px;
       min-height: 30svh;
-      max-height: 80svh;
+      height: 80svh;
+      max-height: 90svh;
       overflow-y: auto;
       border-radius: 10px;
     }
