@@ -67,7 +67,7 @@ export class ChatManager {
             {
                 id: 'ai-welcome',
                 type: 'ai',
-                content: 'Bonjour ! Je suis votre assistant IA. Comment puis-je vous aider aujourd\'hui ?',
+                content: `Bonjour ! Je suis Yohann, développeur web full stack. Peut-être votre futur développeur ?`,
                 timestamp: new Date().toISOString(),
                 avatar: '🤖'
             }
@@ -423,8 +423,7 @@ export const ChatUtils = {
      */
     getMessageSuggestions() {
         return [
-            "Peux-tu m'expliquer l'intelligence artificielle ?",
-            "Comment fonctionne le machine learning ?",
+            "Quels sont tes compétences ?",
             "Quelles sont les dernières tendances en développement web ?",
             "Peux-tu m'aider avec du code JavaScript ?",
             "Explique-moi les concepts de programmation orientée objet",

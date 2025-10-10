@@ -1,5 +1,6 @@
 <script>
     import { onMount } from "svelte";
+    import HlsPlayer from './HlsPlayer.svelte';
     // Importez vos composants Svelte ici
     // import MonComposant from './MonComposant.svelte';
     // import AutreComposant from '../AutreComposant.svelte';
@@ -245,8 +246,12 @@
                 <div class="separator-line"></div>
             </div>
             <div class="dashboard-section-two">
-                <h3>Section 2</h3>
-                <p>Contenu de la section 2</p>
+                <HlsPlayer 
+                    src="https://ds1-cache.quanteec.com/contents/encodings/live/d5e9f551-7435-4ea6-3532-3130-6d61-63-916e-ff1d72543cced/media_0.m3u8"
+                    autoplay={true}
+                    muted={true}
+                    controls={false}
+                />
             </div>
 
             <!-- Vous pouvez ajouter autant d'enfants que vous voulez -->
@@ -506,19 +511,8 @@
         transition: transform 0.3s ease;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         z-index: 9999;
-    }
-    .dashboard-section-two p {
-        font-size: 1.2rem;
-        font-weight: bold;
-        color: white;
-        margin: 0;
-        padding: 10px 0;
-    }
-    .dashboard-section-two h3 {
-        font-size: 1.2rem;
-        font-weight: bold;
-        color: white;
-        margin: 0 0 10px 0;
+        display: flex;
+        flex-direction: column;
     }
 
     /* Styles pour le loader */

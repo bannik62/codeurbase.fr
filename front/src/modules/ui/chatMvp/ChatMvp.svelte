@@ -21,6 +21,7 @@
   let currentMessage = "";
   let suggestions = ChatUtils.getMessageSuggestions();
   let messages = []; // Variable réactive pour les messages
+  let isAutoScrolling = false; // Variable pour détecter le scroll automatique
   
   // Initialiser le hook du chat
   const chat = useChat();
@@ -31,8 +32,18 @@
     messages = [...chat.messages];
     console.log("Messages mis à jour:", messages);
     
-    // Scroll automatique après mise à jour
-    scrollToBottom();
+    // Scroll automatique après mise à jour avec délai pour s'assurer que le DOM est mis à jour
+    setTimeout(() => {
+      scrollToBottom();
+    }, 10);
+  }
+  
+  // Watcher réactif pour détecter les changements de messages
+  $: if (messages.length > 0) {
+    // À chaque changement de messages, scroller vers le bas après un court délai
+    setTimeout(() => {
+      scrollToBottom();
+    }, 50);
   }
 
   onMount(() => {
@@ -129,6 +140,8 @@
 
   function scrollToBottom() {
     if (messagesContainer) {
+      isAutoScrolling = true; // Activer le mode auto-scroll
+      
       // Scroll immédiat
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
       
@@ -137,15 +150,29 @@
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       }, 50);
       
-      // Scroll final après un délai plus long
+      // Scroll final et redonne le contrôle à l'utilisateur
       setTimeout(() => {
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        // Attendre encore un peu avant de redonner le contrôle
+        setTimeout(() => {
+          isAutoScrolling = false; // Redonner le contrôle du scroll à l'utilisateur
+        }, 100);
       }, 200);
+    }
+  }
+
+  // Fonction pour bloquer le scroll pendant l'auto-scroll
+  function handleScroll(event) {
+    if (isAutoScrolling && messagesContainer) {
+      // Pendant l'auto-scroll, forcer le conteneur à rester en bas
+      const maxScroll = messagesContainer.scrollHeight - messagesContainer.clientHeight;
+      messagesContainer.scrollTop = maxScroll;
     }
   }
 
   function clearChat() {
     chat.resetSession(); // Réinitialise la session ET efface la conversation
+    isAutoScrolling = false; // Réinitialiser l'état du scroll
     updateMessages(); // Mettre à jour l'affichage
   }
 
@@ -194,9 +221,8 @@
           <div class="tech-stack">
             <h4>Technologies utilisées :</h4>
             <div class="tech-tags">
-              <span class="tech-tag">OpenAI GPT</span>
+              <span class="tech-tag">Powered by OpenAI GPT</span>
               <span class="tech-tag">Natural Language Processing</span>
-              <span class="tech-tag">Machine Learning</span>
               <span class="tech-tag">Real-time Processing</span>
             </div>
           </div>
@@ -218,7 +244,7 @@
           </div>
         </div>
         
-        <div class="chat-messages" bind:this={messagesContainer}>
+        <div class="chat-messages" bind:this={messagesContainer} on:scroll={handleScroll}>
             {#if !chat.hasMessages || messages.length <= 1}
             <div class="message-suggestions">
               <p class="suggestions-title">Suggestions de questions :</p>
@@ -1203,7 +1229,11 @@
     }
     h2, .chat_title {
       font-size: clamp(1.2rem, 9vw, 12rem);
-      margin-bottom: 25px;
+      margin-bottom: 5%;
+      margin
+      -top: 15%;
+    }
+    .info-title {
     }
     .chat_description{
       font-size: clamp(0.8rem, 1.5vw, 0.9rem);
@@ -1225,7 +1255,8 @@
 
     .chat-info-section {
       padding: 20px;
-      /* min-height: 85svh; */
+      min-height: 77svh;
+      max-height: 80svh;
       overflow-y: hidden;
     }
 
@@ -1235,7 +1266,7 @@
     }
 
     .chat-messenger {
-      height: 85svh;
+      height: 75svh;
       max-height: 85svh;
       overflow: hidden;
     }
