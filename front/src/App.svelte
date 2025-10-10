@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import Acceuilbis from './pages/AcceuilPortfolioBis.svelte';
   import Acceuil from './pages/Acceuil.svelte';
-  import About from './pages/About.svelte';
+  import About from './pages/Blog.svelte';
   import { currentPage } from './stores/router';
   import Contact from './pages/Contact.svelte';
   import { onDestroy } from 'svelte';

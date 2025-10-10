@@ -247,7 +247,7 @@
             </div>
             <div class="dashboard-section-two">
                 <HlsPlayer 
-                    src="https://ds1-cache.quanteec.com/contents/encodings/live/d5e9f551-7435-4ea6-3532-3130-6d61-63-916e-ff1d72543cced/media_0.m3u8"
+                      src={import.meta.env.VITE_HLS_VIDEO_URL} 
                     autoplay={true}
                     muted={true}
                     controls={false}

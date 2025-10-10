@@ -3,7 +3,7 @@
   import { writable } from "svelte/store";
   import { currentPage } from "../stores/router";
   import ServicesOK from "../modules/services/ServicesOK.svelte";
-  import Welcome from "../modules/ui/blog/Welcometo.svelte";
+  import Welcome from "../modules/ui/site_acceuil/Welcometo.svelte";
   import { initLenis, stopLenis, destroyLenis } from "../stores/lenis.js";
   
   console.log("Acceuil: component instantiated");
