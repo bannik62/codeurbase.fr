@@ -299,7 +299,7 @@ export function createLargeDesktopBlogAnimations(currentSize) {
             toggleActions: "play none none reverse",
         },
     })
-    .fromTo(".blog-title", {
+    .fromTo(".blog-title", {  
         opacity: 0,
         y: 150,
         scale: 0.4,
@@ -357,7 +357,7 @@ export function createLargeDesktopBlogAnimations(currentSize) {
         rotationX: 0,
         z: 0,
         duration: 1.8,
-        stagger: 0.4,
+        stagger: 0.3,
         ease: "power2.out",
     });
 

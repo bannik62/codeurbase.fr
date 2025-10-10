@@ -57,7 +57,6 @@
         justify-content: center;
         align-items: center;
         width: 100vw;
-        height: 100svh;
         padding: 20px;
         color: #fff;
         font-family: Arial, sans-serif;
