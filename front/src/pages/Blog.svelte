@@ -3,6 +3,7 @@
   import { initLenis } from "../stores/lenis.js";
   import { gsap } from "gsap";
   import { ScrollTrigger } from "gsap/ScrollTrigger";
+  import Blog from "../modules/ui/Blog/Blog.svelte";
 
   // Enregistrer ScrollTrigger
   gsap.registerPlugin(ScrollTrigger);
@@ -46,10 +47,7 @@
 </script>
 
 <div class="about">
-
-<div class="about-content">
-   <h1>Blog coming soon</h1>
-</div> 
+  <Blog />
 </div>
 <style>
     .about {

@@ -6,18 +6,18 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
  * @param {string} currentSize - La taille d'écran actuelle
  * @returns {Object} - Objet contenant les animations
  */
-export function createSmallMobileChatAnimations(currentSize) {
-    // Animation pour le titre du chat
-    const chatTitleAnimation = gsap.timeline({
+export function createSmallMobileBlogAnimations(currentSize) {
+    // Animation pour le titre du blog
+    const blogTitleAnimation = gsap.timeline({
         scrollTrigger: {
-            trigger: "#chat-mvp",
+            trigger: "#blog-section",
             start: "top 80%",
             end: "bottom 20%",
             scrub: 0.3,
             toggleActions: "play none none reverse",
         },
     })
-    .fromTo(".chat-title", {
+    .fromTo(".blog-title", {
         opacity: 0,
         y: 50,
         scale: 0.8,
@@ -28,7 +28,7 @@ export function createSmallMobileChatAnimations(currentSize) {
         duration: 1,
         ease: "back.out(1.7)",
     })
-    .fromTo(".chat-description", {
+    .fromTo(".blog-description", {
         opacity: 0,
         y: 30,
     }, {
@@ -38,38 +38,32 @@ export function createSmallMobileChatAnimations(currentSize) {
         ease: "power2.out",
     }, "-=0.3");
 
-    // Animation pour le contenu du chat
-    const chatContentAnimation = gsap.timeline({
+    // Animation pour les articles
+    const blogArticlesAnimation = gsap.timeline({
         scrollTrigger: {
-            trigger: ".chat-content",
+            trigger: ".blog-articles",
             start: "top 80%",
             end: "bottom 20%",
             scrub: 0.4,
             toggleActions: "play none none reverse",
         },
     })
-    .fromTo(".chat-messages", {
+    .fromTo(".blog-card", {
         opacity: 0,
-        x: -30,
+        y: 40,
+        scale: 0.9,
     }, {
         opacity: 1,
-        x: 0,
+        y: 0,
+        scale: 1,
         duration: 0.8,
+        stagger: 0.2,
         ease: "power2.out",
-    })
-    .fromTo(".chat-input", {
-        opacity: 0,
-        x: -30,
-    }, {
-        opacity: 1,
-        x: 0,
-        duration: 0.8,
-        ease: "power2.out",
-    }, "-=0.4");
+    });
 
     return {
-        chatTitleAnimation,
-        chatContentAnimation
+        blogTitleAnimation,
+        blogArticlesAnimation
     };
 }
 
@@ -78,18 +72,18 @@ export function createSmallMobileChatAnimations(currentSize) {
  * @param {string} currentSize - La taille d'écran actuelle
  * @returns {Object} - Objet contenant les animations
  */
-export function createMobileChatAnimations(currentSize) {
-    // Animation pour le titre du chat
-    const chatTitleAnimation = gsap.timeline({
+export function createMobileBlogAnimations(currentSize) {
+    // Animation pour le titre du blog
+    const blogTitleAnimation = gsap.timeline({
         scrollTrigger: {
-            trigger: "#chat-mvp",
+            trigger: "#blog-section",
             start: "top 75%",
             end: "bottom 25%",
             scrub: 0.4,
             toggleActions: "play none none reverse",
         },
     })
-    .fromTo(".chat-title", {
+    .fromTo(".blog-title", {
         opacity: 0,
         y: 60,
         scale: 0.7,
@@ -100,7 +94,7 @@ export function createMobileChatAnimations(currentSize) {
         duration: 1.2,
         ease: "back.out(1.7)",
     })
-    .fromTo(".chat-description", {
+    .fromTo(".blog-description", {
         opacity: 0,
         y: 40,
     }, {
@@ -110,38 +104,32 @@ export function createMobileChatAnimations(currentSize) {
         ease: "power2.out",
     }, "-=0.4");
 
-    // Animation pour le contenu du chat
-    const chatContentAnimation = gsap.timeline({
+    // Animation pour les articles
+    const blogArticlesAnimation = gsap.timeline({
         scrollTrigger: {
-            trigger: ".chat-content",
+            trigger: ".blog-articles",
             start: "top 75%",
             end: "bottom 25%",
             scrub: 0.5,
             toggleActions: "play none none reverse",
         },
     })
-    .fromTo(".chat-messages", {
+    .fromTo(".blog-card", {
         opacity: 0,
-        x: -40,
+        y: 50,
+        scale: 0.85,
     }, {
         opacity: 1,
-        x: 0,
+        y: 0,
+        scale: 1,
         duration: 1,
+        stagger: 0.25,
         ease: "power2.out",
-    })
-    .fromTo(".chat-input", {
-        opacity: 0,
-        x: -40,
-    }, {
-        opacity: 1,
-        x: 0,
-        duration: 1,
-        ease: "power2.out",
-    }, "-=0.5");
+    });
 
     return {
-        chatTitleAnimation,
-        chatContentAnimation
+        blogTitleAnimation,
+        blogArticlesAnimation
     };
 }
 
@@ -150,18 +138,18 @@ export function createMobileChatAnimations(currentSize) {
  * @param {string} currentSize - La taille d'écran actuelle
  * @returns {Object} - Objet contenant les animations
  */
-export function createTabletChatAnimations(currentSize) {
-    // Animation pour le titre du chat
-    const chatTitleAnimation = gsap.timeline({
+export function createTabletBlogAnimations(currentSize) {
+    // Animation pour le titre du blog
+    const blogTitleAnimation = gsap.timeline({
         scrollTrigger: {
-            trigger: "#chat-mvp",
+            trigger: "#blog-section",
             start: "top 70%",
             end: "bottom 30%",
             scrub: 0.5,
             toggleActions: "play none none reverse",
         },
     })
-    .fromTo(".chat-title", {
+    .fromTo(".blog-title", {
         opacity: 0,
         y: 80,
         scale: 0.6,
@@ -174,7 +162,7 @@ export function createTabletChatAnimations(currentSize) {
         duration: 1.5,
         ease: "back.out(1.7)",
     })
-    .fromTo(".chat-description", {
+    .fromTo(".blog-description", {
         opacity: 0,
         y: 50,
         rotationX: -45,
@@ -186,42 +174,34 @@ export function createTabletChatAnimations(currentSize) {
         ease: "power2.out",
     }, "-=0.5");
 
-    // Animation pour le contenu du chat
-    const chatContentAnimation = gsap.timeline({
+    // Animation pour les articles
+    const blogArticlesAnimation = gsap.timeline({
         scrollTrigger: {
-            trigger: ".chat-content",
+            trigger: ".blog-articles",
             start: "top 70%",
             end: "bottom 30%",
             scrub: 0.6,
             toggleActions: "play none none reverse",
         },
     })
-    .fromTo(".chat-messages", {
+    .fromTo(".blog-card", {
         opacity: 0,
-        x: -50,
-        rotationX: -30,
+        y: 60,
+        scale: 0.8,
+        rotationY: -15,
     }, {
         opacity: 1,
-        x: 0,
-        rotationX: 0,
+        y: 0,
+        scale: 1,
+        rotationY: 0,
         duration: 1.2,
+        stagger: 0.3,
         ease: "power2.out",
-    })
-    .fromTo(".chat-input", {
-        opacity: 0,
-        x: -50,
-        rotationX: -30,
-    }, {
-        opacity: 1,
-        x: 0,
-        rotationX: 0,
-        duration: 1.2,
-        ease: "power2.out",
-    }, "-=0.6");
+    });
 
     return {
-        chatTitleAnimation,
-        chatContentAnimation
+        blogTitleAnimation,
+        blogArticlesAnimation
     };
 }
 
@@ -230,18 +210,18 @@ export function createTabletChatAnimations(currentSize) {
  * @param {string} currentSize - La taille d'écran actuelle
  * @returns {Object} - Objet contenant les animations
  */
-export function createDesktopChatAnimations(currentSize) {
-    // Animation pour le titre du chat
-    const chatTitleAnimation = gsap.timeline({
+export function createDesktopBlogAnimations(currentSize) {
+    // Animation pour le titre du blog
+    const blogTitleAnimation = gsap.timeline({
         scrollTrigger: {
-            trigger: "#chat-mvp",
+            trigger: "#blog-section",
             start: "top 65%",
             end: "bottom 35%",
             scrub: 0.6,
             toggleActions: "play none none reverse",
         },
     })
-    .fromTo(".chat-title", {
+    .fromTo(".blog-title", {
         opacity: 0,
         y: 100,
         scale: 0.5,
@@ -256,7 +236,7 @@ export function createDesktopChatAnimations(currentSize) {
         duration: 1.8,
         ease: "back.out(1.7)",
     })
-    .fromTo(".chat-description", {
+    .fromTo(".blog-description", {
         opacity: 0,
         y: 60,
         rotationX: -60,
@@ -270,46 +250,36 @@ export function createDesktopChatAnimations(currentSize) {
         ease: "power2.out",
     }, "-=0.6");
 
-    // Animation pour le contenu du chat
-    const chatContentAnimation = gsap.timeline({
+    // Animation pour les articles
+    const blogArticlesAnimation = gsap.timeline({
         scrollTrigger: {
-            trigger: ".chat-content",
+            trigger: ".blog-articles",
             start: "top 65%",
             end: "bottom 35%",
             scrub: 0.7,
             toggleActions: "play none none reverse",
         },
     })
-    .fromTo(".chat-messages", {
+    .fromTo(".blog-card", {
         opacity: 0,
-        x: -60,
-        rotationX: -45,
-        rotationY: 5,
+        y: 80,
+        scale: 0.7,
+        rotationY: -20,
+        rotationX: -30,
     }, {
         opacity: 1,
-        x: 0,
-        rotationX: 0,
+        y: 0,
+        scale: 1,
         rotationY: 0,
-        duration: 1.5,
-        ease: "power2.out",
-    })
-    .fromTo(".chat-input", {
-        opacity: 0,
-        x: -60,
-        rotationX: -45,
-        rotationY: 5,
-    }, {
-        opacity: 1,
-        x: 0,
         rotationX: 0,
-        rotationY: 0,
         duration: 1.5,
+        stagger: 0.35,
         ease: "power2.out",
-    }, "-=0.7");
+    });
 
     return {
-        chatTitleAnimation,
-        chatContentAnimation
+        blogTitleAnimation,
+        blogArticlesAnimation
     };
 }
 
@@ -318,94 +288,82 @@ export function createDesktopChatAnimations(currentSize) {
  * @param {string} currentSize - La taille d'écran actuelle
  * @returns {Object} - Objet contenant les animations
  */
-export function createLargeDesktopChatAnimations(currentSize) {
-    // Animation pour le titre du chat
-    const chatTitleAnimation = gsap.timeline({
+export function createLargeDesktopBlogAnimations(currentSize) {
+    // Animation pour le titre du blog
+    const blogTitleAnimation = gsap.timeline({
         scrollTrigger: {
-            trigger: "#chat-mvp",
-            start: "top 10%",
-            end: "bottom 80%",
+            trigger: "#blog-section",
+            start: "top 60%",
+            end: "bottom 40%",
             scrub: 0.7,
             toggleActions: "play none none reverse",
         },
     })
-    .fromTo(".chat-title", {
+    .fromTo(".blog-title", {
         opacity: 0,
-        y: 250,
+        y: 150,
         scale: 0.4,
         rotationX: -150,
         rotationY: 20,
         z: -200,
     }, {
         opacity: 1,
-        y: 150,
-        scale: 1.2,
+        y: 0,
+        scale: 1,
         rotationX: 0,
         rotationY: 0,
         z: 0,
-        duration: 1,
+        duration: 2,
         ease: "back.out(1.7)",
     })
-    .fromTo(".chat-description", {
+    .fromTo(".blog-description", {
         opacity: 0,
-        y: 150,
+        y: 100,
         rotationX: -80,
         rotationY: 15,
         z: -100,
     }, {
         opacity: 1,
-        y: -50,
+        y: 0,
         rotationX: 0,
         rotationY: 0,
         z: 0,
-        duration: 1,
+        duration: 1.8,
         ease: "power2.out",
     }, "-=0.7");
 
-    // Animation pour le contenu du chat
-    const chatContentAnimation = gsap.timeline({
+    // Animation pour les articles
+    const blogArticlesAnimation = gsap.timeline({
         scrollTrigger: {
-            trigger: "h2",
-            start: "top 90%",
-            end: "bottom 10%",
+            trigger: ".blog-articles",
+            start: "top 60%",
+            end: "bottom 40%",
             scrub: 0.8,
             toggleActions: "play none none reverse",
         },
     })
-    .fromTo(".chat-messages", {
+    .fromTo(".blog-card", {
         opacity: 0,
-        x: -80,
-        rotationX: -60,
-        rotationY: 10,
+        y: 100,
+        scale: 0.6,
+        rotationY: -25,
+        rotationX: -45,
         z: -75,
     }, {
         opacity: 1,
-        x: 0,
-        rotationX: 0,
+        y: 0,
+        scale: 1,
         rotationY: 0,
+        rotationX: 0,
         z: 0,
         duration: 1.8,
+        stagger: 0.4,
         ease: "power2.out",
-    })
-    .fromTo(".chat-input", {
-        opacity: 0,
-        x: -80,
-        rotationX: -60,
-        rotationY: 10,
-        z: -75,
-    }, {
-        opacity: 1,
-        x: 0,
-        rotationX: 0,
-        rotationY: 0,
-        z: 0,
-        duration: 1.8,
-        ease: "power2.out",
-    }, "-=0.8");
+    });
 
     return {
-        chatTitleAnimation,
-        chatContentAnimation
+        blogTitleAnimation,
+        blogArticlesAnimation
     };
 }
 
@@ -414,20 +372,20 @@ export function createLargeDesktopChatAnimations(currentSize) {
  * @param {string} currentSize - La taille d'écran actuelle
  * @returns {Object} - Objet contenant les animations
  */
-export function createXlDesktopChatAnimations(currentSize) {
-    // Animation pour le titre du chat
-    const chatTitleAnimation = gsap.timeline({
+export function createXlDesktopBlogAnimations(currentSize) {
+    // Animation pour le titre du blog
+    const blogTitleAnimation = gsap.timeline({
         scrollTrigger: {
-            trigger: "#chat-mvp",
+            trigger: "#blog-section",
             start: "top 55%",
             end: "bottom 45%",
             scrub: 0.8,
             toggleActions: "play none none reverse",
         },
     })
-    .fromTo(".chat-title", {
+    .fromTo(".blog-title", {
         opacity: 0,
-        y: 150,
+        y: 200,
         scale: 0.3,
         rotationX: -180,
         rotationY: 25,
@@ -442,9 +400,9 @@ export function createXlDesktopChatAnimations(currentSize) {
         duration: 2.2,
         ease: "back.out(1.7)",
     })
-    .fromTo(".chat-description", {
+    .fromTo(".blog-description", {
         opacity: 0,
-        y: 100,
+        y: 120,
         rotationX: -100,
         rotationY: 20,
         z: -150,
@@ -458,50 +416,38 @@ export function createXlDesktopChatAnimations(currentSize) {
         ease: "power2.out",
     }, "-=0.8");
 
-    // Animation pour le contenu du chat
-    const chatContentAnimation = gsap.timeline({
+    // Animation pour les articles
+    const blogArticlesAnimation = gsap.timeline({
         scrollTrigger: {
-            trigger: ".chat-content",
+            trigger: ".blog-articles",
             start: "top 55%",
             end: "bottom 45%",
             scrub: 0.9,
             toggleActions: "play none none reverse",
         },
     })
-    .fromTo(".chat-messages", {
+    .fromTo(".blog-card", {
         opacity: 0,
-        x: -100,
-        rotationX: -80,
-        rotationY: 15,
+        y: 120,
+        scale: 0.5,
+        rotationY: -30,
+        rotationX: -60,
         z: -100,
     }, {
         opacity: 1,
-        x: 0,
-        rotationX: 0,
+        y: 0,
+        scale: 1,
         rotationY: 0,
+        rotationX: 0,
         z: 0,
         duration: 2,
+        stagger: 0.45,
         ease: "power2.out",
-    })
-    .fromTo(".chat-input", {
-        opacity: 0,
-        x: -100,
-        rotationX: -80,
-        rotationY: 15,
-        z: -100,
-    }, {
-        opacity: 1,
-        x: 0,
-        rotationX: 0,
-        rotationY: 0,
-        z: 0,
-        duration: 2,
-        ease: "power2.out",
-    }, "-=0.9");
+    });
 
     return {
-        chatTitleAnimation,
-        chatContentAnimation
+        blogTitleAnimation,
+        blogArticlesAnimation
     };
 }
 
@@ -510,20 +456,20 @@ export function createXlDesktopChatAnimations(currentSize) {
  * @param {string} currentSize - La taille d'écran actuelle
  * @returns {Object} - Objet contenant toutes les animations
  */
-export function initChatAnimations(currentSize) {
+export function initBlogAnimations(currentSize) {
     switch (currentSize) {
         case 'smallMobile':
-            return createSmallMobileChatAnimations(currentSize);
+            return createSmallMobileBlogAnimations(currentSize);
         case 'mobile':
-            return createMobileChatAnimations(currentSize);
+            return createMobileBlogAnimations(currentSize);
         case 'tablet':
-            return createTabletChatAnimations(currentSize);
+            return createTabletBlogAnimations(currentSize);
         case 'desktop':
-            return createDesktopChatAnimations(currentSize);
+            return createDesktopBlogAnimations(currentSize);
         case 'largeDesktop':
-            return createLargeDesktopChatAnimations(currentSize);
+            return createLargeDesktopBlogAnimations(currentSize);
         case 'xlDesktop':
-            return createXlDesktopChatAnimations(currentSize);
+            return createXlDesktopBlogAnimations(currentSize);
         default:
             return {};
     }
@@ -533,7 +479,8 @@ export function initChatAnimations(currentSize) {
  * Nettoie toutes les animations
  * @param {Object} animations - Objet contenant les animations
  */
-export function cleanupChatAnimations(animations) {
-    if (animations.chatTitleAnimation) animations.chatTitleAnimation.kill();
-    if (animations.chatContentAnimation) animations.chatContentAnimation.kill();
+export function cleanupBlogAnimations(animations) {
+    if (animations.blogTitleAnimation) animations.blogTitleAnimation.kill();
+    if (animations.blogArticlesAnimation) animations.blogArticlesAnimation.kill();
 }
+

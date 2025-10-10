@@ -26,9 +26,7 @@
 
 <style>
   .contact-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+ 
     background-color: #322f2ff4;
     width: 100vw;
   }

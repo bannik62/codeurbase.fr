@@ -1217,7 +1217,7 @@
   /* Large Desktop */
   @media (min-width: 1441px) and (max-width: 1920px) {
     .chat-container {
-      width: 50%;
+      width: 99%;
       min-width: 500px;
       padding: 2% 2% 8svh 2%;
       /* height: auto; */
@@ -1230,8 +1230,8 @@
     h2, .chat_title {
       font-size: clamp(1.2rem, 9vw, 12rem);
       margin-bottom: 5%;
-      margin
-      -top: 15%;
+      margin-top: 10%;
+      top: 5%;
     }
     .info-title {
     }
