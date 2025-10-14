@@ -1,10 +1,14 @@
 const express = require('express');
 const n8nRouter = require('./router/n8nRouter');
+const securityRouter = require('./router/securityRouter');
+const authRouter = require('./router/SecureRouter/secureN8nRouter');
 const axios = require('axios');
 
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 
 // Charger les variables d'environnement
 dotenv.config();
@@ -33,6 +37,23 @@ app.use(cors({
   ].filter(Boolean),
   credentials: true
 }));
+
+// Sécurité des headers HTTP avec Helmet
+app.use(helmet({
+  // Désactiver CSP car vous utilisez des scripts externes (GSAP, Umami, cdnjs)
+  // Vous pourrez le réactiver plus tard avec une config précise
+  contentSecurityPolicy: false,
+  
+  // HSTS seulement en production (force HTTPS)
+  hsts: process.env.NODE_ENV === 'production',
+  
+  // Autres headers activés par défaut (bon pour vous) :
+  // - X-Frame-Options: DENY (anti-clickjacking)
+  // - X-Content-Type-Options: nosniff
+  // - X-DNS-Prefetch-Control: off
+  // - Referrer-Policy: no-referrer
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -63,9 +84,6 @@ app.get('/health/umami', async (req, res) => {
   }
 });
 
-
-
-
 // Route de health check pour phpMyAdmin
 app.get('/health/phpmyadmin', async (req, res) => {
   try {
@@ -78,7 +96,23 @@ app.get('/health/phpmyadmin', async (req, res) => {
   }
 });
 
+// Rate limiting pour protéger contre les attaques par force brute
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // Maximum 5 tentatives par IP
+  message: { 
+    success: false, 
+    error: 'Trop de tentatives de connexion',
+    message: 'Veuillez réessayer dans 15 minutes'
+  },
+  standardHeaders: true, // Retourne les infos de rate limit dans les headers `RateLimit-*`
+  legacyHeaders: false // Désactive les headers `X-RateLimit-*`
+});
+
 app.use('/codeurbaseApi/n8n', n8nRouter);
+app.use('/api/security', securityRouter);
+app.use('/api/auth/login', loginLimiter); // Applique le rate limiting sur le login
+app.use('/api/auth', authRouter);
 
 app.listen(port, () => {
   console.log(`*********************Server is running on ${port} *************************`);

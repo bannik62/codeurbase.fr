@@ -1,0 +1,144 @@
+<script>
+  import { currentPage } from '../../stores/router.js';
+  
+  /**
+   * Redirection vers la page de login
+   */
+  function goToLogin() {
+    currentPage.set('login');
+  }
+  
+  /**
+   * Retour à l'accueil
+   */
+  function goToHome() {
+    currentPage.set('acceuil');
+  }
+</script>
+
+<main class="access-denied">
+  <div class="content">
+    <div class="icon">🔒</div>
+    <h1>Accès refusé</h1>
+    <p class="message">
+      Vous n'avez pas les permissions nécessaires pour accéder à cette page.
+    </p>
+    <p class="submessage">
+      Cette section est réservée aux utilisateurs authentifiés.
+    </p>
+    
+    <div class="actions">
+      <button class="btn-login" on:click={goToLogin}>
+        🔐 Se connecter
+      </button>
+      <button class="btn-home" on:click={goToHome}>
+        🏠 Retour à l'accueil
+      </button>
+    </div>
+  </div>
+</main>
+
+<style>
+  .access-denied {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: clamp(1rem, 3vw, 2rem);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  }
+  
+  .content {
+    background: white;
+    border-radius: clamp(1rem, 2vw, 1.5rem);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    padding: clamp(3rem, 6vw, 4rem);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+  }
+  
+  .icon {
+    font-size: clamp(4rem, 10vw, 6rem);
+    margin-bottom: 1.5rem;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+  
+  h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: #333;
+    margin: 0 0 1rem 0;
+    font-weight: 700;
+  }
+  
+  .message {
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    color: #555;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.6;
+  }
+  
+  .submessage {
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    color: #777;
+    margin: 0 0 2.5rem 0;
+  }
+  
+  .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  button {
+    padding: clamp(0.875rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2rem);
+    border: none;
+    border-radius: 0.5rem;
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .btn-login {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+  }
+  
+  .btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  }
+  
+  .btn-home {
+    background: #f5f5f5;
+    color: #333;
+  }
+  
+  .btn-home:hover {
+    background: #e0e0e0;
+    transform: translateY(-2px);
+  }
+  
+  button:active {
+    transform: translateY(0);
+  }
+  
+  @media (min-width: 600px) {
+    .actions {
+      flex-direction: row;
+      justify-content: center;
+    }
+  }
+</style>
+
