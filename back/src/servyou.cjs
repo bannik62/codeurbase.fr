@@ -110,9 +110,9 @@ const loginLimiter = rateLimit({
 });
 
 app.use('/codeurbaseApi/n8n', n8nRouter);
-app.use('/api/security', securityRouter);
-app.use('/api/auth/login', loginLimiter); // Applique le rate limiting sur le login
-app.use('/api/auth', authRouter);
+app.use('/security', securityRouter);
+app.use('/auth/login', loginLimiter); // Applique le rate limiting sur le login
+app.use('/auth', authRouter);
 
 app.listen(port, () => {
   console.log(`*********************Server is running on ${port} *************************`);

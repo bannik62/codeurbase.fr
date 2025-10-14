@@ -24,7 +24,7 @@
   function logout() {
     if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
       // Appeler l'API de déconnexion
-      fetch('http://localhost:3000/api/auth/logout', {
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/logout`, {
         method: 'POST',
         credentials: 'include'
       }).then(() => {
