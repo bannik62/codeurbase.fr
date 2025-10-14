@@ -252,6 +252,8 @@ router.post('/createArticle', authMiddleware, adminMiddleware, async (req, res) 
     // Appeler le webhook N8N
     const N8N_WEBHOOK_URL = process.env.N8N_WORKFLOW_CREATE_ARTICLE;
     
+    console.log('[CreateArticle] N8N_WEBHOOK_URL:', N8N_WEBHOOK_URL);
+    
     if (!N8N_WEBHOOK_URL) {
       return res.status(500).json({
         success: false,
@@ -260,6 +262,13 @@ router.post('/createArticle', authMiddleware, adminMiddleware, async (req, res) 
     }
     
     const axios = require('axios');
+    
+    console.log('[CreateArticle] Appel N8N avec payload:', {
+      prompt: prompt.trim(),
+      author: req.user.username,
+      requestedBy: req.user.email
+    });
+    
     const n8nResponse = await axios.post(N8N_WEBHOOK_URL, {
       prompt: prompt.trim(),
       author: req.user.username,
