@@ -6,6 +6,8 @@
   import { initBlogAnimations, cleanupBlogAnimations } from "./blogAnimation.js";
   import { useBlog, BlogUtils } from "./scriptBlog.js";
   import { initLenis } from "../../../stores/lenis.js";
+  import CardArticle from "./CardArticle.svelte";
+  import ArticleReader from "./ArticleReader.svelte";
 
   // Enregistrer ScrollTrigger
   gsap.registerPlugin(ScrollTrigger);
@@ -18,21 +20,32 @@
   // Variables pour le blog
   let searchQuery = "";
   let selectedCategory = "all";
+  let blogData = {
+    articles: [],
+    categories: ["all"],
+    isLoading: false,
+    error: null
+  };
+  let selectedArticle = null;
   
   // Initialiser le hook du blog
   const blog = useBlog();
   
   // Articles filtrés (réactif)
   $: filteredArticles = selectedCategory === "all" 
-    ? blog.articles 
-    : blog.articles.filter(article => article.category === selectedCategory);
+    ? blogData.articles 
+    : blogData.articles.filter(article => article.category === selectedCategory);
   
   // Articles recherchés
   $: searchedArticles = searchQuery.trim() === ""
     ? filteredArticles
-    : blog.searchArticles(searchQuery);
+    : blogData.articles.filter(article => 
+        article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        article.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        article.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
 
-  onMount(() => {
+  onMount(async () => {
     // Initialiser Lenis pour le scroll smooth
     const lenisInstance = initLenis();
     lenisInstance.on("scroll", ScrollTrigger.update);
@@ -69,6 +82,18 @@
 
     // Initialiser les animations selon la taille d'écran
     animations = initBlogAnimations(currentSize);
+    
+    // Charger les articles depuis l'API
+    blogData.isLoading = true;
+    await blog.fetchArticles();
+    
+    // Mise à jour de l'objet blogData pour déclencher la réactivité
+    blogData = {
+      articles: [...blog.articles],
+      categories: [...blog.categories],
+      isLoading: blog.isLoading,
+      error: blog.error
+    };
   });
 
   onDestroy(() => {
@@ -95,6 +120,14 @@
   function handleSearch(event) {
     searchQuery = event.target.value;
   }
+
+  function openArticle(article) {
+    selectedArticle = article;
+  }
+
+  function closeArticle() {
+    selectedArticle = null;
+  }
 </script>
 
 <div class="blog-container" bind:this={container}>
@@ -105,7 +138,7 @@
     <!-- Filtres et recherche -->
     <div class="blog-filters">
       <div class="category-filters">
-        {#each blog.categories as category}
+        {#each blogData.categories as category}
           <button 
             class="category-btn"
             class:active={selectedCategory === category}
@@ -131,40 +164,33 @@
 
     <!-- Grille d'articles -->
     <div class="blog-articles">
-      {#if searchedArticles.length === 0}
+      {#if blogData.isLoading}
+        <div class="loading-state">
+          <span class="loading-icon">⏳</span>
+          <p>Chargement des articles...</p>
+        </div>
+      {:else if blogData.error}
+        <div class="error-state">
+          <span class="error-icon">⚠️</span>
+          <p>Erreur : {blogData.error}</p>
+        </div>
+      {:else if searchedArticles.length === 0}
         <div class="no-results">
           <span class="no-results-icon">📝</span>
           <p>Aucun article trouvé</p>
         </div>
       {:else}
         {#each searchedArticles as article (article.id)}
-          <article class="blog-card">
-            <div class="card-image">
-              <img src={article.image} alt={article.title} />
-              <div class="card-category" style="background-color: {BlogUtils.getCategoryColor(article.category)}">
-                {article.category}
-              </div>
-            </div>
-            <div class="card-content">
-              <h3 class="card-title">{article.title}</h3>
-              <p class="card-excerpt">{BlogUtils.truncateText(article.excerpt, 120)}</p>
-              <div class="card-meta">
-                <span class="card-date">{blog.formatDate(article.date)}</span>
-                <span class="card-author">Par {article.author}</span>
-              </div>
-              <div class="card-tags">
-                {#each article.tags as tag}
-                  <span class="tag">{tag}</span>
-                {/each}
-              </div>
-              <button class="read-more-btn">Lire l'article →</button>
-            </div>
-          </article>
+          <CardArticle {article} formatDate={blog.formatDate} onRead={() => openArticle(article)} />
         {/each}
       {/if}
     </div>
   </section>
 </div>
+
+{#if selectedArticle}
+  <ArticleReader article={selectedArticle} formatDate={blog.formatDate} onClose={closeArticle} />
+{/if}
 
 <style>
   @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap");
@@ -290,120 +316,8 @@
     margin-top: 20px;
   }
 
-  .blog-card {
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(220, 20, 60, 0.1));
-    border: 2px solid rgba(220, 20, 60, 0.3);
-    border-radius: 15px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .blog-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(220, 20, 60, 0.4);
-    border-color: crimson;
-  }
-
-  .card-image {
-    position: relative;
-    width: 100%;
-    height: 200px;
-    overflow: hidden;
-  }
-
-  .card-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-  }
-
-  .blog-card:hover .card-image img {
-    transform: scale(1.1);
-  }
-
-  .card-category {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    padding: 5px 12px;
-    border-radius: 15px;
-    font-family: "Orbitron", cursive;
-    font-size: clamp(0.6rem, 1vw, 0.8rem);
-    color: white;
-    font-weight: 600;
-    text-transform: capitalize;
-  }
-
-  .card-content {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    flex: 1;
-  }
-
-  .card-title {
-    font-family: "Orbitron", cursive;
-    color: crimson;
-    font-size: clamp(0.9rem, 1.5vw, 1.2rem);
-    margin: 0;
-  }
-
-  .card-excerpt {
-    font-family: "Orbitron", cursive;
-    color: rgb(220, 220, 220);
-    font-size: clamp(0.7rem, 1.2vw, 0.9rem);
-    line-height: 1.5;
-    margin: 0;
-  }
-
-  .card-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: clamp(0.6rem, 1vw, 0.75rem);
-    color: rgba(220, 220, 220, 0.7);
-    font-family: "Orbitron", cursive;
-  }
-
-  .card-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .tag {
-    background: rgba(220, 20, 60, 0.2);
-    color: rgb(250, 245, 245);
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: clamp(0.6rem, 1vw, 0.7rem);
-    border: 1px solid rgba(220, 20, 60, 0.3);
-    font-family: "Orbitron", cursive;
-  }
-
-  .read-more-btn {
-    background: linear-gradient(45deg, crimson, #ff4444);
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-family: "Orbitron", cursive;
-    font-size: clamp(0.7rem, 1.2vw, 0.9rem);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(220, 20, 60, 0.3);
-    margin-top: auto;
-  }
-
-  .read-more-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 15px rgba(220, 20, 60, 0.5);
-  }
-
+  .loading-state,
+  .error-state,
   .no-results {
     grid-column: 1 / -1;
     display: flex;
@@ -414,11 +328,19 @@
     color: rgba(220, 220, 220, 0.7);
   }
 
+  .loading-icon,
+  .error-icon,
   .no-results-icon {
     font-size: 4rem;
     margin-bottom: 20px;
   }
 
+  .error-state {
+    color: #ff6b6b;
+  }
+
+  .loading-state p,
+  .error-state p,
   .no-results p {
     font-family: "Orbitron", cursive;
     font-size: clamp(0.9rem, 1.5vw, 1.2rem);
@@ -439,10 +361,6 @@
     .blog-articles {
       grid-template-columns: 1fr;
       gap: 20px;
-    }
-
-    .card-image {
-      height: 180px;
     }
 
     .search-container {

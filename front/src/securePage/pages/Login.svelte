@@ -227,15 +227,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #322f2ff4;
     padding: clamp(1rem, 3vw, 2rem);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   }
   
   .login-container {
-    background: white;
+    background: rgba(51, 51, 51, 0.95);
     border-radius: clamp(1rem, 2vw, 1.5rem);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 20px rgba(255, 31, 31, 0.3);
+    border: 1px solid #ff1f1f;
     padding: clamp(2rem, 5vw, 3rem);
     width: 100%;
     max-width: 450px;
@@ -248,14 +249,16 @@
   
   .login-header h1 {
     font-size: clamp(1.75rem, 4vw, 2.5rem);
-    color: #333;
+    color: #fff;
     margin: 0 0 0.5rem 0;
     font-weight: 700;
+    font-family: "Orbitron", cursive;
+    text-shadow: 0 0 10px #ff1f1f;
   }
   
   .login-header p {
     font-size: clamp(0.9rem, 2vw, 1rem);
-    color: #666;
+    color: #ccc;
     margin: 0;
   }
   
@@ -276,33 +279,37 @@
   }
   
   .csrf-loading {
-    background: #e3f2fd;
-    color: #1976d2;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid #666;
   }
   
   .csrf-error {
-    background: #ffebee;
-    color: #c62828;
+    background: rgba(255, 31, 31, 0.2);
+    color: #ff1f1f;
+    border: 1px solid #ff1f1f;
   }
   
   .csrf-success {
-    background: #e8f5e9;
-    color: #2e7d32;
+    background: rgba(0, 255, 0, 0.1);
+    color: #0f0;
+    border: 1px solid #0f0;
   }
   
   .btn-refresh {
     margin-left: auto;
     padding: 0.25rem 0.75rem;
-    background: #c62828;
+    background: #ff1f1f;
     color: white;
-    border: none;
+    border: 1px solid #ff1f1f;
     border-radius: 0.25rem;
     cursor: pointer;
     font-size: 0.85rem;
+    transition: all 0.3s ease;
   }
   
   .btn-refresh:hover {
-    background: #b71c1c;
+    box-shadow: 0 0 10px rgba(255, 31, 31, 0.5);
   }
   
   /* Formulaire */
@@ -320,30 +327,34 @@
   
   .form-group label {
     font-weight: 600;
-    color: #333;
+    color: #fff;
     font-size: clamp(0.9rem, 2vw, 1rem);
   }
   
   .form-group input {
     padding: clamp(0.75rem, 2vw, 1rem);
-    border: 2px solid #e0e0e0;
+    border: 2px solid #555;
     border-radius: 0.5rem;
     font-size: clamp(0.9rem, 2vw, 1rem);
-    transition: border-color 0.2s;
+    transition: all 0.2s;
+    background: #1a1a1a;
+    color: #fff;
   }
   
   .form-group input:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #ff1f1f;
+    box-shadow: 0 0 10px rgba(255, 31, 31, 0.3);
   }
   
   .form-group input:disabled {
-    background: #f5f5f5;
+    background: #2a2a2a;
     cursor: not-allowed;
+    opacity: 0.5;
   }
   
   .form-group input.error {
-    border-color: #c62828;
+    border-color: #ff1f1f;
   }
   
   .password-input-wrapper {
@@ -374,7 +385,7 @@
   }
   
   .error-message {
-    color: #c62828;
+    color: #ff1f1f;
     font-size: 0.85rem;
     margin-top: -0.25rem;
   }
@@ -386,38 +397,43 @@
     border-radius: 0.5rem;
     font-size: 0.9rem;
     text-align: center;
+    border: 1px solid;
   }
   
   .login-error {
-    background: #ffebee;
-    color: #c62828;
+    background: rgba(255, 31, 31, 0.2);
+    color: #ff1f1f;
+    border-color: #ff1f1f;
   }
   
   .login-success {
-    background: #e8f5e9;
-    color: #2e7d32;
+    background: rgba(0, 255, 0, 0.1);
+    color: #0f0;
+    border-color: #0f0;
   }
   
   /* Bouton de soumission */
   .btn-submit {
     padding: clamp(0.875rem, 2vw, 1rem);
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #ff1f1f;
     color: white;
-    border: none;
+    border: 1px solid #ff1f1f;
     border-radius: 0.5rem;
     font-size: clamp(0.95rem, 2vw, 1.1rem);
     font-weight: 600;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+    font-family: "Orbitron", cursive;
   }
   
   .btn-submit:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 0 20px rgba(255, 31, 31, 0.6);
+    text-shadow: 0 0 10px #ff1f1f;
   }
   
   .btn-submit:active:not(:disabled) {
@@ -448,7 +464,8 @@
   .debug-info {
     margin-top: 2rem;
     padding: 1rem;
-    background: #f5f5f5;
+    background: rgba(255, 31, 31, 0.1);
+    border: 1px solid #ff1f1f;
     border-radius: 0.5rem;
     font-size: 0.85rem;
   }
@@ -456,12 +473,12 @@
   .debug-info h3 {
     margin: 0 0 0.75rem 0;
     font-size: 1rem;
-    color: #333;
+    color: #fff;
   }
   
   .debug-info p {
     margin: 0.5rem 0;
-    color: #666;
+    color: #ccc;
   }
   
   .debug-info ul {
@@ -471,15 +488,15 @@
   
   .debug-info li {
     margin: 0.25rem 0;
-    color: #666;
+    color: #ccc;
   }
   
   .debug-info code {
-    background: white;
+    background: #1a1a1a;
     padding: 0.125rem 0.375rem;
     border-radius: 0.25rem;
     font-family: 'Courier New', monospace;
-    color: #667eea;
+    color: #ff1f1f;
     font-weight: 600;
   }
 </style>
