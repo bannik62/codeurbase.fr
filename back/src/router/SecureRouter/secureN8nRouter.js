@@ -6,27 +6,28 @@ const router = express.Router();
 
 /**
  * Identifiants fictifs pour tester le système
- * En production, utiliser une base de données avec des mots de passe hashés
+ * Les mots de passe sont stockés dans les variables d'environnement
+ * En production, utiliser une base de données avec des mots de passe hashés (bcrypt)
  */
 const FAKE_USERS = [
   {
     id: 1,
     username: 'admin',
-    password: 'admin123', // ⚠️ Ne JAMAIS stocker des mots de passe en clair en production !
+    password: process.env.TEST_ADMIN_PASSWORD,
     role: 'admin',
     email: 'admin@codeurbase.fr'
   },
   {
     id: 2,
     username: 'user',
-    password: 'user123',
+    password: process.env.TEST_USER_PASSWORD,
     role: 'user',
     email: 'user@codeurbase.fr'
   },
   {
     id: 3,
     username: 'test',
-    password: 'test123',
+    password: process.env.TEST_TEST_PASSWORD,
     role: 'user',
     email: 'test@codeurbase.fr'
   }
