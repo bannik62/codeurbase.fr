@@ -277,11 +277,16 @@ router.post('/createArticle', authMiddleware, adminMiddleware, async (req, res) 
     
     console.log('[CreateArticle] Réponse N8N:', n8nResponse.data);
     
+    // N8N retourne un tableau avec output.validated et output.article
+    const n8nData = n8nResponse.data[0]?.output || n8nResponse.data;
+    
+    console.log('[CreateArticle] Article extrait:', n8nData.article);
+    
     // TODO: Sauvegarder en BDD si validé
-    // if (n8nResponse.data.validated) {
+    // if (n8nData.validated) {
     //   const Article = require('../../models/Article');
     //   await Article.create({
-    //     ...n8nResponse.data.article,
+    //     ...n8nData.article,
     //     isPublished: true
     //   });
     // }
@@ -289,7 +294,7 @@ router.post('/createArticle', authMiddleware, adminMiddleware, async (req, res) 
     res.json({
       success: true,
       message: 'Article généré avec succès',
-      data: n8nResponse.data
+      data: n8nData
     });
     
   } catch (error) {
