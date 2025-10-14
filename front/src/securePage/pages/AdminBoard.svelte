@@ -73,8 +73,7 @@
     generatedArticle = null;
 
     try {
-      const BACKEND_URL = import.meta.env.BACKEND_URL;
-      console.log('[AdminBoard] BACKEND_URL:', BACKEND_URL);
+      const BACKEND_URL = import.meta.env.BACKEND_URL || 'https://backend.codeurbase.fr';
       const response = await fetch(`${BACKEND_URL}/auth/createArticle`, {
         method: 'POST',
         headers: {
