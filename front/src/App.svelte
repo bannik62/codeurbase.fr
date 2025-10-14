@@ -5,6 +5,8 @@
   import About from './pages/Blog.svelte';
   import { currentPage } from './stores/router';
   import Contact from './pages/Contact.svelte';
+  import Login from './securePage/pages/Login.svelte';
+  import AdminBoard from './securePage/pages/AdminBoard.svelte';
   import { onDestroy } from 'svelte';
   import Navbar from './modules/ui/portfolio/navbar/Navbar.svelte';
   import { lenis, stopLenis } from './stores/lenis.js';
@@ -102,6 +104,12 @@
       Press this or Echap
     </button>
     <Acceuilbis />
+  {:else if $currentPage === 'login'}
+    <!-- Page de connexion sans navbar -->
+    <Login />
+  {:else if $currentPage === 'admin'}
+    <!-- Tableau de bord admin sans navbar -->
+    <AdminBoard />
   {:else}
   <div class="app_wrapper_content">
     <Navbar />
