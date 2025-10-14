@@ -250,7 +250,7 @@ router.post('/createArticle', authMiddleware, adminMiddleware, async (req, res) 
     console.log(`[CreateArticle] Prompt:`, prompt);
     
     // Appeler le webhook N8N
-    const N8N_WEBHOOK_URL = process.env.N8N_WORKFLOW_CREATE_ARTICLE_LOCAL;
+    const N8N_WEBHOOK_URL = process.env.N8N_WORKFLOW_CREATE_ARTICLE;
     
     if (!N8N_WEBHOOK_URL) {
       return res.status(500).json({
