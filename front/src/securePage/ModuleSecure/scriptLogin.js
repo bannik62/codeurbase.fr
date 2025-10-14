@@ -48,7 +48,7 @@ export class LoginManager {
             
             console.log('[Login] Récupération du token CSRF...');
             
-            const response = await fetch(`${API_BASE_URL}/api/security/csrf-token`, {
+            const response = await fetch(`${API_BASE_URL}/security/csrf-token`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -124,7 +124,7 @@ export class LoginManager {
             
             console.log('[Login] Tentative de connexion pour:', username);
             
-            const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+            const response = await fetch(`${API_BASE_URL}/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -172,7 +172,7 @@ export class LoginManager {
         try {
             console.log('[Login] Déconnexion...');
             
-            const response = await fetch(`${API_BASE_URL}/api/auth/logout`, {
+            const response = await fetch(`${API_BASE_URL}/auth/logout`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -204,7 +204,7 @@ export class LoginManager {
         try {
             console.log('[Login] Vérification de l\'authentification via cookie...');
             
-            const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
+            const response = await fetch(`${API_BASE_URL}/auth/me`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

@@ -44,15 +44,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #322f2ff4;
     padding: clamp(1rem, 3vw, 2rem);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   }
   
   .content {
-    background: white;
+    background: rgba(51, 51, 51, 0.95);
+    border: 1px solid #ff1f1f;
     border-radius: clamp(1rem, 2vw, 1.5rem);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 20px rgba(255, 31, 31, 0.3);
     padding: clamp(3rem, 6vw, 4rem);
     text-align: center;
     max-width: 500px;
@@ -63,6 +64,7 @@
     font-size: clamp(4rem, 10vw, 6rem);
     margin-bottom: 1.5rem;
     animation: pulse 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px #ff1f1f);
   }
   
   @keyframes pulse {
@@ -76,21 +78,23 @@
   
   h1 {
     font-size: clamp(2rem, 5vw, 3rem);
-    color: #333;
+    color: #fff;
     margin: 0 0 1rem 0;
     font-weight: 700;
+    font-family: "Orbitron", cursive;
+    text-shadow: 0 0 10px #ff1f1f;
   }
   
   .message {
     font-size: clamp(1rem, 3vw, 1.25rem);
-    color: #555;
+    color: #ccc;
     margin: 0 0 0.5rem 0;
     line-height: 1.6;
   }
   
   .submessage {
     font-size: clamp(0.9rem, 2vw, 1rem);
-    color: #777;
+    color: #999;
     margin: 0 0 2.5rem 0;
   }
   
@@ -102,32 +106,35 @@
   
   button {
     padding: clamp(0.875rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2rem);
-    border: none;
+    border: 1px solid #ff1f1f;
     border-radius: 0.5rem;
     font-size: clamp(0.95rem, 2vw, 1.1rem);
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
+    font-family: "Orbitron", cursive;
   }
   
   .btn-login {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #ff1f1f;
     color: white;
   }
   
   .btn-login:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 0 20px rgba(255, 31, 31, 0.6);
+    text-shadow: 0 0 10px #ff1f1f;
   }
   
   .btn-home {
-    background: #f5f5f5;
-    color: #333;
+    background: transparent;
+    color: #fff;
   }
   
   .btn-home:hover {
-    background: #e0e0e0;
+    background: rgba(255, 31, 31, 0.2);
     transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(255, 31, 31, 0.4);
   }
   
   button:active {

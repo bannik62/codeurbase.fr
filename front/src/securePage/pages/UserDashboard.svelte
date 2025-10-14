@@ -3,6 +3,7 @@
   import { currentPage } from '../../stores/router.js';
   import SessionGuard, { sessionValid, sessionUser } from '../ModuleSecure/SessionGuard.svelte';
   import AccessDenied from './AccessDenied.svelte';
+  import Navbar from '../../modules/ui/portfolio/navbar/Navbar.svelte';
   
   /**
    * Callback quand la session est valide
@@ -24,7 +25,7 @@
   function logout() {
     if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
       // Appeler l'API de déconnexion
-      fetch('http://localhost:3000/api/auth/logout', {
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/logout`, {
         method: 'POST',
         credentials: 'include'
       }).then(() => {
@@ -54,6 +55,7 @@
   
 {:else if $sessionValid === true}
   <!-- Session valide - Afficher le contenu -->
+  <Navbar />
   <main class="user-dashboard">
     
     <header class="header">
@@ -166,13 +168,15 @@
     align-items: center;
     justify-content: center;
     gap: 1rem;
+    background: #322f2ff4;
+    color: #fff;
   }
   
   .spinner {
     width: 3rem;
     height: 3rem;
-    border: 4px solid rgba(102, 126, 234, 0.2);
-    border-top-color: #667eea;
+    border: 4px solid rgba(255, 31, 31, 0.2);
+    border-top-color: #ff1f1f;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
   }
@@ -183,38 +187,45 @@
   
   .user-dashboard {
     min-height: 100vh;
-    background: #f5f7fa;
+    background: #322f2ff4;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   }
   
   .header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    margin-top: 10%;
+    background: rgba(51, 51, 51, 0.95);
     color: white;
     padding: clamp(1.5rem, 4vw, 2rem);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 20px rgba(255, 31, 31, 0.3);
+    border-bottom: 1px solid #ff1f1f;
   }
   
   .header h1 {
     margin: 0;
     font-size: clamp(1.5rem, 4vw, 2rem);
+    font-family: "Orbitron", cursive;
+    text-shadow: 0 0 10px #ff1f1f;
   }
   
   .btn-logout {
     padding: 0.5rem 1rem;
-    background: rgba(255, 255, 255, 0.2);
+    background: #ff1f1f;
     color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid #ff1f1f;
     border-radius: 0.5rem;
     cursor: pointer;
     font-weight: 600;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
+    font-family: "Orbitron", cursive;
   }
   
   .btn-logout:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: transparent;
+    box-shadow: 0 0 20px rgba(255, 31, 31, 0.6);
+    text-shadow: 0 0 10px #ff1f1f;
   }
   
   .content {
@@ -228,18 +239,20 @@
   
   /* Carte utilisateur */
   .user-card {
-    background: white;
+    background: rgba(51, 51, 51, 0.95);
+    border: 1px solid #ff1f1f;
     border-radius: 1rem;
     padding: 2rem;
     text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 20px rgba(255, 31, 31, 0.2);
   }
   
   .user-avatar {
     width: 5rem;
     height: 5rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: rgba(255, 31, 31, 0.2);
+    color: #ff1f1f;
+    border: 2px solid #ff1f1f;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -252,13 +265,15 @@
   .user-card h2 {
     margin: 0 0 0.5rem 0;
     font-size: 1.5rem;
+    color: #fff;
   }
   
   .role {
     display: inline-block;
     padding: 0.25rem 0.75rem;
-    background: #e3f2fd;
-    color: #1976d2;
+    background: rgba(255, 31, 31, 0.2);
+    color: #ff1f1f;
+    border: 1px solid #ff1f1f;
     border-radius: 1rem;
     font-size: 0.9rem;
     font-weight: 600;
@@ -266,7 +281,7 @@
   }
   
   .email {
-    color: #666;
+    color: #ccc;
     margin: 0.5rem 0 0 0;
   }
   
@@ -278,13 +293,19 @@
   }
   
   .stat-card {
-    background: white;
+    background: rgba(51, 51, 51, 0.95);
+    border: 1px solid #ff1f1f;
     border-radius: 1rem;
     padding: 1.5rem;
     display: flex;
     align-items: center;
     gap: 1rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 20px rgba(255, 31, 31, 0.2);
+    transition: all 0.3s ease;
+  }
+  
+  .stat-card:hover {
+    box-shadow: 0 0 30px rgba(255, 31, 31, 0.4);
   }
   
   .stat-icon {
@@ -294,29 +315,33 @@
   .stat-label {
     margin: 0;
     font-size: 0.9rem;
-    color: #666;
+    color: #ccc;
   }
   
   .stat-value {
     margin: 0.25rem 0 0 0;
     font-size: 1.75rem;
     font-weight: 700;
-    color: #333;
+    color: #fff;
   }
   
   /* Actions rapides */
   .quick-actions,
   .recent-activity {
-    background: white;
+    background: rgba(51, 51, 51, 0.95);
+    border: 1px solid #ff1f1f;
     border-radius: 1rem;
     padding: 2rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 20px rgba(255, 31, 31, 0.2);
   }
   
   .quick-actions h3,
   .recent-activity h3 {
     margin: 0 0 1.5rem 0;
     font-size: 1.25rem;
+    color: #fff;
+    font-family: "Orbitron", cursive;
+    text-shadow: 0 0 10px #ff1f1f;
   }
   
   .actions-grid {
@@ -327,8 +352,8 @@
   
   .action-btn {
     padding: 1rem;
-    background: #f5f7fa;
-    border: 2px solid transparent;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid #555;
     border-radius: 0.75rem;
     cursor: pointer;
     display: flex;
@@ -336,14 +361,15 @@
     align-items: center;
     gap: 0.5rem;
     font-weight: 600;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
+    color: #fff;
   }
   
   .action-btn:hover {
-    background: white;
-    border-color: #667eea;
+    background: rgba(255, 31, 31, 0.1);
+    border-color: #ff1f1f;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    box-shadow: 0 0 20px rgba(255, 31, 31, 0.4);
   }
   
   .action-icon {
@@ -362,8 +388,16 @@
     align-items: flex-start;
     gap: 1rem;
     padding: 1rem;
-    background: #f5f7fa;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #555;
     border-radius: 0.75rem;
+    transition: all 0.3s ease;
+  }
+  
+  .activity-item:hover {
+    background: rgba(255, 31, 31, 0.1);
+    border-color: #ff1f1f;
+    box-shadow: 0 0 10px rgba(255, 31, 31, 0.3);
   }
   
   .activity-icon {
@@ -377,6 +411,7 @@
   
   .activity-content p {
     margin: 0;
+    color: #fff;
   }
   
   .activity-time {

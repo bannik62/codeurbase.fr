@@ -32,7 +32,7 @@
       isCheckingSession.set(true);
       console.log('[SessionGuard] Vérification de la session...');
       
-      const response = await fetch(`${API_BASE_URL}/api/auth/verifySession`, {
+      const response = await fetch(`${API_BASE_URL}/auth/verifySession`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'

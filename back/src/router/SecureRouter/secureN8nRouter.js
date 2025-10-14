@@ -229,5 +229,69 @@ router.get('/users', (req, res) => {
   });
 });
 
+/**
+ * POST /auth/createArticle
+ * Route sécurisée pour créer un article via N8N
+ * Nécessite d'être authentifié et admin
+ */
+router.post('/createArticle', authMiddleware, adminMiddleware, async (req, res) => {
+  try {
+    const { prompt } = req.body;
+    
+    // Validation
+    if (!prompt || !prompt.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Le prompt est requis'
+      });
+    }
+    
+    console.log(`[CreateArticle] Demande de création par ${req.user.username}`);
+    console.log(`[CreateArticle] Prompt:`, prompt);
+    
+    // Appeler le webhook N8N
+    const N8N_WEBHOOK_URL = process.env.N8N_WORKFLOW_CREATE_ARTICLE_LOCAL;
+    
+    if (!N8N_WEBHOOK_URL) {
+      return res.status(500).json({
+        success: false,
+        message: 'Webhook N8N non configuré'
+      });
+    }
+    
+    const axios = require('axios');
+    const n8nResponse = await axios.post(N8N_WEBHOOK_URL, {
+      prompt: prompt.trim(),
+      author: req.user.username,
+      requestedBy: req.user.email
+    }, { timeout: 120000 }); // 2 minutes timeout
+    
+    console.log('[CreateArticle] Réponse N8N:', n8nResponse.data);
+    
+    // TODO: Sauvegarder en BDD si validé
+    // if (n8nResponse.data.validated) {
+    //   const Article = require('../../models/Article');
+    //   await Article.create({
+    //     ...n8nResponse.data.article,
+    //     isPublished: true
+    //   });
+    // }
+    
+    res.json({
+      success: true,
+      message: 'Article généré avec succès',
+      data: n8nResponse.data
+    });
+    
+  } catch (error) {
+    console.error('[CreateArticle] Erreur:', error);
+    res.status(500).json({
+      success: false,
+      message: error.response?.data?.message || 'Erreur lors de la création de l\'article',
+      error: error.message
+    });
+  }
+});
+
 module.exports = router;
 

@@ -4,6 +4,8 @@
  * @version 1.0.0
  */
 
+import axios from 'axios';
+
 /**
  * Classe principale pour gérer la logique du blog
  */
@@ -21,47 +23,58 @@ export class BlogManager {
         // Bind des méthodes
         this.filterByCategory = this.filterByCategory.bind(this);
         this.searchArticles = this.searchArticles.bind(this);
+        this.fetchArticles = this.fetchArticles.bind(this);
     }
 
     /**
      * Initialise les articles par défaut
      */
     initializeDefaultArticles() {
-        this.articles = [
-            {
-                id: 1,
-                title: "Débuter avec Svelte",
-                excerpt: "Découvrez comment créer des applications web modernes avec Svelte, un framework JavaScript innovant.",
-                category: "développement",
-                date: "2025-01-15",
-                author: "Yohann",
-                image: "/images/blog/svelte-intro.jpg",
-                tags: ["svelte", "javascript", "frontend"]
-            },
-            {
-                id: 2,
-                title: "Les bases de GSAP pour les animations",
-                excerpt: "Apprenez à créer des animations fluides et performantes avec la bibliothèque GSAP.",
-                category: "design",
-                date: "2025-01-10",
-                author: "Yohann",
-                image: "/images/blog/gsap-basics.jpg",
-                tags: ["gsap", "animations", "css"]
-            },
-            {
-                id: 3,
-                title: "Architecture d'une application moderne",
-                excerpt: "Explorez les meilleures pratiques pour structurer une application web scalable.",
-                category: "développement",
-                date: "2025-01-05",
-                author: "Yohann",
-                image: "/images/blog/architecture.jpg",
-                tags: ["architecture", "best-practices", "backend"]
-            }
-        ];
+        this.articles = [];
 
         // Extraire les catégories uniques
-        this.categories = ['all', ...new Set(this.articles.map(article => article.category))];
+        this.categories = ['all'];
+    }
+
+    /**
+     * Récupère les articles depuis l'API
+     * @returns {Promise<void>}
+     */
+    async fetchArticles() {
+        this.isLoading = true;
+        this.error = null;
+        
+        try {
+            const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+            const response = await axios.get(`${BACKEND_URL}/codeurbaseApi/n8n/articlesRead`);
+            
+            if (response.data.success && response.data.articles) {
+                this.articles = response.data.articles.map(article => ({
+                    id: article.id,
+                    title: article.title,
+                    excerpt: article.excerpt,
+                    category: article.category,
+                    date: article.createdAt || article.date,
+                    author: article.author,
+                    image: article.image,
+                    tags: article.tags || []
+                }));
+                
+                // Extraire les catégories uniques
+                this.categories = ['all', ...new Set(this.articles.map(a => a.category))];
+            } else {
+                this.articles = [];
+                this.categories = ['all'];
+            }
+            
+        } catch (error) {
+            console.error('Erreur lors du chargement des articles:', error);
+            this.error = error.message;
+            this.articles = [];
+            this.categories = ['all'];
+        } finally {
+            this.isLoading = false;
+        }
     }
 
     /**
@@ -182,14 +195,25 @@ export function useBlog() {
     const blogManager = new BlogManager();
     
     return {
-        // État du blog
-        articles: blogManager.articles,
-        categories: blogManager.categories,
-        currentFilter: blogManager.currentFilter,
-        isLoading: blogManager.isLoading,
-        error: blogManager.error,
+        // État du blog (getters pour avoir les valeurs à jour)
+        get articles() {
+            return blogManager.articles;
+        },
+        get categories() {
+            return blogManager.categories;
+        },
+        get currentFilter() {
+            return blogManager.currentFilter;
+        },
+        get isLoading() {
+            return blogManager.isLoading;
+        },
+        get error() {
+            return blogManager.error;
+        },
         
         // Méthodes
+        fetchArticles: blogManager.fetchArticles.bind(blogManager),
         getAllArticles: blogManager.getAllArticles.bind(blogManager),
         getFilteredArticles: blogManager.getFilteredArticles.bind(blogManager),
         filterByCategory: blogManager.filterByCategory.bind(blogManager),
