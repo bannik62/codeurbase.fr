@@ -73,7 +73,7 @@
     generatedArticle = null;
 
     try {
-      const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+      const BACKEND_URL = import.meta.env.BACKEND_URL;
       const response = await fetch(`${BACKEND_URL}/auth/createArticle`, {
         method: 'POST',
         headers: {
@@ -86,10 +86,17 @@
       });
 
       const data = await response.json();
+      
+      console.log('[AdminBoard] Réponse backend:', data);
 
       if (response.ok && data.success && data.data) {
         articleCreationSuccess = data.message || "Article généré avec succès";
-        generatedArticle = data.data.article;
+        
+        // N8N retourne { id, sessionId, article: {...} }
+        generatedArticle = data.data.article || data.data;
+        
+        console.log('[AdminBoard] Article généré:', generatedArticle);
+        
         articlePrompt = "";
       } else {
         articleCreationError = data.message || "Erreur lors de la création de l'article";
