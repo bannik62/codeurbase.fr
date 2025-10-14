@@ -92,8 +92,8 @@
       if (response.ok && data.success && data.data) {
         articleCreationSuccess = data.message || "Article généré avec succès";
         
-        // N8N retourne { id, sessionId, article: {...} }
-        generatedArticle = data.data.article || data.data;
+        // N8N retourne { output: { validated: true, article: {...} } }
+        generatedArticle = data.data.output?.article || data.data.article || data.data;
         
         console.log('[AdminBoard] Article généré:', generatedArticle);
         
