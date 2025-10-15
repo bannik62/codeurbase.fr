@@ -57,6 +57,9 @@
   let articleCreationError = null;
   let articleCreationSuccess = null;
   let generatedArticle = null;
+  let isValidatingArticle = false;
+  let articleValidationError = null;
+  let articleValidationSuccess = null;
 
   /**
    * Créer un article via N8N
@@ -111,6 +114,46 @@
 
   function closeArticlePreview() {
     generatedArticle = null;
+  }
+
+  /**
+   * Valider et sauvegarder un article en BDD
+   */
+  async function handleValidateArticle() {
+    if (!generatedArticle) {
+      articleValidationError = "Aucun article à valider";
+      return;
+    }
+
+    isValidatingArticle = true;
+    articleValidationError = null;
+    articleValidationSuccess = null;
+
+    try {
+      const BACKEND_URL = import.meta.env.BACKEND_URL || 'https://backend.codeurbase.fr';
+      const response = await fetch(`${BACKEND_URL}/auth/validateArticle`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ article: generatedArticle })
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        articleValidationSuccess = data.message || "Article validé et sauvegardé avec succès";
+        console.log('[AdminBoard] Article validé:', data.data);
+        // Optionnel : fermer la preview après validation
+        // closeArticlePreview();
+      } else {
+        articleValidationError = data.message || "Erreur lors de la validation de l'article";
+      }
+    } catch (error) {
+      console.error('[AdminBoard] Erreur validation article:', error);
+      articleValidationError = "Erreur de connexion lors de la validation";
+    } finally {
+      isValidatingArticle = false;
+    }
   }
 </script>
 
@@ -358,10 +401,27 @@
             </div>
             
             <div class="preview-actions">
-              <button class="btn-publish" disabled>
-                ✅ Article prêt à être publié
+              <button 
+                class="btn-validate" 
+                on:click={handleValidateArticle}
+                disabled={isValidatingArticle}
+              >
+                {isValidatingArticle ? '⏳ Validation...' : '✅ Valider l\'article'}
               </button>
-              <p class="publish-note">L'article sera visible sur la page Blog dès qu'il sera en BDD</p>
+              
+              {#if articleValidationSuccess}
+                <div class="success-message">
+                  ✅ {articleValidationSuccess}
+                </div>
+              {/if}
+              
+              {#if articleValidationError}
+                <div class="error-message">
+                  ❌ {articleValidationError}
+                </div>
+              {/if}
+              
+              <p class="publish-note">L'article sera visible sur la page Blog après validation</p>
             </div>
           </div>
         </section>
@@ -993,7 +1053,7 @@
     border-radius: 0.5rem;
   }
 
-  .btn-publish {
+  .btn-validate {
     padding: 1rem 2rem;
     background: #28a745;
     color: white;
@@ -1001,8 +1061,41 @@
     border-radius: 0.5rem;
     font-size: 1rem;
     font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .btn-validate:hover:not(:disabled) {
+    background: #218838;
+    transform: translateY(-2px);
+  }
+
+  .btn-validate:disabled {
+    background: #6c757d;
     cursor: not-allowed;
-    opacity: 0.8;
+    opacity: 0.6;
+  }
+
+  .success-message {
+    margin: 1rem 0;
+    padding: 0.75rem 1rem;
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  .error-message {
+    margin: 1rem 0;
+    padding: 0.75rem 1rem;
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    text-align: center;
   }
 
   .publish-note {

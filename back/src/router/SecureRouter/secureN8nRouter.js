@@ -307,5 +307,73 @@ router.post('/createArticle', authMiddleware, adminMiddleware, async (req, res) 
   }
 });
 
+/**
+ * POST /auth/validateArticle
+ * Route sécurisée pour valider et sauvegarder un article en BDD
+ * Nécessite d'être authentifié et admin
+ */
+router.post('/validateArticle', authMiddleware, adminMiddleware, async (req, res) => {
+  try {
+    const { article } = req.body;
+    
+    // Validation des données reçues
+    if (!article) {
+      return res.status(400).json({
+        success: false,
+        message: 'L\'article est requis'
+      });
+    }
+    
+    // Vérification des champs obligatoires
+    const requiredFields = ['title', 'excerpt', 'content', 'category', 'author'];
+    for (const field of requiredFields) {
+      if (!article[field]) {
+        return res.status(400).json({
+          success: false,
+          message: `Le champ ${field} est requis`
+        });
+      }
+    }
+    
+    console.log(`[ValidateArticle] Demande de validation par ${req.user.username}`);
+    console.log(`[ValidateArticle] Article reçu:`, article.title);
+    
+    // Import du modèle ArticleValidate
+    const ArticleValidate = require('../../models/ArticleValidate');
+    
+    // Sauvegarde en BDD
+    const savedArticle = await ArticleValidate.create({
+      title: article.title,
+      excerpt: article.excerpt,
+      content: article.content,
+      category: article.category,
+      author: article.author,
+      image: article.image || null,
+      tags: article.tags || null,
+      is_published: true
+    });
+    
+    console.log(`[ValidateArticle] Article sauvegardé avec l'ID: ${savedArticle.id}`);
+    
+    res.json({
+      success: true,
+      message: 'Article validé et sauvegardé avec succès',
+      data: {
+        id: savedArticle.id,
+        title: savedArticle.title,
+        is_published: savedArticle.is_published
+      }
+    });
+    
+  } catch (error) {
+    console.error('[ValidateArticle] Erreur:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur lors de la validation de l\'article',
+      error: error.message
+    });
+  }
+});
+
 module.exports = router;
 
