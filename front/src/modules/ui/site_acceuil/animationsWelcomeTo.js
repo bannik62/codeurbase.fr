@@ -579,7 +579,7 @@ export function createLargeDesktopWelcomeToAnimations(currentSize) {
             end: "bottom 0%",
             scrub: 0.9,
             toggleActions: "play none none reverse",
-            markers: true,
+            // markers: true,
         },
     })
     .fromTo(".h3-after_objectives", {
