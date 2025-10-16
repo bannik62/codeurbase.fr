@@ -12,8 +12,52 @@
     isAdmin,
     adminUtils
   } from '../ModuleSecure/script.AdminBoard.js';
+  
+  // Variables pour les statistiques d'articles
+  let articlesStats = {
+    total: 0,
+    published: 0,
+    drafts: 0,
+    today: 0,
+    thisWeek: 0,
+    byCategory: [],
+    recent: []
+  };
+  let isLoadingArticlesStats = false;
+  let articlesStatsError = null;
   import { currentUser } from '../ModuleSecure/scriptLogin.js';
   
+  /**
+   * Récupère les statistiques des articles
+   */
+  async function fetchArticlesStats() {
+    isLoadingArticlesStats = true;
+    articlesStatsError = null;
+    
+    try {
+      const BACKEND_URL = import.meta.env.BACKEND_URL || 'https://backend.codeurbase.fr';
+      const response = await fetch(`${BACKEND_URL}/auth/admin/stats/articles`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok && data.success) {
+        articlesStats = data.data;
+        console.log('[AdminBoard] Stats articles récupérées:', articlesStats);
+      } else {
+        articlesStatsError = data.message || 'Erreur lors de la récupération des stats articles';
+      }
+    } catch (error) {
+      console.error('[AdminBoard] Erreur stats articles:', error);
+      articlesStatsError = 'Erreur de connexion lors de la récupération des stats articles';
+    } finally {
+      isLoadingArticlesStats = false;
+    }
+  }
+
   /**
    * Callback quand la session est valide
    */
@@ -21,6 +65,8 @@
     console.log('[AdminBoard] Session valide, initialisation du dashboard...');
     currentUser.set(user);
     adminBoardManager.initialize();
+    // Récupérer les stats d'articles
+    fetchArticlesStats();
   }
   
   /**
@@ -143,6 +189,8 @@
       if (response.ok && data.success) {
         articleValidationSuccess = data.message || "Article validé et sauvegardé avec succès";
         console.log('[AdminBoard] Article validé:', data.data);
+        // Rafraîchir les statistiques après validation
+        fetchArticlesStats();
         // Optionnel : fermer la preview après validation
         // closeArticlePreview();
       } else {
@@ -293,7 +341,66 @@
               </p>
             </div>
           </div>
+          
+          <!-- Statistiques des articles -->
+          <div class="stat-card">
+            <div class="stat-icon">📝</div>
+            <div class="stat-content">
+              <p class="stat-label">Articles totaux</p>
+              <p class="stat-value">
+                {isLoadingArticlesStats ? '⏳' : adminUtils.formatNumber(articlesStats.total)}
+              </p>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-content">
+              <p class="stat-label">Articles publiés</p>
+              <p class="stat-value">
+                {isLoadingArticlesStats ? '⏳' : adminUtils.formatNumber(articlesStats.published)}
+              </p>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">📄</div>
+            <div class="stat-content">
+              <p class="stat-label">Brouillons</p>
+              <p class="stat-value">
+                {isLoadingArticlesStats ? '⏳' : adminUtils.formatNumber(articlesStats.drafts)}
+              </p>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">📅</div>
+            <div class="stat-content">
+              <p class="stat-label">Aujourd'hui</p>
+              <p class="stat-value">
+                {isLoadingArticlesStats ? '⏳' : adminUtils.formatNumber(articlesStats.today)}
+              </p>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">📈</div>
+            <div class="stat-content">
+              <p class="stat-label">Cette semaine</p>
+              <p class="stat-value">
+                {isLoadingArticlesStats ? '⏳' : adminUtils.formatNumber(articlesStats.thisWeek)}
+              </p>
+            </div>
+          </div>
         </div>
+        
+        <!-- Message d'erreur pour les stats articles -->
+        {#if articlesStatsError}
+          <div class="error-message">
+            ⚠️ {articlesStatsError}
+            <button class="retry-btn" on:click={fetchArticlesStats}>🔄 Réessayer</button>
+          </div>
+        {/if}
       </section>
       
       <!-- Activité récente -->
@@ -1144,7 +1251,24 @@
     border: 1px solid #f5c6cb;
     border-radius: 0.5rem;
     font-size: 0.9rem;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .retry-btn {
+    padding: 0.5rem 1rem;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .retry-btn:hover {
+    background: #c82333;
   }
 
   .publish-note {
