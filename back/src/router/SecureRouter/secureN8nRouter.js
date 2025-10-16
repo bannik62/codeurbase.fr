@@ -110,51 +110,6 @@ router.post('/login', (req, res) => {
   }
 });
 
-/**
- * GET /api/auth/verifySession
- * Vérifie simplement si la session (cookie JWT) est valide
- * Retourne un boolean
- */
-router.get('/verifySession', (req, res) => {
-  try {
-    const { getTokenFromRequest, verifyToken } = require('../../moduleOfSecurity/jwtManagerSession');
-    
-    // Récupérer le token depuis le cookie
-    const token = getTokenFromRequest(req);
-    
-    if (!token) {
-      console.log('[Auth] Pas de token de session');
-      return res.json({
-        valid: false,
-        message: 'Pas de session active'
-      });
-    }
-    
-    // Vérifier le token
-    const decoded = verifyToken(token);
-    
-    if (!decoded) {
-      console.log('[Auth] Token de session invalide ou expiré');
-      return res.json({
-        valid: false,
-        message: 'Session invalide ou expirée'
-      });
-    }
-    
-    console.log(`[Auth] Session valide pour: ${decoded.username}`);
-    res.json({
-      valid: true,
-      user: decoded
-    });
-    
-  } catch (error) {
-    console.error('[Auth] Erreur lors de la vérification de session:', error);
-    res.json({
-      valid: false,
-      message: 'Erreur lors de la vérification'
-    });
-  }
-});
 
 /**
  * GET /api/auth/me
