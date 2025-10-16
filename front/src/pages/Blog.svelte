@@ -1,6 +1,6 @@
 <script>
   import { onMount, onDestroy } from "svelte";
-  import { initLenis } from "../stores/lenis.js";
+  import { getLenis } from "../stores/lenis.js";
   import { gsap } from "gsap";
   import { ScrollTrigger } from "gsap/ScrollTrigger";
   import Blog from "../modules/ui/Blog/Blog.svelte";
@@ -14,31 +14,20 @@
   let lenisInstance = null;
 
   onMount(() => {
-    // Initialiser Lenis pour le scroll smooth
-    lenisInstance = initLenis();
-    lenisInstance.on("scroll", ScrollTrigger.update);
+    // Récupérer l'instance Lenis existante
+    lenisInstance = getLenis();
     
     if (lenisInstance) {
-      // Boucle requestAnimationFrame pour Lenis
-      function raf(time) {
-        if (isRafActive) {
-          lenisInstance.raf(time);
-          rafId = requestAnimationFrame(raf);
-        }
-      }
-      rafId = requestAnimationFrame(raf);
+      console.log('[Blog] Utilisation de l\'instance Lenis existante');
+      // Lenis est déjà configuré dans App.svelte
+    } else {
+      console.warn('[Blog] Aucune instance Lenis trouvée');
     }
   });
 
   onDestroy(() => {
-    // Nettoyer Lenis
-    isRafActive = false;
-    if (rafId) {
-      cancelAnimationFrame(rafId);
-    }
-    if (lenisInstance) {
-      lenisInstance.destroy();
-    }
+    // Pas besoin de nettoyer Lenis, il est géré globalement
+    console.log('[Blog] onDestroy - Lenis géré globalement');
     
     // Nettoyer ScrollTrigger
     ScrollTrigger.getAll().forEach(trigger => trigger.kill());

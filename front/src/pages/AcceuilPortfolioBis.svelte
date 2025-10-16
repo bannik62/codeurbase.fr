@@ -13,7 +13,7 @@
     import Techno from "../modules/ui/portfolio/techno/Techno.svelte";
     import Cockpit from "../modules/ui/portfolio/cockpit/Cockpit.svelte";
     import { initMediaQuery, useMediaQuery } from "../stores/mediaQuery.js";
-    import { initLenis, stopLenis, startLenis } from "../stores/lenis.js";
+    import { getLenis, stopLenis, startLenis } from "../stores/lenis.js";
     let canvas;
     let ctx;
     let atmoOne;
@@ -46,7 +46,7 @@
             document.body.style.overflow = 'auto';
             ScrollTrigger.getAll().forEach(trigger => trigger.kill());
             ScrollTrigger.clearMatchMedia();
-            stopLenis();
+            // Pas besoin de stopLenis(), il est géré globalement
         }
         console.log('AcceuilPortfolioBis: onDestroy END');
     });
@@ -77,21 +77,15 @@
         // GSAP ScrollTrigger
         gsap.registerPlugin(ScrollTrigger);
 
-        // Initialiser Lenis dans la page principale
-        const lenisInstance = initLenis();
-        lenisInstance.on("scroll", ScrollTrigger.update);
+        // Récupérer l'instance Lenis existante
+        const lenisInstance = getLenis();
         
-        // CORRECTION : Lenis a besoin de sa propre boucle requestAnimationFrame
-        let rafId = null;
-        let isRafActive = true;
-        
-        function raf(time) {
-            if (isRafActive) {
-                lenisInstance.raf(time);
-                rafId = requestAnimationFrame(raf);
-            }
+        if (lenisInstance) {
+            console.log('[AcceuilPortfolioBis] Utilisation de l\'instance Lenis existante');
+            // Lenis est déjà configuré dans App.svelte
+        } else {
+            console.warn('[AcceuilPortfolioBis] Aucune instance Lenis trouvée');
         }
-        rafId = requestAnimationFrame(raf);
 
         // Forcer un refresh de ScrollTrigger après le chargement complet
         setTimeout(() => {
@@ -425,15 +419,8 @@
             cleanupMediaQueryStores();
             cleanupMediaQuery();
 
-            // Arrêter Lenis et nettoyer
-            isRafActive = false;
-            if (rafId) {
-                cancelAnimationFrame(rafId);
-                rafId = null;
-            }
-            if (lenisInstance) {
-                lenisInstance.destroy();
-            }
+            // Pas besoin de nettoyer Lenis, il est géré globalement
+            console.log('[AcceuilPortfolioBis] onDestroy - Lenis géré globalement');
 
             // Tuer toutes les animations GSAP
             if (cloudAnimation) cloudAnimation.kill();

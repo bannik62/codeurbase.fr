@@ -4,7 +4,7 @@
   import { currentPage } from "../stores/router";
   import ServicesOK from "../modules/services/ServicesOK.svelte";
   import Welcome from "../modules/ui/site_acceuil/Welcometo.svelte";
-  import { initLenis, stopLenis, destroyLenis } from "../stores/lenis.js";
+  import { getLenis, stopLenis, destroyLenis } from "../stores/lenis.js";
   
   console.log("Acceuil: component instantiated");
 
@@ -17,41 +17,26 @@
   let lenisInstance = null;
 
   onMount(() => {
-    console.log("Acceuil: onMount - Initializing Lenis");
+    console.log("Acceuil: onMount - Récupération de Lenis");
     
-    // Initialiser Lenis pour le scroll smooth
-    lenisInstance = initLenis();
+    // Récupérer l'instance Lenis existante
+    lenisInstance = getLenis();
     
     if (lenisInstance) {
-      console.log("Acceuil: Lenis initialized successfully");
-      
-      // CORRECTION : Lenis a besoin de sa propre boucle requestAnimationFrame
-      function raf(time) {
-        if (isRafActive) {
-          lenisInstance.raf(time);
-          rafId = requestAnimationFrame(raf);
-        }
-      }
-      rafId = requestAnimationFrame(raf);
+      console.log("Acceuil: Instance Lenis récupérée avec succès");
+      // Lenis est déjà configuré dans App.svelte
+    } else {
+      console.warn("Acceuil: Aucune instance Lenis trouvée");
     }
     
     // window.location.reload();
   });
 
   onDestroy(() => {
-    console.log("Acceuil: onDestroy - Cleaning up Lenis");
+    console.log("Acceuil: onDestroy - Lenis géré globalement");
     
-    // Nettoyer la boucle requestAnimationFrame
-    isRafActive = false;
-    if (rafId) {
-      cancelAnimationFrame(rafId);
-      rafId = null;
-    }
-    
-    // Nettoyer Lenis lors de la destruction du composant
-    // Note: On utilise stopLenis() plutôt que destroyLenis() 
-    // pour permettre la réutilisation dans d'autres pages
-    stopLenis();
+    // Pas besoin de nettoyer Lenis, il est géré globalement
+    // Lenis continue de fonctionner pour les autres pages
   });
 </script>
 
