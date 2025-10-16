@@ -32,7 +32,7 @@
       isCheckingSession.set(true);
       console.log('[SessionGuard] Vérification de la session...');
       
-      const response = await fetch(`${API_BASE_URL}/auth/verifySession`, {
+      const response = await fetch(`${API_BASE_URL}/auth/me`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -44,14 +44,15 @@
       
       console.log('[SessionGuard] Réponse:', data);
       
-      if (data.valid === true) {
+      if (data.success === true && data.user) {
         // Session valide ✅
         sessionValid.set(true);
-        sessionUser.set(data.user || null);
+        sessionUser.set(data.user);
         console.log('[SessionGuard] Session valide ✅', data.user);
         if (onValidSession) {
           onValidSession(data.user);
         }
+        return true;
       } else {
         // Session invalide ❌
         sessionValid.set(false);
@@ -60,9 +61,8 @@
         if (onInvalidSession) {
           onInvalidSession();
         }
+        return false;
       }
-      
-      return data.valid;
       
     } catch (error) {
       console.error('[SessionGuard] Erreur lors de la vérification:', error);
