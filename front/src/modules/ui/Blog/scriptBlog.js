@@ -46,15 +46,16 @@ export class BlogManager {
         
         try {
             const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-            const response = await axios.get(`${BACKEND_URL}/codeurbaseApi/n8n/articlesRead`);
+            const response = await axios.get(`${BACKEND_URL}/api/articles`);
             
             if (response.data.success && response.data.articles) {
                 this.articles = response.data.articles.map(article => ({
                     id: article.id,
                     title: article.title,
                     excerpt: article.excerpt,
+                    content: article.content,
                     category: article.category,
-                    date: article.createdAt || article.date,
+                    date: article.date || article.createdAt,
                     author: article.author,
                     image: article.image,
                     tags: article.tags || []
@@ -62,9 +63,12 @@ export class BlogManager {
                 
                 // Extraire les catégories uniques
                 this.categories = ['all', ...new Set(this.articles.map(a => a.category))];
+                
+                console.log(`[Blog] ${this.articles.length} articles chargés depuis la BDD`);
             } else {
                 this.articles = [];
                 this.categories = ['all'];
+                console.warn('[Blog] Aucun article trouvé ou réponse invalide');
             }
             
         } catch (error) {
