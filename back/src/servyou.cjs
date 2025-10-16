@@ -2,6 +2,7 @@ const express = require('express');
 const n8nRouter = require('./router/n8nRouter');
 const securityRouter = require('./router/securityRouter');
 const authRouter = require('./router/SecureRouter/secureN8nRouter');
+const publicRouter = require('./router/publicRouter');
 const axios = require('axios');
 
 const cors = require('cors');
@@ -113,6 +114,7 @@ app.use('/codeurbaseApi/n8n', n8nRouter);
 app.use('/security', securityRouter);
 app.use('/auth/login', loginLimiter); // Applique le rate limiting sur le login
 app.use('/auth', authRouter);
+app.use('/api', publicRouter);
 
 app.listen(port, () => {
   console.log(`*********************Server is running on ${port} *************************`);
