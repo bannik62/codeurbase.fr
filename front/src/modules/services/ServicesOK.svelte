@@ -195,7 +195,7 @@
                 ? widthTotal
                 : widthMin}%;transition: width 0.5s ease-in-out;"
         >
-            phpMyAdmin
+            MySQL
         </div>
         <div
             class="phpmyadmin-power-content"
