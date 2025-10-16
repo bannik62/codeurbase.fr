@@ -64,14 +64,15 @@
 
   .article-reader-card {
     position: relative;
-    background: linear-gradient(135deg, rgba(26, 26, 26, 0.98), rgba(220, 20, 60, 0.1));
+    background: linear-gradient(135deg, #1a1a1afa, #dc143c1a);
     border: 2px solid rgba(220, 20, 60, 0.5);
     border-radius: 15px;
     width: 100%;
     max-width: 900px;
     max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(220, 20, 60, 0.4);
+    overflow: auto;
+    overflow-x: hidden;
+    box-shadow: 0 20px 60px #dc143c66;
     /* Forcer le scroll natif et empêcher Lenis */
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
