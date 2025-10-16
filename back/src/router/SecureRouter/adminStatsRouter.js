@@ -11,9 +11,9 @@ const activeSessions = new Map();
  * Fonction pour nettoyer les sessions expirées
  */
 function cleanExpiredSessions() {
-  const oneHourAgo = Date.now() - (60 * 60 * 1000);
+  const thirtyMinutesAgo = Date.now() - (30 * 60 * 1000);
   for (const [token, timestamp] of activeSessions.entries()) {
-    if (timestamp < oneHourAgo) {
+    if (timestamp < thirtyMinutesAgo) {
       activeSessions.delete(token);
     }
   }
@@ -235,7 +235,7 @@ router.get('/general', authMiddleware, adminMiddleware, async (req, res) => {
       }
     });
     
-    // Sessions actives (connexions < 1 heure)
+    // Sessions actives (connexions < 30 minutes)
     const activeSessionsCount = getActiveSessionsCount();
     
     // Requêtes articles (via compteur)
