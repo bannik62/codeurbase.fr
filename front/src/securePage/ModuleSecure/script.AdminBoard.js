@@ -59,7 +59,7 @@ export class AdminBoardManager {
       
       console.log('[AdminBoard] Initialisation du tableau de bord...');
       
-      // Charger les données simulées
+      // Charger les vraies données depuis l'API
       await this.loadDashboardData();
       
       this.initialized = true;
@@ -74,23 +74,54 @@ export class AdminBoardManager {
   }
   
   /**
-   * Charge les données du tableau de bord
-   * Pour l'instant, utilise des données fictives
-   * TODO: Remplacer par de vraies requêtes API
+   * Charge les données du tableau de bord depuis l'API
    */
   async loadDashboardData() {
-    // Simuler un délai de chargement
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    // Données fictives
-    const mockData = {
-      stats: {
-        totalUsers: 42,
-        activeUsers: 12,
-        totalSessions: 156,
-        totalRequests: 2847
-      },
-      recentActivity: [
+    try {
+      const BACKEND_URL = import.meta.env.BACKEND_URL || 'https://backend.codeurbase.fr';
+      
+      // Récupérer les statistiques générales
+      const generalResponse = await fetch(`${BACKEND_URL}/auth/admin/stats/general`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
+      });
+      
+      if (!generalResponse.ok) {
+        throw new Error(`Erreur API: ${generalResponse.status}`);
+      }
+      
+      const generalData = await generalResponse.json();
+      
+      if (!generalData.success) {
+        throw new Error(generalData.message || 'Erreur lors de la récupération des données');
+      }
+      
+      // Récupérer les statistiques des utilisateurs
+      const usersResponse = await fetch(`${BACKEND_URL}/auth/admin/stats/users`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
+      });
+      
+      let usersData = { data: { total: 0, active: 0, inactive: 0, byRole: [] } };
+      if (usersResponse.ok) {
+        const usersResult = await usersResponse.json();
+        if (usersResult.success) {
+          usersData = usersResult;
+        }
+      }
+      
+      // Construire les données du dashboard
+      const dashboardStats = {
+        totalUsers: generalData.data.users.total,
+        activeUsers: generalData.data.users.active,
+        totalSessions: generalData.data.sessions.active,
+        totalRequests: generalData.data.requests.articles
+      };
+      
+      // Données d'activité récente (simulées pour l'instant)
+      const recentActivity = [
         {
           id: 1,
           type: 'login',
@@ -101,37 +132,32 @@ export class AdminBoardManager {
         {
           id: 2,
           type: 'api_call',
-          user: 'user',
+          user: 'system',
           timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
-          message: 'Appel API: /api/n8n/chatWithMe'
+          message: `Appel API: /api/articles (${generalData.data.requests.articles} total)`
         },
         {
           id: 3,
-          type: 'csrf_generated',
+          type: 'stats',
           user: 'system',
           timestamp: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
-          message: 'Token CSRF généré'
-        },
-        {
-          id: 4,
-          type: 'login',
-          user: 'test',
-          timestamp: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
-          message: 'Connexion réussie'
-        },
-        {
-          id: 5,
-          type: 'logout',
-          user: 'user',
-          timestamp: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
-          message: 'Déconnexion'
+          message: `Sessions actives: ${generalData.data.sessions.active}`
         }
-      ],
-      systemStatus: 'ok'
-    };
-    
-    dashboardData.set(mockData);
-    console.log('[AdminBoard] Données chargées:', mockData);
+      ];
+      
+      const realData = {
+        stats: dashboardStats,
+        recentActivity: recentActivity,
+        systemStatus: 'ok'
+      };
+      
+      dashboardData.set(realData);
+      console.log('[AdminBoard] Données réelles du tableau de bord chargées:', realData);
+      
+    } catch (error) {
+      console.error('[AdminBoard] Erreur lors du chargement des données:', error);
+      throw error;
+    }
   }
   
   /**

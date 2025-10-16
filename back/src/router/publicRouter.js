@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
+// Compteur pour les requêtes articles
+let articlesRequestCount = 0;
+
 /**
  * GET /api/articles
  * Route publique pour récupérer tous les articles publiés
@@ -8,7 +11,9 @@ const router = express.Router();
  */
 router.get('/articles', async (req, res) => {
   try {
-    console.log('[PublicArticles] Demande de récupération des articles');
+    // Incrémenter le compteur
+    articlesRequestCount++;
+    console.log(`[PublicArticles] Demande de récupération des articles (total: ${articlesRequestCount})`);
     
     // Import du modèle ArticleValidate
     const ArticleValidate = require('../models/ArticleValidate');
@@ -72,4 +77,20 @@ router.get('/articles', async (req, res) => {
   }
 });
 
+/**
+ * GET /api/stats/requests
+ * Route publique pour récupérer le nombre de requêtes articles
+ */
+router.get('/stats/requests', (req, res) => {
+  res.json({
+    success: true,
+    data: {
+      articlesRequests: articlesRequestCount
+    },
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Export du compteur pour utilisation dans d'autres modules
 module.exports = router;
+module.exports.getArticlesRequestCount = () => articlesRequestCount;

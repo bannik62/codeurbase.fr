@@ -191,6 +191,8 @@
         console.log('[AdminBoard] Article validé:', data.data);
         // Rafraîchir les statistiques après validation
         fetchArticlesStats();
+        // Rafraîchir aussi les stats générales
+        adminBoardManager.refresh();
         // Optionnel : fermer la preview après validation
         // closeArticlePreview();
       } else {

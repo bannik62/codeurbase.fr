@@ -1,7 +1,40 @@
 const express = require('express');
 const { authMiddleware, adminMiddleware } = require('../../moduleOfSecurity/jwtManagerSession');
+const jwt = require('jsonwebtoken');
 
 const router = express.Router();
+
+// Store pour les sessions actives (en production, utiliser Redis ou une DB)
+const activeSessions = new Map();
+
+/**
+ * Fonction pour nettoyer les sessions expirées
+ */
+function cleanExpiredSessions() {
+  const oneHourAgo = Date.now() - (60 * 60 * 1000);
+  for (const [token, timestamp] of activeSessions.entries()) {
+    if (timestamp < oneHourAgo) {
+      activeSessions.delete(token);
+    }
+  }
+}
+
+/**
+ * Fonction pour ajouter une session active
+ */
+function addActiveSession(token) {
+  activeSessions.set(token, Date.now());
+  // Nettoyer les sessions expirées
+  cleanExpiredSessions();
+}
+
+/**
+ * Fonction pour compter les sessions actives
+ */
+function getActiveSessionsCount() {
+  cleanExpiredSessions();
+  return activeSessions.size;
+}
 
 /**
  * GET /auth/admin/stats/articles
@@ -11,6 +44,12 @@ const router = express.Router();
 router.get('/articles', authMiddleware, adminMiddleware, async (req, res) => {
   try {
     console.log(`[AdminStats] Demande de stats articles par ${req.user.username}`);
+    
+    // Ajouter la session actuelle
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    if (token) {
+      addActiveSession(token);
+    }
     
     // Import du modèle ArticleValidate
     const ArticleValidate = require('../../models/ArticleValidate');
@@ -107,6 +146,12 @@ router.get('/users', authMiddleware, adminMiddleware, async (req, res) => {
   try {
     console.log(`[AdminStats] Demande de stats utilisateurs par ${req.user.username}`);
     
+    // Ajouter la session actuelle
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    if (token) {
+      addActiveSession(token);
+    }
+    
     // Import du modèle Users
     const User = require('../../models/Users');
     
@@ -166,6 +211,12 @@ router.get('/general', authMiddleware, adminMiddleware, async (req, res) => {
     const ArticleValidate = require('../../models/ArticleValidate');
     const User = require('../../models/Users');
     
+    // Ajouter la session actuelle
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    if (token) {
+      addActiveSession(token);
+    }
+    
     // Stats générales
     const totalArticles = await ArticleValidate.count();
     const publishedArticles = await ArticleValidate.count({ where: { is_published: true } });
@@ -184,6 +235,13 @@ router.get('/general', authMiddleware, adminMiddleware, async (req, res) => {
       }
     });
     
+    // Sessions actives (connexions < 1 heure)
+    const activeSessionsCount = getActiveSessionsCount();
+    
+    // Requêtes articles (via compteur)
+    const publicRouter = require('../publicRouter');
+    const articlesRequests = publicRouter.getArticlesRequestCount ? publicRouter.getArticlesRequestCount() : 0;
+    
     const stats = {
       articles: {
         total: totalArticles,
@@ -193,6 +251,12 @@ router.get('/general', authMiddleware, adminMiddleware, async (req, res) => {
       users: {
         total: totalUsers,
         active: activeUsers
+      },
+      sessions: {
+        active: activeSessionsCount
+      },
+      requests: {
+        articles: articlesRequests
       },
       system: {
         uptime: process.uptime(),
