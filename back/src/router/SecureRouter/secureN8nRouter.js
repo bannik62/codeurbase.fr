@@ -294,7 +294,7 @@ router.post('/validateArticle', authMiddleware, adminMiddleware, async (req, res
     console.log(`[ValidateArticle] Article reçu:`, article.title);
     
     // Import du modèle ArticleValidate
-    const ArticleValidate = require('../../models/ArticleValidate');
+    const { ArticleValidate } = require('../../models');
     
     // Sauvegarde en BDD
     const savedArticle = await ArticleValidate.create({
