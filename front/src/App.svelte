@@ -9,17 +9,28 @@
   import AdminBoard from './securePage/pages/AdminBoard.svelte';
   import { onDestroy } from 'svelte';
   import Navbar from './modules/ui/portfolio/navbar/Navbar.svelte';
-  import { lenis, stopLenis, initLenis, destroyLenis } from './stores/lenis.js';
+  import { lenis, stopLenis, initLenis, destroyLenis, getLenis } from './stores/lenis.js';
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
   gsap.registerPlugin(ScrollTrigger);
   let buttonVisible = false;
   let showPortfolio = true;
+  let previousPage = null;
   
   // Log quand la page change
   $: {
     // console.log('App: currentPage changed to:', $currentPage);
     // console.log('App: will try to render:', $currentPage === 'acceuilPortfolioBis' ? 'AcceuilPortfolioBis' : $currentPage === 'acceuil' ? 'Acceuil' : 'other');
+    
+    // Reset scroll en haut lors du changement de page (pas au rechargement)
+    if (previousPage && previousPage !== $currentPage) {
+      const lenisInstance = getLenis();
+      if (lenisInstance) {
+        console.log(`[App] Changement de page: ${previousPage} → ${$currentPage}, reset scroll en haut`);
+        lenisInstance.scrollTo(0, { immediate: true });
+      }
+    }
+    previousPage = $currentPage;
     
     // Mise à jour explicite selon la page
     if ($currentPage === 'acceuilPortfolioBis') {
@@ -83,6 +94,10 @@
       // Configurer ScrollTrigger avec Lenis
       lenisInstance.on('scroll', ScrollTrigger.update);
       lenisInstance.on('scroll', handleScroll);
+      
+      // S'assurer que la page commence en haut
+      lenisInstance.scrollTo(0, { immediate: true });
+      console.log('[App] Reset scroll initial en haut');
     }
     
     // S'abonne aux événements de scroll via Lenis
