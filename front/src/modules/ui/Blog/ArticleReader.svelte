@@ -7,18 +7,11 @@
   export let formatDate;
   export let onClose;
 
-  // Désactiver Lenis quand la modal est ouverte
-  onMount(() => {
-    stopLenis();
-  });
-
-  onDestroy(() => {
-    startLenis();
-  });
+  // Pas de gestion Lenis ici, on utilise CSS pour forcer le scroll natif
 </script>
 
-<div class="article-reader-overlay" on:click={onClose} on:keydown={(e) => e.key === 'Escape' && onClose()} role="button" tabindex="-1">
-  <div class="article-reader-card" on:click={(e) => e.stopPropagation()} on:keydown role="none">
+<div class="article-reader-overlay" on:click={onClose} on:keydown={(e) => e.key === 'Escape' && onClose()} role="button" tabindex="-1" data-lenis-prevent>
+  <div class="article-reader-card" on:click={(e) => e.stopPropagation()} on:keydown role="none" data-lenis-prevent>
     <button class="close-btn" on:click={onClose}>✕</button>
     
     <div class="article-header">
@@ -63,8 +56,10 @@
     z-index: 9999;
     padding: 20px;
     overflow-y: auto;
-    /* S'assurer que le scroll natif fonctionne */
+    /* Forcer le scroll natif et empêcher Lenis */
     overscroll-behavior: contain;
+    /* Désactiver le smooth scroll de Lenis sur cet élément */
+    scroll-behavior: auto !important;
   }
 
   .article-reader-card {
@@ -77,9 +72,10 @@
     max-height: 90vh;
     overflow-y: auto;
     box-shadow: 0 20px 60px rgba(220, 20, 60, 0.4);
-    /* Améliorer le scroll natif */
+    /* Forcer le scroll natif et empêcher Lenis */
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
+    scroll-behavior: auto !important;
   }
 
   .close-btn {
