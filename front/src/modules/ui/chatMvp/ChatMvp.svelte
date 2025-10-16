@@ -5,7 +5,7 @@
   import { initMediaQuery, useMediaQuery } from "../../../stores/mediaQuery.js";
   import { initChatAnimations, cleanupChatAnimations } from "./chatAnimation.js";
   import { useChat, ChatUtils } from "./SpeackMe.js";
-  import { initLenis, lenis } from "../../../stores/lenis.js";
+  import { getLenis, lenis } from "../../../stores/lenis.js";
 
   // Enregistrer ScrollTrigger
   gsap.registerPlugin(ScrollTrigger);
@@ -47,31 +47,15 @@
   }
 
   onMount(() => {
-    // Initialiser Lenis pour le scroll smooth
-    const lenisInstance = initLenis();
-    lenisInstance.on("scroll", ScrollTrigger.update);
+    // Récupérer l'instance Lenis existante
+    const lenisInstance = getLenis();
     
-    // Boucle requestAnimationFrame pour Lenis
-    let rafId = null;
-    let isRafActive = true;
-    
-    function raf(time) {
-      if (isRafActive) {
-        lenisInstance.raf(time);
-        rafId = requestAnimationFrame(raf);
-      }
+    if (lenisInstance) {
+      console.log('[ChatMvp] Utilisation de l\'instance Lenis existante');
+      // Lenis est déjà configuré dans App.svelte
+    } else {
+      console.warn('[ChatMvp] Aucune instance Lenis trouvée');
     }
-    rafId = requestAnimationFrame(raf);
-    
-    // Fonction de cleanup pour Lenis
-    const cleanupLenis = () => {
-      isRafActive = false;
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-      }
-      lenisInstance.destroy();
-    };
-    cleanupFunctions.push(cleanupLenis);
     
     // Initialiser le store media query
     const cleanupMediaQuery = initMediaQuery();

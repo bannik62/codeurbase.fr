@@ -9,7 +9,7 @@
   import AdminBoard from './securePage/pages/AdminBoard.svelte';
   import { onDestroy } from 'svelte';
   import Navbar from './modules/ui/portfolio/navbar/Navbar.svelte';
-  import { lenis, stopLenis } from './stores/lenis.js';
+  import { lenis, stopLenis, initLenis, destroyLenis } from './stores/lenis.js';
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
   gsap.registerPlugin(ScrollTrigger);
@@ -74,6 +74,16 @@
 
   onMount(() => {
     window.addEventListener('keydown', DetectEchap);
+    
+    // Initialiser Lenis une seule fois pour toute l'app
+    console.log('[App] Initialisation de Lenis');
+    const lenisInstance = initLenis();
+    
+    if (lenisInstance) {
+      // Configurer ScrollTrigger avec Lenis
+      lenisInstance.on('scroll', ScrollTrigger.update);
+      lenisInstance.on('scroll', handleScroll);
+    }
     
     // S'abonne aux événements de scroll via Lenis
     const unsubscribe = lenis.subscribe(instance => {

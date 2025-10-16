@@ -5,7 +5,7 @@
   import { initMediaQuery, useMediaQuery } from "../../../stores/mediaQuery.js";
   import { initBlogAnimations, cleanupBlogAnimations } from "./blogAnimation.js";
   import { useBlog, BlogUtils } from "./scriptBlog.js";
-  import { initLenis } from "../../../stores/lenis.js";
+  import { getLenis } from "../../../stores/lenis.js";
   import CardArticle from "./CardArticle.svelte";
   import ArticleReader from "./ArticleReader.svelte";
 
@@ -46,31 +46,15 @@
       );
 
   onMount(async () => {
-    // Initialiser Lenis pour le scroll smooth
-    const lenisInstance = initLenis();
-    lenisInstance.on("scroll", ScrollTrigger.update);
+    // Récupérer l'instance Lenis existante
+    const lenisInstance = getLenis();
     
-    // Boucle requestAnimationFrame pour Lenis
-    let rafId = null;
-    let isRafActive = true;
-    
-    function raf(time) {
-      if (isRafActive) {
-        lenisInstance.raf(time);
-        rafId = requestAnimationFrame(raf);
-      }
+    if (lenisInstance) {
+      console.log('[Blog] Utilisation de l\'instance Lenis existante');
+      // Lenis est déjà configuré dans App.svelte
+    } else {
+      console.warn('[Blog] Aucune instance Lenis trouvée');
     }
-    rafId = requestAnimationFrame(raf);
-    
-    // Fonction de cleanup pour Lenis
-    const cleanupLenis = () => {
-      isRafActive = false;
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-      }
-      lenisInstance.destroy();
-    };
-    cleanupFunctions.push(cleanupLenis);
     
     // Initialiser le store media query
     const cleanupMediaQuery = initMediaQuery();
@@ -403,7 +387,7 @@
   @media (min-width: 1441px) and (max-width: 1920px) {
     .blog-container {
       width: 100%;
-      height: 130vh;
+      height: auto;
       margin-top: 10%;
     }
     .search-input {
