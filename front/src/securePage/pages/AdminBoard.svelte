@@ -155,6 +155,23 @@
       isValidatingArticle = false;
     }
   }
+
+  /**
+   * Invalider l'article généré (reset de la vue)
+   */
+  function handleInvalidateArticle() {
+    if (confirm('Êtes-vous sûr de vouloir invalider cet article ? Il sera supprimé de la vue.')) {
+      // Reset de toutes les variables d'article
+      generatedArticle = null;
+      articleCreationSuccess = null;
+      articleCreationError = null;
+      articleValidationSuccess = null;
+      articleValidationError = null;
+      articlePrompt = '';
+      
+      console.log('[AdminBoard] Article invalidé - Vue réinitialisée');
+    }
+  }
 </script>
 
 <!-- Composant invisible qui vérifie la session -->
@@ -407,6 +424,14 @@
                 disabled={isValidatingArticle}
               >
                 {isValidatingArticle ? '⏳ Validation...' : '✅ Valider l\'article'}
+              </button>
+              
+              <button 
+                class="btn-invalidate" 
+                on:click={handleInvalidateArticle}
+                disabled={isValidatingArticle}
+              >
+                ❌ Invalider l'article
               </button>
               
               {#if articleValidationSuccess}
@@ -1071,6 +1096,30 @@
   }
 
   .btn-validate:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .btn-invalidate {
+    padding: 1rem 2rem;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 1rem;
+  }
+
+  .btn-invalidate:hover:not(:disabled) {
+    background: #c82333;
+    transform: translateY(-2px);
+  }
+
+  .btn-invalidate:disabled {
     background: #6c757d;
     cursor: not-allowed;
     opacity: 0.6;
