@@ -1,9 +1,20 @@
 <script>
   import { BlogUtils } from "./scriptBlog.js";
+  import { stopLenis, startLenis } from "../../../stores/lenis.js";
+  import { onMount, onDestroy } from 'svelte';
 
   export let article;
   export let formatDate;
   export let onClose;
+
+  // Désactiver Lenis quand la modal est ouverte
+  onMount(() => {
+    stopLenis();
+  });
+
+  onDestroy(() => {
+    startLenis();
+  });
 </script>
 
 <div class="article-reader-overlay" on:click={onClose} on:keydown={(e) => e.key === 'Escape' && onClose()} role="button" tabindex="-1">
@@ -52,6 +63,8 @@
     z-index: 9999;
     padding: 20px;
     overflow-y: auto;
+    /* S'assurer que le scroll natif fonctionne */
+    overscroll-behavior: contain;
   }
 
   .article-reader-card {
@@ -64,6 +77,9 @@
     max-height: 90vh;
     overflow-y: auto;
     box-shadow: 0 20px 60px rgba(220, 20, 60, 0.4);
+    /* Améliorer le scroll natif */
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
 
   .close-btn {
