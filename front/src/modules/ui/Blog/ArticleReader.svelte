@@ -80,16 +80,16 @@
   }
 
   .close-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: rgba(220, 20, 60, 0.8);
+    position: sticky;
+    top: 5px;
+    left: 15px;
+    background: #dc143ccc;
     border: none;
-    color: white;
-    width: 40px;
-    height: 40px;
+    color: #fff;
+    width: 2%;
+    height: 30px;
     border-radius: 50%;
-    font-size: 1.5rem;
+    /* font-size: 1.5rem; */
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -207,7 +207,7 @@
   /* Responsive */
   @media (max-width: 768px) {
     .article-reader-overlay {
-      padding: 10px;
+      padding: 1px;
     }
 
     .article-header {
