@@ -195,7 +195,7 @@
                 ? widthTotal
                 : widthMin}%;transition: width 0.5s ease-in-out;"
         >
-            MySQL
+            SQL
         </div>
         <div
             class="phpmyadmin-power-content"
@@ -278,7 +278,7 @@
     }
     .backend-power-title {
         display: absolute;
-        font-size: 1.5rem;
+        font-size: 2rem;
         font-weight: 600;
         color: #fff;
         background-color: #555;
@@ -336,7 +336,7 @@
         padding: 10px;
     }
     .n8n-power-title {
-        font-size: 1.5rem;
+        font-size: 2rem;
         font-weight: 600;
         color: #fff;
         background-color: #555;
@@ -393,16 +393,15 @@
         padding: 10px;
     }
     .phpmyadmin-power-title {
-        font-size: 1.5rem;
-        font-weight: 600;
+        font-size: 2rem;
+        font-weight: 500;
         color: #fff;
         background-color: #555;
         width: 50%;
         height: 100%;
         border-radius: 10px 0 0 10px;
         display: flex;
-        white-space: normal;
-        word-break: break-word;
+        padding: 0 px;
         justify-content: center;
         align-items: center;
         border-bottom: 1px solid #fff;
@@ -416,7 +415,7 @@
         justify-content: center;
         align-items: center;
         background-color: #555;
-        height: 100%;
+        height: 99%;
         border-radius: 0 10px 10px 0;
         display: flex;
         justify-content: center;
@@ -452,8 +451,8 @@
         padding: 10px;
     }
     .umami-power-title {
-        font-size: 1.5rem;
-        font-weight: 600;
+        font-size: 1.4rem;
+        font-weight: 700;
         color: #fff;
         background-color: #555;
         width: 50%;

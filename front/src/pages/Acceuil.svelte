@@ -9,7 +9,7 @@
   console.log("Acceuil: component instantiated");
 
   // Store pour gérer l'état de la page d'accueil
-  const welcomeMessage = writable("Bienvenue sur Codeurbase !");
+  const welcomeMessage = writable("Bienvenue sur ");
   
   // Variables pour gérer la boucle RAF de Lenis
   let rafId = null;
@@ -67,7 +67,7 @@
     flex-direction: column;
     /* align-items: center; */
     /* justify-content: center; */
-    min-height: calc(100vh - 60px);
+    /* min-height: calc(100vh - 60px); */
     background-color: #322f2ff4;
   }
 
@@ -94,11 +94,15 @@
   }
 
   h1 {
-    font-size: clamp(2rem, 5vw, 7rem);
+    margin-top: 10%;
+    font-size: clamp(2rem, 8vw, 10rem);
   }
 
   /* Media Queries Responsive */
   @media (max-width: 480px) {
+    h1 {
+      margin-top: 10%;
+    }
     .home-container {
       min-height: calc(100vh - 60px);
       padding-bottom: 20px;
@@ -106,8 +110,7 @@
 
     .home-container-content {
       flex-direction: column;
-      width: 98vw;
-      padding: 0 10px;
+      width: 99%;
       flex: 1;
     }
 
@@ -122,7 +125,7 @@
   @media (min-width: 481px) and (max-width: 768px) {
     .home-container-content {
       flex-direction: column;
-      width: 100vw;
+      width: 100%;
       padding: 0 15px;
     }
 

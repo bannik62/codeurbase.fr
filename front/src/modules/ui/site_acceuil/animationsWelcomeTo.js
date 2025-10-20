@@ -7,37 +7,70 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
  * @returns {Object} - Objet contenant les animations
  */
 export function createSmallMobileWelcomeToAnimations(currentSize) {
-    // Animation pour h2 "CodeurBase" + son contenu
-    const codeurbaseAnimation = gsap.timeline({
+    // Animation pour h2 "CodeurBase"
+    const mainTitleAnimation = gsap.timeline({
         scrollTrigger: {
-            trigger: "#codeurbase",
-            start: "top 80%",
-            end: "bottom 20%",
-            scrub: 0.3,
+            trigger: ".main-title",
+            start: "top 20%",
+            end: "bottom 10%",
+            scrub: 0.2,
             toggleActions: "play none none reverse",
+            // markers: true,
         },
     })
     .fromTo(".main-title", {
         opacity: 0,
-        y: 50,
-        scale: 0.8,
+        y: 70,
+        x: 0,
+        scale: 1,
     }, {
         opacity: 1,
-        y: 0,
+        y:-10,
+        x: 0,
         scale: 1,
         duration: 1,
         ease: "back.out(1.7)",
+    });
+
+    // Animation pour la description
+    const descriptionAnimation = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".main-description",
+            start: "top 40%",
+            toggleActions: "play none none reverse",
+        },
     })
-    .fromTo(".main-description, .feature-item", {
+    .fromTo(".main-description", {
         opacity: 0,
         y: 30,
     }, {
         opacity: 1,
         y: 0,
-        duration: 0.8,
+        x: 45,
+        duration: 1,
+        scale: 1.2,
+        ease: "power2.out",
+    });
+
+    // Animation pour les feature-items
+    const featureItemsAnimation = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".feature-item",
+            start: "top 95%",
+            toggleActions: "play none none reverse",
+        },
+    })
+    .fromTo(".feature-item", {
+        opacity: 0,
+        y: 30,
+    }, {
+        opacity: 1,
+        y: 0,
+        x: 20,
+        duration: 1,
         ease: "power2.out",
         stagger: 0.1,
-    }, "-=0.3");
+    });
 
     // Animation pour h3 "Objectifs" + ses paragraphes
     const objectivesAnimation = gsap.timeline({
@@ -51,11 +84,12 @@ export function createSmallMobileWelcomeToAnimations(currentSize) {
     })
     .fromTo(".objectives-title", {
         opacity: 0,
-        y: 40,
-        scale: 0.9,
+        y: 150,
+        scale: 0,
     }, {
         opacity: 1,
         y: 0,
+        x: 0,
         scale: 1,
         duration: 1.2,
         ease: "back.out(1.7)",
@@ -65,7 +99,7 @@ export function createSmallMobileWelcomeToAnimations(currentSize) {
         x: -30,
     }, {
         opacity: 1,
-        x: 0,
+        x: 25,
         duration: 0.8,
         ease: "power2.out",
         stagger: 0.1,
@@ -77,7 +111,7 @@ export function createSmallMobileWelcomeToAnimations(currentSize) {
             trigger: ".tech-stack",
             start: "top 80%",
             end: "bottom 20%",
-            scrub: 0.5,
+            scrub: 0.2,
             toggleActions: "play none none reverse",
         },
     })
@@ -88,6 +122,7 @@ export function createSmallMobileWelcomeToAnimations(currentSize) {
     }, {
         opacity: 1,
         y: 0,
+        x: 15,
         scale: 1,
         duration: 1.2,
         ease: "back.out(1.7)",
@@ -98,13 +133,16 @@ export function createSmallMobileWelcomeToAnimations(currentSize) {
     }, {
         opacity: 1,
         y: 0,
+        x: 20,
         duration: 0.8,
         ease: "power2.out",
         stagger: 0.15,
     }, "-=0.5");
 
     return {
-        codeurbaseAnimation,
+        mainTitleAnimation,
+        descriptionAnimation,
+        featureItemsAnimation,
         objectivesAnimation,
         techAnimation
     };
@@ -479,57 +517,75 @@ export function createDesktopWelcomeToAnimations(currentSize) {
  * @returns {Object} - Objet contenant les animations
  */
 export function createLargeDesktopWelcomeToAnimations(currentSize) {
-    // Animation pour h2 "CodeurBase" + son contenu-------------------------------------------------------
-    const codeurbaseAnimation = gsap.timeline({
+    // Animation du titre (structure alignée avec small)
+    const mainTitleAnimation = gsap.timeline({
         scrollTrigger: {
-            trigger: "nav",
-            start: "top 0.1% ",
-            endTrigger: "h2",
+            trigger: ".main-title",
+            start: "top 50%",
             end: "bottom 0%",
-            scrub: 0.7,
+            scrub: 0.1,
             toggleActions: "play none none reverse",
             // markers: true,
         },
     })
     .fromTo(".main-title", {
         opacity: 0,
-        y: 120,
-        scale: 0.4,
-        rotationX: -150,
-        rotationY: 20,
-        z: -200,
+        y: 70,
+        x: 0,
+        scale: 1,
     }, {
         opacity: 1,
-        y: 0,
-        scale: 1.5,
-        rotationX: 0,
-        rotationY: 0,
-        z: 0,
-        duration: 2,
+        y: 20,
+        x: 0,
+        scale: 1,
+        duration: 0.8,
         ease: "back.out(1.7)",
+    });
+
+    // Animation de la description (séparée pour éviter les chevauchements)
+    const descriptionAnimation = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".main-description",
+            start: "top 50%",
+            toggleActions: "play none none reverse",
+        },
     })
-    .fromTo(".main-description, .feature-item", {
+    .fromTo(".main-description", {
         opacity: 0,
-        y: 80,
-        rotationX: -80,
-        rotationY: 15,
-        z: -100,
+        y: 30,
     }, {
         opacity: 1,
         y: 0,
-        rotationX: 0,
-        rotationY: 0,
-        z: 0,
-        duration: 1.8,
+        x: 20,
+        duration: 1,
+        ease: "power2.out",
+    });
+
+    // Animation des feature items (séparée comme small)
+    const featureItemsAnimation = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".feature-item",
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+        },
+    })
+    .fromTo(".feature-item", {
+        opacity: 0,
+        y: 30,
+    }, {
+        opacity: 1,
+        y: 0,
+        x: 20,
+        duration: 1,
         ease: "power2.out",
         stagger: 0.1,
-    }, "-=0.7");
+    });
 
     // Animation pour h3 "Objectifs" + ses paragraphes
     const objectivesAnimation = gsap.timeline({
         scrollTrigger: {
             trigger: ".last-feature-item",
-            start: "top 30%",
+            start: "top 60%",
             endTrigger: ".last-p_objectives",
             end: "bottom 0% -1300px",
             scrub: 0.8,
@@ -546,12 +602,12 @@ export function createLargeDesktopWelcomeToAnimations(currentSize) {
         z: -150,
     }, {
         opacity: 1,
-        y: 0,
+        y: 50,
         scale: 1,
         rotationX: 0,
         rotationY: 0,
         z: 0,
-        duration: 1,
+        duration: 0.8,
         ease: "back.out(1.7)",
     })
     .fromTo(".objective-item", {
@@ -562,14 +618,14 @@ export function createLargeDesktopWelcomeToAnimations(currentSize) {
         z: -75,
     }, {
         opacity: 1,
-        x: 0,
+        x: 50,
         rotationX: 0,
         rotationY: 0,
         z: 0,
         duration: 1.8,
         ease: "power2.out",
         stagger: 0.1,
-    }, "-=0.8");
+    }, "-=1");
 
     // Animation pour h3 "Technologies utilisées"------------------------------------------------
     const techTitleAnimation = gsap.timeline({
@@ -729,7 +785,9 @@ export function createLargeDesktopWelcomeToAnimations(currentSize) {
     }, "-=0.4");
 
     return {
-        codeurbaseAnimation,
+        mainTitleAnimation,
+        descriptionAnimation,
+        featureItemsAnimation,
         objectivesAnimation,
         techTitleAnimation,
         frontendAnimation,
@@ -913,6 +971,9 @@ export function initWelcomeToAnimations(currentSize) {
  * @param {Object} animations - Objet contenant les animations
  */
 export function cleanupWelcomeToAnimations(animations) {
+    if (animations.mainTitleAnimation) animations.mainTitleAnimation.kill();
+    if (animations.descriptionAnimation) animations.descriptionAnimation.kill();
+    if (animations.featureItemsAnimation) animations.featureItemsAnimation.kill();
     if (animations.codeurbaseAnimation) animations.codeurbaseAnimation.kill();
     if (animations.objectivesAnimation) animations.objectivesAnimation.kill();
     if (animations.techTitleAnimation) animations.techTitleAnimation.kill();
