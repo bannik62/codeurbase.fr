@@ -50,10 +50,10 @@
 
 
 
-<div class="home-container-content-title">
+<div class="home-container-content-text">
 <section id="codeurbase">
   <h2 class="main-title">CodeurBase</h2>
-  <p class="main-description">CodeurBase sera mon espace numérique personnel, combinant à la fois :</p>
+  <p class="main-description">CodeurBase sera mon espace numérique personnel,<br> combinant à la fois :</p>
 
   <div class="feature">
     <p class="feature-item"><strong>Blog :</strong> partager mes découvertes, astuces et projets autour du développement.</p>
@@ -67,7 +67,7 @@
     <p class="objective-item">Mettre en avant mes compétences de développeur web.</p>
     <p class="objective-item">Créer une vitrine claire et professionnelle.</p>
     <p class="objective-item">Créer un portfolio de mes réalisations.</p>
-    <p class="objective-item">Créer un blog pour partager mes découvertes, astuces et projets autour du développement.</p>
+    <p class="objective-item">Créer un blog pour partager mes découvertes, astuces et projets <br> autour du développement.</p>
     <p class="objective-item last-p_objectives">Un point de contact pour me contacter.</p>
   </div>
 
@@ -107,20 +107,38 @@
 </div>
 
 <style>
+  strong {
+    font-weight: 800;
+    color:crimson;
+  }
    h2, h3, h4 {
     font-family: "Orbitron", cursive;
     font-weight: 600;
-    font-size: clamp(0.8rem, 3vw, 3rem);
+    font-size: clamp(2rem, 2.3vw, 3rem);
     color:crimson;
     text-align: center;
   }
   p {
     font-family: "Orbitron", cursive;
     font-weight: 500;
-    font-size: clamp(0.7rem, 4vw, 2.5rem);
+    font-size: clamp(0.7rem, 2.6vw, 1.3rem);
     color: rgb(250, 245, 245)fff;
+    white-space: normal; 
+    width: 100vw;
+    margin-bottom:50px
   }
-  .home-container-content-title {
+  /* Espacements verticaux globaux (base, via clamp) */
+  .main-title { margin: 0 0 clamp(12px, 2vw, 32px); }
+  .main-description { margin: 0 0 clamp(12px, 2vw, 28px); }
+  .feature { margin-block: clamp(12px, 2.5vw, 40px); }
+  .objectives { margin-block: clamp(24px, 3vw, 64px); }
+  .h3-after_objectives { margin-block-start: clamp(32px, 4vw, 80px); }
+  h4 { margin: clamp(16px, 3vw, 48px) 0 clamp(8px, 2vw, 24px); }
+  .tech-stack { margin-bottom: clamp(16px, 3vw, 48px); }
+  /* Espacement spécifique Objectifs */
+  .objectives-title { margin-bottom: clamp(16px, 4vw, 56px); }
+  .objective-item { margin-top: clamp(10px, 2.8vw, 28px); }
+  .home-container-content-text{
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -129,30 +147,41 @@
     width: 35vw;
     min-width: 350px;
     padding: 5%;
+    overflow: hidden;
   }
 
   /* Media Queries Responsive */
   
   /* Small Mobile */
   @media (max-width: 480px) {
-    .home-container-content-title {
-      width: 95vw;
-      height: 300vh;
+
+    .home-container-content-text{
+      width: 100%;
+      /* height: 300vh; */
       min-width: 300px;
-      padding: 1%;
+      padding: 0%;
       padding-bottom: 10%;
+      border:solid 1px red;
+      overflow: hidden
+
     }
 
     #codeurbase {
-      height: 250%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      height: auto;
+      width: 100%vw;
+      margin-top: 10%;
     }
     
-    /* clamp() géré dans les styles généraux */
   }
 
   /* Medium Mobile */
   @media (min-width: 481px) and (max-width: 768px) {
-    .home-container-content-title {
+    .home-container-content-text {
       width: 80vw;
       min-width: 320px;
       padding: 4%;
@@ -163,18 +192,17 @@
 
   /* Tablet */
   @media (min-width: 769px) and (max-width: 1024px) {
-    .home-container-content-title {
+    .home-container-content-text {
       width: 60vw;
       min-width: 400px;
       padding: 4%;
     }
     
-    /* clamp() géré dans les styles généraux */
   }
 
   /* Desktop */
   @media (min-width: 1025px) and (max-width: 1440px) {
-    .home-container-content-title {
+    .home-container-content-text {
       width: 45vw;
       min-width: 450px;
       padding: 5%;
@@ -185,10 +213,12 @@
 
   /* Large Desktop */
   @media (min-width: 1441px) and (max-width: 1920px) {
-    .home-container-content-title {
+    .home-container-content-text {
+      margin-top: 25%;
       width: 40vw;
       min-width: 500px;
       padding: 5%;
+      gap: 10px;
     }
     
     /* clamp() géré dans les styles généraux */
@@ -196,10 +226,16 @@
 
   /* XL Desktop */
   @media (min-width: 1921px) {
-    .home-container-content-title {
+    .home-container-content-text   {
       width: 35vw;
       min-width: 550px;
       padding: 5%;
+    }
+    .objectives {
+      margin-top: 100px;
+    }
+    .objective-item {
+      margin-top: 100px;
     }
     
     /* clamp() géré dans les styles généraux */
