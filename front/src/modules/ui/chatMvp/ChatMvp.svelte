@@ -20,30 +20,20 @@
   let messagesContainer;
   let currentMessage = "";
   let suggestions = ChatUtils.getMessageSuggestions();
-  let messages = []; // Variable réactive pour les messages
   let isAutoScrolling = false; // Variable pour détecter le scroll automatique
   
   // Initialiser le hook du chat
   const chat = useChat();
   
-  // Fonction pour mettre à jour les messages
-  function updateMessages() {
-    console.log("Mise à jour des messages:", chat.messages);
-    messages = [...chat.messages];
-    console.log("Messages mis à jour:", messages);
-    
-    // Scroll automatique après mise à jour avec délai pour s'assurer que le DOM est mis à jour
-    setTimeout(() => {
-      scrollToBottom();
-    }, 10);
-  }
+  // Utiliser la réactivité Svelte directement
+  $: messages = chat.messages;
   
-  // Watcher réactif pour détecter les changements de messages
+  // Watcher réactif pour le scroll automatique
   $: if (messages.length > 0) {
-    // À chaque changement de messages, scroller vers le bas après un court délai
-    setTimeout(() => {
+    // Utiliser requestAnimationFrame pour un scroll fluide
+    requestAnimationFrame(() => {
       scrollToBottom();
-    }, 50);
+    });
   }
 
   onMount(() => {
@@ -71,8 +61,7 @@
     // Initialiser les animations selon la taille d'écran
     animations = initChatAnimations(currentSize);
     
-    // Initialiser les messages
-    updateMessages();
+    // Les messages sont maintenant gérés par la réactivité Svelte
   });
 
   onDestroy(() => {
@@ -99,14 +88,9 @@
       await chat.sendMessage(currentMessage);
       currentMessage = "";
       
-      // Mettre à jour l'affichage plusieurs fois pour être sûr
-      updateMessages();
-      setTimeout(updateMessages, 50); // Double mise à jour
-      
-      scrollToBottom();
+      // Le scroll se fait automatiquement via la réactivité Svelte
     } catch (error) {
       console.error("Erreur lors de l'envoi du message:", error);
-      updateMessages();
     }
   }
 
@@ -124,24 +108,18 @@
 
   function scrollToBottom() {
     if (messagesContainer) {
-      isAutoScrolling = true; // Activer le mode auto-scroll
+      isAutoScrolling = true;
       
-      // Scroll immédiat
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      // Utiliser scrollTo pour un scroll fluide
+      messagesContainer.scrollTo({
+        top: messagesContainer.scrollHeight,
+        behavior: 'smooth'
+      });
       
-      // Scroll après un délai pour être sûr (cas où le DOM n'est pas encore mis à jour)
+      // Redonner le contrôle après l'animation
       setTimeout(() => {
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-      }, 50);
-      
-      // Scroll final et redonne le contrôle à l'utilisateur
-      setTimeout(() => {
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        // Attendre encore un peu avant de redonner le contrôle
-        setTimeout(() => {
-          isAutoScrolling = false; // Redonner le contrôle du scroll à l'utilisateur
-        }, 100);
-      }, 200);
+        isAutoScrolling = false;
+      }, 300);
     }
   }
 
@@ -157,7 +135,7 @@
   function clearChat() {
     chat.resetSession(); // Réinitialise la session ET efface la conversation
     isAutoScrolling = false; // Réinitialiser l'état du scroll
-    updateMessages(); // Mettre à jour l'affichage
+    // L'affichage se met à jour automatiquement via la réactivité Svelte
   }
 
   // Fonction pour formater le contenu des messages
