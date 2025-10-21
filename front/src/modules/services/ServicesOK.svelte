@@ -260,7 +260,7 @@
         min-height: 100px;
         z-index: 1000;
         padding: 10px;
-        gap: 15%;
+        gap: 25%;
     }
 
     .backend-power {
