@@ -41,7 +41,7 @@ export function createSmallMobileChatAnimations(currentSize) {
     // Animation pour le contenu du chat
     const chatContentAnimation = gsap.timeline({
         scrollTrigger: {
-            trigger: ".chat-content",
+            trigger: ".chat-messenger",
             start: "top 80%",
             end: "bottom 20%",
             scrub: 0.4,
@@ -113,7 +113,7 @@ export function createMobileChatAnimations(currentSize) {
     // Animation pour le contenu du chat
     const chatContentAnimation = gsap.timeline({
         scrollTrigger: {
-            trigger: ".chat-content",
+            trigger: ".chat-messenger",
             start: "top 75%",
             end: "bottom 25%",
             scrub: 0.5,
@@ -189,7 +189,7 @@ export function createTabletChatAnimations(currentSize) {
     // Animation pour le contenu du chat
     const chatContentAnimation = gsap.timeline({
         scrollTrigger: {
-            trigger: ".chat-content",
+            trigger: ".chat-messenger",
             start: "top 70%",
             end: "bottom 30%",
             scrub: 0.6,
@@ -273,7 +273,7 @@ export function createDesktopChatAnimations(currentSize) {
     // Animation pour le contenu du chat
     const chatContentAnimation = gsap.timeline({
         scrollTrigger: {
-            trigger: ".chat-content",
+            trigger: ".chat-messenger",
             start: "top 65%",
             end: "bottom 35%",
             scrub: 0.7,
@@ -461,7 +461,7 @@ export function createXlDesktopChatAnimations(currentSize) {
     // Animation pour le contenu du chat
     const chatContentAnimation = gsap.timeline({
         scrollTrigger: {
-            trigger: ".chat-content",
+            trigger: ".chat-messenger",
             start: "top 55%",
             end: "bottom 45%",
             scrub: 0.9,
