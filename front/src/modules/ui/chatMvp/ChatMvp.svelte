@@ -22,21 +22,22 @@
   let suggestions = ChatUtils.getMessageSuggestions();
   let messages = []; // Variable réactive pour les messages
   let isAutoScrolling = false; // Variable pour détecter le scroll automatique
+  let isLoading = false; // État de chargement local
+  let isConnected = true; // État de connexion local
+  let error = null; // Erreur locale
   
   // Initialiser le hook du chat
   const chat = useChat();
   
-  // Fonction pour mettre à jour les messages
-  function updateMessages() {
-    // Les messages sont maintenant réactifs via les stores
-    chat.messages.subscribe(msgs => {
-      messages = [...msgs];
-      // Scroll automatique après mise à jour
-      requestAnimationFrame(() => {
-        scrollToBottom();
-      });
-    })();
-  }
+  // Accéder directement aux stores individuels avec subscribe
+  let unsubMessages, unsubLoading, unsubConnected, unsubError;
+  
+  onMount(() => {
+    unsubMessages = chat.messages.subscribe(value => messages = value);
+    unsubLoading = chat.isLoading.subscribe(value => isLoading = value);
+    unsubConnected = chat.isConnected.subscribe(value => isConnected = value);
+    unsubError = chat.error.subscribe(value => error = value);
+  });
   
   // Watcher réactif pour le scroll automatique
   $: if (messages.length > 0) {
@@ -71,11 +72,16 @@
     // Initialiser les animations selon la taille d'écran
     animations = initChatAnimations(currentSize);
     
-    // Initialiser les messages
-    updateMessages();
+    // Les messages sont maintenant synchronisés via la réactivité Svelte
   });
 
   onDestroy(() => {
+    // Nettoyer les souscriptions aux stores
+    if (unsubMessages) unsubMessages();
+    if (unsubLoading) unsubLoading();
+    if (unsubConnected) unsubConnected();
+    if (unsubError) unsubError();
+    
     // Nettoyer les animations
     cleanupChatAnimations(animations);
     
@@ -99,11 +105,9 @@
       await chat.sendMessage(currentMessage);
       currentMessage = "";
       
-      // Mettre à jour l'affichage
-      updateMessages();
+      // L'affichage se met à jour automatiquement via la réactivité Svelte
     } catch (error) {
       console.error("Erreur lors de l'envoi du message:", error);
-      updateMessages();
     }
   }
 
@@ -148,12 +152,21 @@
   function clearChat() {
     chat.resetSession(); // Réinitialise la session ET efface la conversation
     isAutoScrolling = false; // Réinitialiser l'état du scroll
-    updateMessages(); // Mettre à jour l'affichage
+    // L'affichage se met à jour automatiquement via la réactivité Svelte
   }
 
   // Fonction pour formater le contenu des messages
   function formatMessageContent(content) {
     return ChatUtils.sanitizeContent(content);
+  }
+
+  // Fonction pour formater l'heure des messages
+  function formatMessageTime(timestamp) {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
 </script>
 
@@ -220,7 +233,7 @@
         </div>
         
         <div class="chat-messages" bind:this={messagesContainer} on:scroll={handleScroll}>
-            {#if !chat.hasMessages || messages.length <= 1}
+            {#if messages.length <= 1}
             <div class="message-suggestions">
               <p class="suggestions-title">Suggestions de questions :</p>
               <div class="suggestion-buttons">
@@ -252,7 +265,7 @@
                     <p>{@html formatMessageContent(message.content)}</p>
                   {/if}
                 </div>
-                <span class="message-time">{chat.formatMessageTime(message.timestamp)}</span>
+                <span class="message-time">{formatMessageTime(message.timestamp)}</span>
               </div>
             </div>
           {/each}
@@ -271,24 +284,24 @@
               bind:value={currentMessage}
               on:keypress={handleKeyPress}
               bind:this={messageInput}
-              disabled={chat.isLoading}
+              disabled={isLoading}
             />
             <button 
               class="send-btn" 
               on:click={handleSendMessage}
-              disabled={chat.isLoading || !currentMessage.trim()}
+              disabled={isLoading || !currentMessage.trim()}
               title="Envoyer le message"
             >
-              {chat.isLoading ? '⏳' : '➤'}
+              {isLoading ? '⏳' : '➤'}
             </button>
           </div>
           
           <!-- Indicateur de connexion -->
           <div class="connection-status">
-            <span class="status-indicator" class:connected={chat.isConnected} class:disconnected={!chat.isConnected}>
-              {chat.isConnected ? '🟢 Connecté' : '🔴 Déconnecté'}
+            <span class="status-indicator" class:connected={isConnected} class:disconnected={!isConnected}>
+              {isConnected ? '🟢 Connecté' : '🔴 Déconnecté'}
             </span>
-            {#if chat.hasMessages}
+            {#if messages.length > 1}
               <button class="clear-btn" on:click={clearChat} title="Effacer la conversation">
                 🗑️ Effacer
               </button>

@@ -353,7 +353,7 @@ export function useChat() {
     const chatManager = new ChatManager();
     
     return {
-        // État du chat
+        // Stores réactifs
         messages: chatManager.messages,
         isLoading: chatManager.isLoading,
         isConnected: chatManager.isConnected,
@@ -363,7 +363,7 @@ export function useChat() {
         sendMessage: chatManager.sendMessage,
         addMessage: chatManager.addMessage,
         clearConversation: chatManager.clearConversation,
-        checkConnection: chatManager.checkConnection,
+        resetSession: chatManager.resetSession,
         getMessageCount: chatManager.getMessageCount,
         getLastMessage: chatManager.getLastMessage,
         formatMessageTime: chatManager.formatMessageTime,
@@ -373,16 +373,22 @@ export function useChat() {
         
         // Getters réactifs
         get hasMessages() {
-            return chatManager.messages.length > 1; // Plus que le message de bienvenue
+            let currentMessages;
+            chatManager.messages.subscribe(msgs => currentMessages = msgs)();
+            return currentMessages.length > 1; // Plus que le message de bienvenue
         },
         
         get lastUserMessage() {
-            const userMessages = chatManager.messages.filter(msg => msg.type === 'user');
+            let currentMessages;
+            chatManager.messages.subscribe(msgs => currentMessages = msgs)();
+            const userMessages = currentMessages.filter(msg => msg.type === 'user');
             return userMessages.length > 0 ? userMessages[userMessages.length - 1] : null;
         },
         
         get lastAiMessage() {
-            const aiMessages = chatManager.messages.filter(msg => msg.type === 'ai');
+            let currentMessages;
+            chatManager.messages.subscribe(msgs => currentMessages = msgs)();
+            const aiMessages = currentMessages.filter(msg => msg.type === 'ai');
             return aiMessages.length > 0 ? aiMessages[aiMessages.length - 1] : null;
         }
     };
