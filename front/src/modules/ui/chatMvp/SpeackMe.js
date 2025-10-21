@@ -148,16 +148,41 @@ export class ChatManager {
 
             console.log("Réponse reçue du backend:", response.data);
 
-            // Modifier directement le message de chargement avec la réponse
-            loadingMsg.content = response.data.message || 'Désolé, je n\'ai pas pu générer de réponse.';
-
-            loadingMsg.isLoading = false;
+            // Modifier le message de chargement avec la réponse via le store
+            this.messages.update(currentMessages => {
+                return currentMessages.map(msg => {
+                    if (msg.id === loadingMsg.id) {
+                        return {
+                            ...msg,
+                            content: response.data.message || 'Désolé, je n\'ai pas pu générer de réponse.',
+                            isLoading: false
+                        };
+                    }
+                    return msg;
+                });
+            });
 
             this.isLoading.set(false);
             return loadingMsg;
 
         } catch (error) {
             this.isLoading.set(false);
+            
+            // Mettre à jour le message de chargement avec l'erreur
+            this.messages.update(currentMessages => {
+                return currentMessages.map(msg => {
+                    if (msg.id === loadingMsg.id) {
+                        return {
+                            ...msg,
+                            content: 'Erreur lors de la communication avec l\'IA.',
+                            isLoading: false,
+                            error: true
+                        };
+                    }
+                    return msg;
+                });
+            });
+            
             this.handleError(error);
             throw error;
         }

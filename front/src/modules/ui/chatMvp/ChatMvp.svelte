@@ -33,10 +33,23 @@
   let unsubMessages, unsubLoading, unsubConnected, unsubError;
   
   onMount(() => {
-    unsubMessages = chat.messages.subscribe(value => messages = value);
-    unsubLoading = chat.isLoading.subscribe(value => isLoading = value);
-    unsubConnected = chat.isConnected.subscribe(value => isConnected = value);
-    unsubError = chat.error.subscribe(value => error = value);
+    console.log('Initialisation des souscriptions aux stores');
+    unsubMessages = chat.messages.subscribe(value => {
+      console.log('Messages mis à jour:', value);
+      messages = value;
+    });
+    unsubLoading = chat.isLoading.subscribe(value => {
+      console.log('isLoading mis à jour:', value);
+      isLoading = value;
+    });
+    unsubConnected = chat.isConnected.subscribe(value => {
+      console.log('isConnected mis à jour:', value);
+      isConnected = value;
+    });
+    unsubError = chat.error.subscribe(value => {
+      console.log('error mis à jour:', value);
+      error = value;
+    });
   });
   
   // Watcher réactif pour le scroll automatique
