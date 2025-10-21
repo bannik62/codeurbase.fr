@@ -5,6 +5,7 @@
  */
 
 import axios from 'axios';
+import { writable } from 'svelte/store';
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 /**
@@ -12,10 +13,11 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
  */
 export class ChatManager {
     constructor() {
-        this.messages = [];
-        this.isLoading = false;
-        this.isConnected = true;
-        this.error = null;
+        // Utiliser des stores Svelte pour la réactivité
+        this.messages = writable([]);
+        this.isLoading = writable(false);
+        this.isConnected = writable(true);
+        this.error = writable(null);
         this.apiEndpoint = `${BACKEND_URL}/codeurbaseApi/n8n/chatWithMe`;        
         // Générer un sessionId unique pour cet utilisateur
         this.sessionId = this.generateSessionId();
@@ -63,7 +65,7 @@ export class ChatManager {
      * Initialise les messages par défaut
      */
     initializeDefaultMessages() {
-        this.messages = [
+        this.messages.set([
             {
                 id: 'ai-welcome',
                 type: 'ai',
@@ -71,7 +73,7 @@ export class ChatManager {
                 timestamp: new Date().toISOString(),
                 avatar: '🤖'
             }
-        ];
+        ]);
     }
 
     /**
@@ -89,7 +91,8 @@ export class ChatManager {
             error: messageData.error || null
         };
         
-        this.messages.push(message);
+        // Mettre à jour le store de manière réactive
+        this.messages.update(currentMessages => [...currentMessages, message]);
         return message;
     }
 
@@ -111,8 +114,8 @@ export class ChatManager {
             throw new Error('Le message ne peut pas être vide');
         }
 
-        this.isLoading = true;
-        this.error = null;
+        this.isLoading.set(true);
+        this.error.set(null);
 
         try {
             // Ajouter le message de l'utilisateur
@@ -150,11 +153,11 @@ export class ChatManager {
 
             loadingMsg.isLoading = false;
 
-            this.isLoading = false;
+            this.isLoading.set(false);
             return loadingMsg;
 
         } catch (error) {
-            this.isLoading = false;
+            this.isLoading.set(false);
             this.handleError(error);
             throw error;
         }
@@ -165,7 +168,9 @@ export class ChatManager {
      * @param {string} messageId - ID du message à supprimer
      */
     removeMessage(messageId) {
-        this.messages = this.messages.filter(msg => msg.id !== messageId);
+        this.messages.update(currentMessages => 
+            currentMessages.filter(msg => msg.id !== messageId)
+        );
     }
 
     /**
@@ -174,7 +179,10 @@ export class ChatManager {
      * @returns {Array} Historique des messages
      */
     getConversationHistory(limit = 10) {
-        return this.messages
+        let currentMessages;
+        this.messages.subscribe(msgs => currentMessages = msgs)();
+        
+        return currentMessages
             .filter(msg => msg.type !== 'system' && !msg.isLoading)
             .slice(-limit)
             .map(msg => ({
@@ -224,14 +232,14 @@ export class ChatManager {
             } else if (error.request) {
                 // Erreur de réseau
                 errorMessage = 'Impossible de joindre le serveur. Vérifiez votre connexion internet.';
-                this.isConnected = false;
+                this.isConnected.set(false);
             } else {
                 // Autre erreur
                 errorMessage = error.message || 'Une erreur inattendue s\'est produite.';
             }
         }
 
-        this.error = errorMessage;
+        this.error.set(errorMessage);
         
         // Ajouter un message d'erreur à l'interface
         this.addMessage({
@@ -246,8 +254,8 @@ export class ChatManager {
      * Efface la conversation
      */
     clearConversation() {
-        this.messages = [];
-        this.error = null;
+        this.messages.set([]);
+        this.error.set(null);
         this.initializeDefaultMessages();
     }
 
@@ -257,7 +265,9 @@ export class ChatManager {
      * @returns {number} Nombre de messages
      */
     getMessageCount() {
-        return this.messages.length;
+        let currentMessages;
+        this.messages.subscribe(msgs => currentMessages = msgs)();
+        return currentMessages.length;
     }
 
     /**
@@ -265,7 +275,9 @@ export class ChatManager {
      * @returns {Object|null} Dernier message ou null
      */
     getLastMessage() {
-        return this.messages.length > 0 ? this.messages[this.messages.length - 1] : null;
+        let currentMessages;
+        this.messages.subscribe(msgs => currentMessages = msgs)();
+        return currentMessages.length > 0 ? currentMessages[currentMessages.length - 1] : null;
     }
 
     /**
@@ -286,10 +298,13 @@ export class ChatManager {
      * @returns {string} Conversation au format JSON
      */
     exportConversation() {
+        let currentMessages;
+        this.messages.subscribe(msgs => currentMessages = msgs)();
+        
         return JSON.stringify({
-            messages: this.messages,
+            messages: currentMessages,
             exportedAt: new Date().toISOString(),
-            messageCount: this.messages.length
+            messageCount: currentMessages.length
         }, null, 2);
     }
 
@@ -301,7 +316,7 @@ export class ChatManager {
         try {
             const data = JSON.parse(jsonData);
             if (data.messages && Array.isArray(data.messages)) {
-                this.messages = data.messages;
+                this.messages.set(data.messages);
                 return true;
             }
             throw new Error('Format de données invalide');
@@ -319,8 +334,11 @@ export class ChatManager {
     searchMessages(query) {
         if (!query || query.trim() === '') return [];
         
+        let currentMessages;
+        this.messages.subscribe(msgs => currentMessages = msgs)();
+        
         const searchTerm = query.toLowerCase().trim();
-        return this.messages.filter(msg => 
+        return currentMessages.filter(msg => 
             msg.content.toLowerCase().includes(searchTerm) &&
             msg.type !== 'system'
         );

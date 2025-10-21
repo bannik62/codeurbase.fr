@@ -20,13 +20,23 @@
   let messagesContainer;
   let currentMessage = "";
   let suggestions = ChatUtils.getMessageSuggestions();
+  let messages = []; // Variable réactive pour les messages
   let isAutoScrolling = false; // Variable pour détecter le scroll automatique
   
   // Initialiser le hook du chat
   const chat = useChat();
   
-  // Utiliser la réactivité Svelte directement
-  $: messages = chat.messages;
+  // Fonction pour mettre à jour les messages
+  function updateMessages() {
+    // Les messages sont maintenant réactifs via les stores
+    chat.messages.subscribe(msgs => {
+      messages = [...msgs];
+      // Scroll automatique après mise à jour
+      requestAnimationFrame(() => {
+        scrollToBottom();
+      });
+    })();
+  }
   
   // Watcher réactif pour le scroll automatique
   $: if (messages.length > 0) {
@@ -61,7 +71,8 @@
     // Initialiser les animations selon la taille d'écran
     animations = initChatAnimations(currentSize);
     
-    // Les messages sont maintenant gérés par la réactivité Svelte
+    // Initialiser les messages
+    updateMessages();
   });
 
   onDestroy(() => {
@@ -88,9 +99,11 @@
       await chat.sendMessage(currentMessage);
       currentMessage = "";
       
-      // Le scroll se fait automatiquement via la réactivité Svelte
+      // Mettre à jour l'affichage
+      updateMessages();
     } catch (error) {
       console.error("Erreur lors de l'envoi du message:", error);
+      updateMessages();
     }
   }
 
@@ -135,7 +148,7 @@
   function clearChat() {
     chat.resetSession(); // Réinitialise la session ET efface la conversation
     isAutoScrolling = false; // Réinitialiser l'état du scroll
-    // L'affichage se met à jour automatiquement via la réactivité Svelte
+    updateMessages(); // Mettre à jour l'affichage
   }
 
   // Fonction pour formater le contenu des messages
