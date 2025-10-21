@@ -148,16 +148,41 @@ export class ChatManager {
 
             console.log("Réponse reçue du backend:", response.data);
 
-            // Modifier directement le message de chargement avec la réponse
-            loadingMsg.content = response.data.message || 'Désolé, je n\'ai pas pu générer de réponse.';
-
-            loadingMsg.isLoading = false;
+            // Modifier le message de chargement avec la réponse via le store
+            this.messages.update(currentMessages => {
+                return currentMessages.map(msg => {
+                    if (msg.id === loadingMsg.id) {
+                        return {
+                            ...msg,
+                            content: response.data.message || 'Désolé, je n\'ai pas pu générer de réponse.',
+                            isLoading: false
+                        };
+                    }
+                    return msg;
+                });
+            });
 
             this.isLoading.set(false);
             return loadingMsg;
 
         } catch (error) {
             this.isLoading.set(false);
+            
+            // Mettre à jour le message de chargement avec l'erreur
+            this.messages.update(currentMessages => {
+                return currentMessages.map(msg => {
+                    if (msg.id === loadingMsg.id) {
+                        return {
+                            ...msg,
+                            content: 'Erreur lors de la communication avec l\'IA.',
+                            isLoading: false,
+                            error: true
+                        };
+                    }
+                    return msg;
+                });
+            });
+            
             this.handleError(error);
             throw error;
         }
@@ -353,7 +378,7 @@ export function useChat() {
     const chatManager = new ChatManager();
     
     return {
-        // État du chat
+        // Stores réactifs
         messages: chatManager.messages,
         isLoading: chatManager.isLoading,
         isConnected: chatManager.isConnected,
@@ -363,7 +388,7 @@ export function useChat() {
         sendMessage: chatManager.sendMessage,
         addMessage: chatManager.addMessage,
         clearConversation: chatManager.clearConversation,
-        checkConnection: chatManager.checkConnection,
+        resetSession: chatManager.resetSession,
         getMessageCount: chatManager.getMessageCount,
         getLastMessage: chatManager.getLastMessage,
         formatMessageTime: chatManager.formatMessageTime,
@@ -373,16 +398,22 @@ export function useChat() {
         
         // Getters réactifs
         get hasMessages() {
-            return chatManager.messages.length > 1; // Plus que le message de bienvenue
+            let currentMessages;
+            chatManager.messages.subscribe(msgs => currentMessages = msgs)();
+            return currentMessages.length > 1; // Plus que le message de bienvenue
         },
         
         get lastUserMessage() {
-            const userMessages = chatManager.messages.filter(msg => msg.type === 'user');
+            let currentMessages;
+            chatManager.messages.subscribe(msgs => currentMessages = msgs)();
+            const userMessages = currentMessages.filter(msg => msg.type === 'user');
             return userMessages.length > 0 ? userMessages[userMessages.length - 1] : null;
         },
         
         get lastAiMessage() {
-            const aiMessages = chatManager.messages.filter(msg => msg.type === 'ai');
+            let currentMessages;
+            chatManager.messages.subscribe(msgs => currentMessages = msgs)();
+            const aiMessages = currentMessages.filter(msg => msg.type === 'ai');
             return aiMessages.length > 0 ? aiMessages[aiMessages.length - 1] : null;
         }
     };
