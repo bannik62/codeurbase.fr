@@ -247,8 +247,8 @@
 
 <style>
     .services-ok {
-        position: relative;
-        top: 5%;
+        position: sticky;
+        top: 15%;
         right: 5%;
         display: flex;
         flex-direction: column;
@@ -260,7 +260,7 @@
         min-height: 100px;
         z-index: 1000;
         padding: 10px;
-        gap: 10%;
+        gap: 15%;
     }
 
     .backend-power {
