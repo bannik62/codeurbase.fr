@@ -1225,7 +1225,7 @@
   /* Large Desktop */
   @media (min-width: 1441px) and (max-width: 1920px) {
     .chat-container {
-      width: 99%;
+      width: 95%;
       min-width: 500px;
       padding: 2% 2% 8svh 2%;
       /* height: auto; */
@@ -1259,6 +1259,7 @@
       gap: 20px;
       min-height: 85svh;
       height: auto;
+      width:99%;
     }
 
     .chat-info-section {
@@ -1274,8 +1275,8 @@
     }
 
     .chat-messenger {
-      height: 75svh;
-      max-height: 85svh;
+      height: 81svh;
+      max-height: 90svh;
       overflow: hidden;
     }
     .info-title {
