@@ -110,7 +110,7 @@
 
     .home-container-content {
       flex-direction: column;
-      width: 99%;
+      width: 100%;
       flex: 1;
     }
 
