@@ -49,17 +49,21 @@
 
 
 
-
+<!-- triggers pour main title -->
 <div class="home-container-content-text">
-<section id="codeurbase">
+  <!-- #codeurbase triggers pour main-description -->
+<section id="codeurbase"> 
+  <!-- .main-title triggers pour  main-description -->
   <h2 class="main-title">CodeurBase</h2>
-  <p class="main-description">CodeurBase sera mon espace numérique personnel,<br> combinant à la fois :</p>
 
+  <p class="main-description">CodeurBase sera mon espace numérique personnel,<br> combinant à la fois :</p>
+  <!-- .feature triggers pour feature-item 1 et 2, 0.8 d intervale -->
   <div class="feature">
     <p class="feature-item"><strong>Blog :</strong> partager mes découvertes, astuces et projets autour du développement.</p>
+  <!-- .last-feature-item triggers pour objectives-title -->
     <p class="last-feature-item feature-item"><strong>Portfolio :</strong> présenter mes réalisations, compétences et expériences.</p>
   </div>
-
+  <!-- .objectives-title triggers pour objective-item 1 et 2, 0.8 d intervale -->
   <h3 class="objectives-title"> Objectifs</h3>
   <div class="objectives">
     <p class="objective-item">Centraliser mes projets et mes expérimentations.</p>
@@ -68,31 +72,42 @@
     <p class="objective-item">Créer une vitrine claire et professionnelle.</p>
     <p class="objective-item">Créer un portfolio de mes réalisations.</p>
     <p class="objective-item">Créer un blog pour partager mes découvertes, astuces et projets <br> autour du développement.</p>
+    <!-- .last-p_objectives triggers pour h3-after_objectives -->
     <p class="objective-item last-p_objectives">Un point de contact pour me contacter.</p>
   </div>
 
+  <!-- h3-after_objectives triggers pour frontend-title -->
   <h3 class="h3-after_objectives">Technologies utilisées</h3>
-  
+  <!-- frontend-title triggers pour frontend-stack -->
   <h4 class="frontend-title">Frontend</h4>
+ <!-- .tech-stack triggers pour tech-item 1 et 2, 0.8 d intervale -->
   <div class="tech-stack frontend-stack">
     <p class="tech-item">Svelte → Framework web moderne et réactif.</p>
     <p class="tech-item">JavaScript (ES6) → Pour la logique applicative.</p>
     <p class="tech-item">CSS / SCSS → Pour un design clair et maintenable.</p>
-    <p class="tech-item">Axios → Communication sécurisée entre frontend et backend.</p>
+    <!-- .tech-item triggers pour backend-title -->
+    <p class="tech-item">Axios → Communication sécurisée entre <br> frontend et backend.</p>
   </div>
 
+  <!-- backend-title triggers pour backend-stack et tech-item 1 et 2, 0.8 d intervale -->
   <h4 class="backend-title">Backend</h4>
+  <!-- .tech-stack triggers pour tech-item 1 et 2, 0.8 d intervale -->
   <div class="tech-stack backend-stack">
     <p class="tech-item">Node.js (Express) → Gestion des API et logique serveur.</p>
+    <!-- .tech-item triggers pour database-title -->
     <p class="tech-item">Sequelize (ORM) → Interaction avec la base de données SQL.</p>
   </div>
 
+  <!-- database-title triggers pour database-stack -->
   <h4 class="database-title">Base de données</h4>
+  <!-- .tech-stack triggers pour tech-item 1 et 2, 0.8 d intervale -->
   <div class="tech-stack database-stack">
     <p class="tech-item">PostgreSQL / MySQL (selon configuration).</p>
   </div>
 
+  <!-- tools-title triggers pour tools-stack -->
   <h4 class="tools-title">Outils et déploiement</h4>
+  <!-- .tech-stack triggers pour tech-item 1 et 2, 0.8 d intervale -->
   <div class="tech-stack tools-stack">
     <p class="tech-item">Docker & Docker Compose → Conteneurisation et orchestration.</p>
     <p class="tech-item">Portainer → Gestion des conteneurs via interface web.</p>

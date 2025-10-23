@@ -40,7 +40,7 @@
   });
 </script>
 
-<section class="home-container">
+<section class="home-container ">
   <h1>{$welcomeMessage}</h1>
   <div class="home-container-content">
     <Welcome />
@@ -136,7 +136,7 @@
     }
   }
 
-  @media (min-width: 769px) and (max-width: 1024px) {
+  @media (min-width: 769px) and (max-width: 1524px) {
     .home-container-content-services {
       width: 45vw;
       min-width: 400px;
