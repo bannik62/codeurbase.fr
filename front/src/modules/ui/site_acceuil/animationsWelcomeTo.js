@@ -11,11 +11,10 @@ export function createSmallMobileWelcomeToAnimations(currentSize) {
     const mainTitleAnimation = gsap.timeline({
         scrollTrigger: {
             trigger: ".main-title",
-            start: "top 20%",
-            end: "bottom 10%",
+            start: "top 25% ",
+            end: "bottom 0%",
             scrub: 0.2,
             toggleActions: "play none none reverse",
-            // markers: true,
         },
     })
     .fromTo(".main-title", {
@@ -32,11 +31,11 @@ export function createSmallMobileWelcomeToAnimations(currentSize) {
         ease: "back.out(1.7)",
     });
 
-    // Animation pour la description
+    // Animation pour la description (se déclenche après le titre)
     const descriptionAnimation = gsap.timeline({
         scrollTrigger: {
-            trigger: ".main-description",
-            start: "top 40%",
+            trigger: ".main-title",
+            start: "top 10%",
             toggleActions: "play none none reverse",
         },
     })
@@ -44,23 +43,24 @@ export function createSmallMobileWelcomeToAnimations(currentSize) {
         opacity: 0,
         y: 30,
     }, {
-        opacity: 1,
-        y: 0,
-        x: 45,
-        duration: 1,
-        scale: 1.2,
-        ease: "power2.out",
-    });
+            opacity: 1,
+            y: 0,
+            x: 40,
+            duration: 1,
+            scale: 1.1,
+            ease: "power2.out",
+        }, );
 
-    // Animation pour les feature-items
-    const featureItemsAnimation = gsap.timeline({
+    // Animation pour le premier feature-item (se déclenche après la description)
+    const featureItem1Animation = gsap.timeline({
         scrollTrigger: {
-            trigger: ".feature-item",
-            start: "top 95%",
+            trigger: ".main-description",
+            start: "top 10% bottom 90%",
             toggleActions: "play none none reverse",
+
         },
     })
-    .fromTo(".feature-item", {
+    .fromTo(".feature-item:first-child", {
         opacity: 0,
         y: 30,
     }, {
@@ -69,32 +69,57 @@ export function createSmallMobileWelcomeToAnimations(currentSize) {
         x: 20,
         duration: 1,
         ease: "power2.out",
-        stagger: 0.1,
     });
 
-    // Animation pour h3 "Objectifs" + ses paragraphes
-    const objectivesAnimation = gsap.timeline({
+    // Animation pour le dernier feature-item (se déclenche après le premier)
+    const featureItem2Animation = gsap.timeline({
         scrollTrigger: {
-            trigger: ".objectives",
-            start: "top 80%",
-            end: "bottom 20%",
-            scrub: 0.4,
+            trigger: ".feature-item:first-child",
+            start: "top 10% bottom 80%",
+            toggleActions: "play none none reverse",
+        },
+    })
+    .fromTo(".last-feature-item", {
+        opacity: 0,
+        y: 30,
+    }, {
+        opacity: 1,
+        y: 0,
+        x: 20,
+        duration: 1,
+        ease: "power2.out",
+    });
+
+    // Animation pour le titre "Objectifs"
+    const objectivesTitleAnimation = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".last-feature-item",
+            start: "top 0% ",
             toggleActions: "play none none reverse",
         },
     })
     .fromTo(".objectives-title", {
         opacity: 0,
-        y: 150,
+        y: 130,
         scale: 0,
     }, {
         opacity: 1,
-        y: 0,
+        y: 40,
         x: 0,
         scale: 1,
         duration: 1.2,
         ease: "back.out(1.7)",
+    });
+
+    // Animation pour tous les objective-items (sauf le dernier)
+    const objectiveItemsAnimation = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".objectives-title",
+            start: "top 20% -=100px",
+            toggleActions: "play none none reverse",
+        },
     })
-    .fromTo(".objective-item", {
+    .fromTo(".objective-item:not(.last-p_objectives)", {
         opacity: 0,
         x: -30,
     }, {
@@ -103,31 +128,76 @@ export function createSmallMobileWelcomeToAnimations(currentSize) {
         duration: 0.8,
         ease: "power2.out",
         stagger: 0.1,
-    }, "-=0.4");
+    });
 
-    // Animation pour h3 "Technologies utilisées" + ses sections
-    const techAnimation = gsap.timeline({
+    // Animation pour le dernier objective-item
+    const objectiveItemLastAnimation = gsap.timeline({
         scrollTrigger: {
-            trigger: ".tech-stack",
-            start: "top 80%",
-            end: "bottom 20%",
-            scrub: 0.2,
+            trigger: ".objectives",
+            start: "top 0%",
+            toggleActions: "play none none reverse",
+        },
+    })
+    .fromTo(".last-p_objectives", {
+        opacity: 0,
+        x: -30,
+    }, {
+        opacity: 1,
+        x: 25,
+        duration: 0.8,
+        ease: "power2.out",
+    });
+
+    // Animation pour le titre "Technologies utilisées" (se déclenche après les objectifs)
+    const techTitleAnimation = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".last-p_objectives",
+            start: "top 20% ",
             toggleActions: "play none none reverse",
         },
     })
     .fromTo(".h3-after_objectives", {
         opacity: 0,
-        y: 40,
+        x: -40,
         scale: 0.9,
     }, {
         opacity: 1,
         y: 0,
-        x: 15,
+        x: 0,
         scale: 1,
         duration: 1.2,
         ease: "back.out(1.7)",
+    });
+
+    // Animation pour le titre "Frontend"
+    const frontendTitleAnimation = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".h3-after_objectives",
+            start: "top 20% -=100px",
+            toggleActions: "play none none reverse",
+        },
     })
-    .fromTo(".tech-stack", {
+    .fromTo(".frontend-title", {
+        opacity: 0,
+        y: 30,
+        scale: 0.9,
+    }, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.8,
+        ease: "power2.out",
+    });
+
+    // Animation pour le frontend-stack (se déclenche après le titre frontend)
+    const frontendStackAnimation = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".frontend-title",
+            start: "top 20% -=50px",
+            toggleActions: "play none none reverse",
+        },
+    })
+    .fromTo(".frontend-stack", {
         opacity: 0,
         y: 30,
     }, {
@@ -136,15 +206,142 @@ export function createSmallMobileWelcomeToAnimations(currentSize) {
         x: 20,
         duration: 0.8,
         ease: "power2.out",
-        stagger: 0.15,
-    }, "-=0.5");
+    });
+
+    // Animation pour le titre "Backend"
+    const backendTitleAnimation = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".frontend-stack",
+            start: "top 10% bottom 80%",
+            toggleActions: "play none none reverse",
+        },
+    })
+    .fromTo(".backend-title", {
+        opacity: 0,
+        y: 30,
+        scale: 0.9,
+    }, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.8,
+        ease: "power2.out",
+    });
+
+    // Animation pour le backend-stack (se déclenche après le titre backend)
+    const backendStackAnimation = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".backend-title",
+            start: "top 20% -=50px",
+            toggleActions: "play none none reverse",
+        },
+    })
+    .fromTo(".backend-stack", {
+        opacity: 0,
+        y: 30,
+    }, {
+        opacity: 1,
+        y: 0,
+        x: 20,
+        duration: 0.8,
+        ease: "power2.out",
+    });
+
+    // Animation pour le titre "Database"
+    const databaseTitleAnimation = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".backend-stack",
+            start: "top 10% bottom 80%",
+            toggleActions: "play none none reverse",
+        },
+    })
+    .fromTo(".database-title", {
+        opacity: 0,
+        y: 30,
+        scale: 0.9,
+    }, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.8,
+        ease: "power2.out",
+    });
+
+    // Animation pour le database-stack (se déclenche après le titre database)
+    const databaseStackAnimation = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".database-title",
+            start: "top 20% -=50px",
+            toggleActions: "play none none reverse",
+        },
+    })
+    .fromTo(".database-stack", {
+        opacity: 0,
+        y: 30,
+    }, {
+        opacity: 1,
+        y: 0,
+        x: 20,
+        duration: 0.8,
+        ease: "power2.out",
+    });
+
+    // Animation pour le titre "Tools"
+    const toolsTitleAnimation = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".database-stack",
+            start: "top 10% bottom 80%",
+            toggleActions: "play none none reverse",
+        },
+    })
+    .fromTo(".tools-title", {
+        opacity: 0,
+        y: 30,
+        scale: 0.9,
+    }, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.8,
+        ease: "power2.out",
+    });
+
+    // Animation pour le tools-stack (se déclenche après le titre tools)
+    const toolsStackAnimation = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".tools-title",
+            start: "top 20% -=50px",
+            toggleActions: "play none none reverse",
+        },
+    })
+    .fromTo(".tools-stack", {
+        opacity: 0,
+        y: 30,
+    }, {
+        opacity: 1,
+        y: 0,
+        x: 20,
+        duration: 0.8,
+        ease: "power2.out",
+    });
 
     return {
         mainTitleAnimation,
         descriptionAnimation,
-        featureItemsAnimation,
-        objectivesAnimation,
-        techAnimation
+        featureItem1Animation,
+        featureItem2Animation,
+        objectivesTitleAnimation,
+        objectiveItemsAnimation,
+        objectiveItemLastAnimation,
+        techTitleAnimation,
+        frontendTitleAnimation,
+        frontendStackAnimation,
+        backendTitleAnimation,
+        backendStackAnimation,
+        databaseTitleAnimation,
+        databaseStackAnimation,
+        toolsTitleAnimation,
+        toolsStackAnimation
     };
 }
 
@@ -521,12 +718,10 @@ export function createLargeDesktopWelcomeToAnimations(currentSize) {
     const mainTitleAnimation = gsap.timeline({
         scrollTrigger: {
             trigger: ".main-title",
-            start: "top 50%",
-            end: "bottom 0%",
+            start: "top 80%",
+            end: "bottom 10%",
             scrub: 0.1,
-            toggleActions: "play none none reverse",
-            // markers: true,
-        },
+            toggleActions: "play none none reverse",        },
     })
     .fromTo(".main-title", {
         opacity: 0,
@@ -535,9 +730,9 @@ export function createLargeDesktopWelcomeToAnimations(currentSize) {
         scale: 1,
     }, {
         opacity: 1,
-        y: 20,
+        y: -50,
         x: 0,
-        scale: 1,
+        scale: 2.5,
         duration: 0.8,
         ease: "back.out(1.7)",
     });
@@ -545,8 +740,8 @@ export function createLargeDesktopWelcomeToAnimations(currentSize) {
     // Animation de la description (séparée pour éviter les chevauchements)
     const descriptionAnimation = gsap.timeline({
         scrollTrigger: {
-            trigger: ".main-description",
-            start: "top 50%",
+            trigger: ".main-title",
+            start: "top 80%",
             toggleActions: "play none none reverse",
         },
     })
@@ -602,11 +797,11 @@ export function createLargeDesktopWelcomeToAnimations(currentSize) {
         z: -150,
     }, {
         opacity: 1,
-        y: 50,
-        scale: 1,
+        y: -0,
         rotationX: 0,
         rotationY: 0,
         z: 0,
+        scale: 2,
         duration: 0.8,
         ease: "back.out(1.7)",
     })

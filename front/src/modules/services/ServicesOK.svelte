@@ -247,8 +247,9 @@
 
 <style>
     .services-ok {
-        position: sticky;
-        top: 15%;
+        margin-top: 60%;
+        position: relative;
+        top: 0%;
         right: 5%;
         display: flex;
         flex-direction: column;
@@ -265,6 +266,7 @@
 
     .backend-power {
         position: sticky;
+        top: 17%;
         width: 50%;
         height: 3%;
         background-color: #0e0e0e;
@@ -324,6 +326,8 @@
         align-items: center;
     }
     .n8n-power {
+        position: sticky;
+        top: 35%;
         width: 50%;
         height: 3%;
         background-color: #0e0e0e;
@@ -381,7 +385,9 @@
     }
 
     .phpmyadmin-power {
-        width: 52%;
+        position: sticky;
+        top: 53%;
+        width: 50%;
         height: 3%;
         background-color: #0e0e0e;
         border-radius: 10px;
@@ -439,6 +445,8 @@
     }
 
     .umami-power {
+        position: sticky;
+        top: 72%;
         width: 50%;
         height: 3%;
         background-color: #0e0e0e;
@@ -498,8 +506,23 @@
     /* Media Queries Responsive - Small Mobile */
     @media (max-width: 480px) {
         .services-ok {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10%;
+            margin-bottom: 10%;
             width: 95vw;
+            right: 0%;
             
+        }
+        .backend-power,
+        .n8n-power,
+        .phpmyadmin-power,
+        .umami-power {
+            height: 22%;
+            margin-top: 10px;
+            margin-bottom: 10Px;
         }
      }
 
@@ -512,12 +535,11 @@
         .umami-power {
             width: 100%;
             height: 22%;
+            margin-top: 100px;
+            margin-bottom: 10Px;
         }
 
-        .phpmyadmin-power {
-            width: 100%;
-            height: 22%;
-        }
+  
 
         .backend-power-title,
         .n8n-power-title,
