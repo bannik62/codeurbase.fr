@@ -185,6 +185,8 @@
 
 <div class="chat-container" bind:this={container}>
   <section id="chat-mvp">
+      <img src="https://us.123rf.com/450wm/videst/videst2502/videst250211161/241064519-digital-human-profile-abstract-circuitry-glowing-orange-lights-futuristic-tech-design-concept.jpg?ver=6" alt="Splash" class="img-splash">
+
     <h2 class="chat-title">Chat MVP IA</h2>
     <p class="chat-description">Interface de chat intelligente basée sur l'intelligence artificielle</p>
 
@@ -197,7 +199,7 @@
             <div class="info-card">
               <div class="card-icon">🧠</div>
               <h4>IA Avancée</h4>
-              <p>Notre chat utilise une intelligence artificielle de pointe pour comprendre et répondre à vos questions avec précision.</p>
+              <p>Notre chat utilise une intelligence artificielle pour comprendre et répondre à vos questions avec précision.</p>
             </div>
             
             <div class="info-card">
@@ -215,7 +217,9 @@
             <div class="info-card">
               <div class="card-icon">🔒</div>
               <h4>Sécurisé & Privé</h4>
-              <p>Vos conversations sont protégées et votre confidentialité est garantie.</p>
+              <p>Vos conversations sont protégées et votre confidentialité est garantie.
+                cependant, les données peuvent être analysées à des fins d'amélioration.
+              </p>
             </div>
           </div>
           
@@ -241,7 +245,7 @@
             <span class="status">En ligne</span>
           </div>
           <div class="chat-actions">
-            <button class="action-btn">⋯</button>
+            <!-- <button class="action-btn">⋯</button> -->
           </div>
         </div>
         
@@ -327,6 +331,20 @@
 </div>
 
 <style>
+  .img-splash {
+    width: 100%;
+    height: 100%;
+    object-fit:contain;
+    
+
+    border-radius: 15px;
+    z-index: 0;
+    position: absolute;
+    top: -15%;
+    left: 0;
+    opacity: 0.2;
+  }
+
   h2 {
     font-family: "Orbitron", cursive;
     font-weight: 600;
@@ -1264,8 +1282,8 @@
 
     .chat-info-section {
       padding: 20px;
-      min-height: 77svh;
-      max-height: 80svh;
+      min-height: 80svh;
+      max-height: 83svh;
       overflow-y: hidden;
     }
 
@@ -1275,7 +1293,7 @@
     }
 
     .chat-messenger {
-      height: 81svh;
+      height: 83svh;
       max-height: 90svh;
       overflow: hidden;
     }

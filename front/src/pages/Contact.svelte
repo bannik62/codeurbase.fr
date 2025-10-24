@@ -27,7 +27,7 @@
 <style>
   .contact-section {
  
-    background-color: #322f2ff4;
+    background-color: #000000f4;
     width: 100vw;
   }
 

@@ -338,7 +338,7 @@ export function createLargeDesktopChatAnimations(currentSize) {
         z: -200,
     }, {
         opacity: 1,
-        y: 150,
+        y: 140,
         scale: 1.2,
         rotationX: 0,
         rotationY: 0,
@@ -348,13 +348,13 @@ export function createLargeDesktopChatAnimations(currentSize) {
     })
     .fromTo(".chat-description", {
         opacity: 0,
-        y: 150,
+        y: 210,
         rotationX: -80,
         rotationY: 15,
         z: -100,
     }, {
         opacity: 1,
-        y: -50,
+        y: -30,
         rotationX: 0,
         rotationY: 0,
         z: 0,
