@@ -237,7 +237,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        left: 5%;   
+        left: 0;   
         bottom:0;
         /* background: rgba(189, 9, 9, 0.389); */
         clip-path: polygon(

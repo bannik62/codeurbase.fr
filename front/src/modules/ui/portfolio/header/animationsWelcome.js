@@ -12,7 +12,7 @@ export function createSmallMobileTitleAnimation(elements) {
             trigger: elements.elementOfTitle.container,
             start: "top 0%",
             endTrigger: elements.elementOfTitle.container,
-            end: "bottom 20%",
+            end: "bottom 0%",
             scrub: 0.3,
             toggleActions: "play none none none",
             // markers: true,
@@ -20,7 +20,7 @@ export function createSmallMobileTitleAnimation(elements) {
     })
     .to(".container-global-text-bienvenue h2", {
         y: 50,
-        x: 792,
+        x: 780,
         duration: 5,
         ease: "linear.inOut",
         willChange: "transform",
@@ -28,7 +28,7 @@ export function createSmallMobileTitleAnimation(elements) {
     })
     .to(".container-global-text-bienvenue h2", {
         y: 100,
-        x: 1420,
+        x: 1200,
         duration: 10,
         ease: "back.inOut(1)",
         willChange: "transform",    
@@ -82,7 +82,7 @@ export function createSmallMobileInMyWorldAnimation(elements) {
             endTrigger: elements.elementOfTitle.bordure,
             end: "bottom ",
             scrub: 0.8,
-            // markers: true,
+            markers: true,
         },
     })
     .fromTo(".h3-in-my-world", 
