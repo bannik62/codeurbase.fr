@@ -24,7 +24,7 @@ export function createSmallMobileTechnoAnimation(elements) {
         },
         {
             opacity: 1,
-            y: 0,
+            y: 20,
             scale: 1,
             rotation: 0,
             duration: 1.5,
