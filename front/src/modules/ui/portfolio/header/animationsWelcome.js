@@ -10,32 +10,36 @@ export function createSmallMobileTitleAnimation(elements) {
     return gsap.timeline({
         scrollTrigger: {
             trigger: elements.elementOfTitle.container,
-            start: "top 0%",
+            start: "top +00px",
             endTrigger: elements.elementOfTitle.container,
             end: "bottom 0%",
-            scrub: 0.3,
-            toggleActions: "play none none none",
+            toggleActions: "play none none reverse",
             // markers: true,
         },
     })
-    .to(".container-global-text-bienvenue h2", {
-        y: 50,
-        x: 780,
-        duration: 5,
-        ease: "linear.inOut",
-        willChange: "transform",
-        scale: 1,
-    })
-    .to(".container-global-text-bienvenue h2", {
-        y: 100,
-        x: 1200,
-        duration: 10,
-        ease: "back.inOut(1)",
-        willChange: "transform",    
-        scale: 0.5,
+    .fromTo(".container-global-text-bienvenue h2", {
+        opacity: 0,
+        y: 0,
+        x: -900,
+    }, {
+        opacity: 1,
+        y: 0,
+        x: 775,
     });
 }
-
+    //     duration: 1,
+    //     ease: "linear.inOut",
+    //     willChange: "transform",
+    //     scale: 1,
+    // })
+    // .to(".container-global-text-bienvenue h2", {
+    //     y: 100,
+    //     x: 550,
+    //     duration: 10,
+    //     ease: "back.inOut(1)",
+    //     willChange: "transform",    
+    //     scale: 0.5,
+    // });
 /**
  * Crée l'animation de splitting pour small mobile
  * @param {Array} selection - Résultat de Splitting
@@ -78,11 +82,10 @@ export function createSmallMobileInMyWorldAnimation(elements) {
     return gsap.timeline({
         scrollTrigger: {
             trigger: elements.elementOfTitle.bordure,    
-            start: "top ",
+            start: "top 25%",
             endTrigger: elements.elementOfTitle.bordure,
             end: "bottom ",
-            scrub: 0.8,
-            markers: true,
+            scrub: 0.2,
         },
     })
     .fromTo(".h3-in-my-world", 
