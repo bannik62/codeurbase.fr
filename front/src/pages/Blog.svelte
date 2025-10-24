@@ -40,7 +40,13 @@
 </div>
 <style>
     .about {
-        background-color: #322f2ff4;
+        background-image: url("https://media.gettyimages.com/id/971238530/fr/vectoriel/abstrait-circuit-futuriste-%C3%A0-repasser.jpg?s=612x612&w=0&k=20&c=a-vrXGSkY_ctr8ZogUFF-Sm0899OC1UjwRJAe58L0hc=");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-blend-mode: overlay;
+        backdrop-filter: blur(10px);
         display: flex;
         flex-direction: column;
         justify-content: center;
