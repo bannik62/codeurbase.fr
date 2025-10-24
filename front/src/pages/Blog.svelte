@@ -46,7 +46,6 @@
         background-repeat: no-repeat;
         background-attachment: fixed;
         background-blend-mode: overlay;
-        backdrop-filter: blur(10px);
         display: flex;
         flex-direction: column;
         justify-content: center;
