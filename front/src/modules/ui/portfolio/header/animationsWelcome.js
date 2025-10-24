@@ -24,7 +24,7 @@ export function createSmallMobileTitleAnimation(elements) {
     }, {
         opacity: 1,
         y: 0,
-        x: 720,
+        x: 721,
     });
 }
     //     duration: 1,
