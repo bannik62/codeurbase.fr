@@ -185,8 +185,7 @@
 
 <div class="chat-container" bind:this={container}>
   <section id="chat-mvp">
-      <img src="https://us.123rf.com/450wm/videst/videst2502/videst250211161/241064519-digital-human-profile-abstract-circuitry-glowing-orange-lights-futuristic-tech-design-concept.jpg?ver=6" alt="Splash" class="img-splash">
-
+  <div class="img-splash"></div>
     <h2 class="chat-title">Chat MVP IA</h2>
     <p class="chat-description">Interface de chat intelligente basée sur l'intelligence artificielle</p>
 
@@ -335,14 +334,20 @@
     width: 100%;
     height: 100%;
     object-fit:contain;
-    
+    background-image: url("https://us.123rf.com/450wm/videst/videst2502/videst250211161/241064519-digital-human-profile-abstract-circuitry-glowing-orange-lights-futuristic-tech-design-concept.jpg?ver=6");
+    background-size: cover;
+    background-position: 50%center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-blend-mode: screen;
+    background-color: rgba(0, 0, 0, 0.5);
 
     border-radius: 15px;
     z-index: 0;
     position: absolute;
-    top: -15%;
-    left: 0;
-    opacity: 0.2;
+    top: 0%;
+    right: 3%;
+    opacity: 0.3;
   }
 
   h2 {
@@ -1243,7 +1248,7 @@
   /* Large Desktop */
   @media (min-width: 1441px) and (max-width: 1920px) {
     .chat-container {
-      width: 95%;
+      width: 100%;
       min-width: 500px;
       padding: 2% 2% 8svh 2%;
       /* height: auto; */
