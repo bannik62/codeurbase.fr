@@ -106,7 +106,7 @@
         <div class="custom-content">
  
             <p class="blink-slow p-life" >
-                Life Detected <br> Navigation automatique
+                 Detected <br> Automation Navigation
             </p>
           
             <div class="blink-normal">

@@ -14,6 +14,7 @@
     import Cockpit from "../modules/ui/portfolio/cockpit/Cockpit.svelte";
     import { initMediaQuery, useMediaQuery } from "../stores/mediaQuery.js";
     import { getLenis, stopLenis, startLenis } from "../stores/lenis.js";
+    import ciruit from "../assets/background/circuit.svg";
     let canvas;
     let ctx;
     let atmoOne;

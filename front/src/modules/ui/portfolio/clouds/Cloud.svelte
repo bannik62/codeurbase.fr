@@ -1,6 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import HlsPlayer from './HlsPlayer.svelte';
+    import map from '../../../../assets/background/map.svg';
     // Importez vos composants Svelte ici
     // import MonComposant from './MonComposant.svelte';
     // import AutreComposant from '../AutreComposant.svelte';
@@ -168,6 +169,24 @@
             <!-- Exemple d'enfants -->
             <div class="dashboard-section-one">
                 <h2 class:h2-visible={showH2}>Planéte Terre</h2>
+                {#if showLoader}
+                <div class="loading-container">
+                    <div class="loading-label">
+                        Recherche développeur...
+                    </div>
+                    <div class="loading-bar">
+                        <div
+                            class="loading-progress"
+                            style="width: {loaderProgress}%"
+                        ></div>
+                    </div>
+                    {#if succes}
+                        <div class="success-message">
+                            <span>✓</span> Recherche terminée avec succès!
+                        </div>
+                    {/if}
+                </div>
+            {/if}
                 
                 <p>
                         <span style="color: green;">Superficie totale:</span>
@@ -223,36 +242,28 @@
                             {/each}
                     </span>
                             </p>
-                {#if showLoader}
-                    <div class="loading-container">
-                        <div class="loading-label">
-                            Recherche développeur...
-                        </div>
-                        <div class="loading-bar">
-                            <div
-                                class="loading-progress"
-                                style="width: {loaderProgress}%"
-                            ></div>
-                        </div>
-                        {#if succes}
-                            <div class="success-message">
-                                <span>✓</span> Recherche terminée avec succès!
-                            </div>
-                        {/if}
-                    </div>
-                {/if}
+
             </div>
             <div class="separator">
                 <div class="separator-line"></div>
             </div>
+            <!-- <img src={map} alt="map"  /> -->
             <div class="dashboard-section-two">
+                <div class="map-container">
+                </div>
+
                 <HlsPlayer 
                       src={import.meta.env.VITE_HLS_VIDEO_URL || "https://ds1-cache.quanteec.com/contents/encodings/live/d5e9f551-7435-4ea6-3532-3130-6d61-63-916e-ff1d72543cced/media_0.m3u8"}
                     autoplay={true}
                     muted={true}
                     controls={false}
                 />
+
             </div>
+
+        
+
+            
 
             <!-- Vous pouvez ajouter autant d'enfants que vous voulez -->
         </div>
@@ -261,6 +272,23 @@
 </div>
 
 <style>
+    .map-container {
+        position: relative;
+        width: 100%;
+        height: clamp(20svh, 100px, 300px);
+        background-image: url('../../../../assets/background/map.svg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        margin: 0 0px 10px 0;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        border: 2px solid #39FF14;
+        border-radius: 8px;
+        backdrop-filter: blur(15px);
+        opacity: 0.7;
+    }
     @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
     .intro-cloud-container {
         position: relative;
@@ -377,10 +405,10 @@
     .child-div:after {
         content: "";
         position: absolute;
-        top: 0%;
+        top: 5%;
         left: 0;
         width: 100%;
-        height: 15svh;
+        height: 7svh;
         clip-path: polygon(50% 100%, 100% 62%, 100% 0, 0 0, 0% 62%);
         background: linear-gradient(
             to right,
