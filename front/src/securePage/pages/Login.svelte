@@ -193,30 +193,7 @@
     </form>
     
     <!-- Informations de debug -->
-    {#if showDebugInfo}
-      <div class="debug-info">
-        <h3>🔧 Informations de test</h3>
-        <p><strong>Identifiants fictifs disponibles :</strong></p>
-        <ul>
-          <li><code>admin</code> / <code>admin123</code> (rôle: admin)</li>
-          <li><code>user</code> / <code>user123</code> (rôle: user)</li>
-          <li><code>test</code> / <code>test123</code> (rôle: user)</li>
-        </ul>
-        
-        {#if $csrfToken}
-          <p>
-            <strong>Token CSRF :</strong> 
-            <code>{$csrfToken.substring(0, 16)}...</code>
-          </p>
-          {#if $csrfExpiresAt}
-            <p>
-              <strong>Expire dans :</strong> 
-              {loginUtils.formatTimeRemaining($csrfExpiresAt)}
-            </p>
-          {/if}
-        {/if}
-      </div>
-    {/if}
+   
     
   </div>
 </main>
