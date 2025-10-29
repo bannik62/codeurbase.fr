@@ -4,7 +4,7 @@
   import { gsap } from "gsap";
   import { ScrollTrigger } from "gsap/ScrollTrigger";
   import Blog from "../modules/ui/Blog/Blog.svelte";
-
+  import backgroundBlog from  "../assets/background/backgroundBlog.svg";
   // Enregistrer ScrollTrigger
   gsap.registerPlugin(ScrollTrigger);
 
@@ -40,7 +40,7 @@
 </div>
 <style>
     .about {
-        background-image: url("https://media.gettyimages.com/id/971238530/fr/vectoriel/abstrait-circuit-futuriste-%C3%A0-repasser.jpg?s=612x612&w=0&k=20&c=a-vrXGSkY_ctr8ZogUFF-Sm0899OC1UjwRJAe58L0hc=");
+        background-image: url('../assets/background/backgroundBlog.svg');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;

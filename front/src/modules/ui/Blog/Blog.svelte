@@ -8,7 +8,8 @@
   import { getLenis } from "../../../stores/lenis.js";
   import CardArticle from "./CardArticle.svelte";
   import ArticleReader from "./ArticleReader.svelte";
-
+  import backgroundBlog from  "../../../assets/background/backgroundBlog.svg";
+  
   // Enregistrer ScrollTrigger
   gsap.registerPlugin(ScrollTrigger);
 

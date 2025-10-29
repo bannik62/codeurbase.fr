@@ -5,13 +5,13 @@
   import ServicesOK from "../modules/services/ServicesOK.svelte";
   import Welcome from "../modules/ui/site_acceuil/Welcometo.svelte";
   import { getLenis, stopLenis, destroyLenis } from "../stores/lenis.js";
-  
+  import ciruit from "../assets/background/circuit.svg";
   console.log("Acceuil: component instantiated");
 
   // Store pour gérer l'état de la page d'accueil
-  const welcomeMessage = writable("Bienvenue sur ");
+  const welcomeMessage = writable(" 🛡️ Bienvenue 👨‍💻");
   
-  // Variables pour gérer la boucle RAF de Lenis
+  // Variables pour gérer la boucle RAF de Leni s
   let rafId = null;
   let isRafActive = true;
   let lenisInstance = null;
@@ -60,6 +60,7 @@
     font-size: clamp(1rem, 4vw, 1.5rem);
     color:crimson;
     text-align: center;
+    background-color: rgba(0, 0, 0, 0.5);
   }
 
   .home-container {
@@ -68,7 +69,10 @@
     /* align-items: center; */
     /* justify-content: center; */
     /* min-height: calc(100vh - 60px); */
-    background-color: #322f2ff4;
+    background-image: url('../assets/background/circuit.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
   }
 
   .home-container-content {
@@ -80,6 +84,7 @@
     justify-content: space-around;
     /* border: 1px solid green; */
     width: 100svw;
+    background-color: rgba(0, 0, 0, 0.5);
   }
 
 

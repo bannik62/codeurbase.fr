@@ -334,19 +334,18 @@
     width: 100%;
     height: 100%;
     object-fit:contain;
-    background-image: url("https://us.123rf.com/450wm/videst/videst2502/videst250211161/241064519-digital-human-profile-abstract-circuitry-glowing-orange-lights-futuristic-tech-design-concept.jpg?ver=6");
+    background-image: url('../../../assets/background/backgroundChat.svg');
     background-size: cover;
-    background-position: 50%center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    background-blend-mode: screen;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(51, 14, 14, 0.202);
 
     border-radius: 15px;
     z-index: 0;
     position: absolute;
     top: 0%;
-    right: 3%;
+    right: 50%;
+    transform: translateX(50%);
     opacity: 0.3;
   }
 
