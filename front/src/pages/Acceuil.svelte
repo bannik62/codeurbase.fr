@@ -39,7 +39,9 @@
     // Lenis continue de fonctionner pour les autres pages
   });
 </script>
-
+<svelte:head>
+  <title>Accueil - CodeurBase</title>
+</svelte:head>
 <section class="home-container ">
   <h1>{$welcomeMessage}</h1>
   <div class="home-container-content">

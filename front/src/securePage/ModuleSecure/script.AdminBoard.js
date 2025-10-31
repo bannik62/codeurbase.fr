@@ -78,7 +78,8 @@ export class AdminBoardManager {
    */
   async loadDashboardData() {
     try {
-      const BACKEND_URL = import.meta.env.BACKEND_URL || 'https://backend.codeurbase.fr';
+      const BACKEND_URL = import.meta.env.VITE_BACKEND_URL ;
+      console.log('BACKEND_URL', BACKEND_URL);
       
       // Récupérer les statistiques générales
       const generalResponse = await fetch(`${BACKEND_URL}/auth/admin/stats/general`, {

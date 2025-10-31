@@ -35,7 +35,7 @@
     articlesStatsError = null;
     
     try {
-      const BACKEND_URL = import.meta.env.BACKEND_URL || 'https://backend.codeurbase.fr';
+      const BACKEND_URL = import.meta.env.VITE_BACKEND_URL ;
       const response = await fetch(`${BACKEND_URL}/auth/admin/stats/articles`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
@@ -111,7 +111,20 @@
    * Créer un article via N8N
    */
   async function handleCreateArticle() {
-    if (!articlePrompt.trim()) {
+    function sanitizeUserPrompt(input) {
+      let value = (input ?? '').normalize('NFKC').trim();
+      value = value.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+      value = value.replace(/<\s*(script|style)[\s\S]*?>[\s\S]*?<\s*\/\s*\1\s*>/gi, '');
+      value = value.replace(/<[^>]*>/g, '');
+      value = value.replace(/\b(?:javascript|data|vbscript)\s*:/gi, '');
+      value = value.replace(/\s{2,}/g, ' ');
+      if (value.length > 5000) value = value.slice(0, 5000);
+      return value;
+    }
+
+    const cleanedPrompt = sanitizeUserPrompt(articlePrompt);
+
+    if (!cleanedPrompt) {
       articleCreationError = "Le prompt ne peut pas être vide";
       return;
     }
@@ -122,7 +135,7 @@
     generatedArticle = null;
 
     try {
-      const BACKEND_URL = import.meta.env.BACKEND_URL || 'https://backend.codeurbase.fr';
+      const BACKEND_URL = import.meta.env.BACKEND_URL ;
       const response = await fetch(`${BACKEND_URL}/auth/createArticle`, {
         method: 'POST',
         headers: {
@@ -130,7 +143,7 @@
         },
         credentials: 'include',
         body: JSON.stringify({
-          prompt: articlePrompt.trim()
+          prompt: cleanedPrompt
         })
       });
 

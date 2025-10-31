@@ -439,7 +439,9 @@
         };
     });
 </script>
-
+<svelte:head>
+  <title>Portfolio - CodeurBase</title>
+</svelte:head>
 <section>
     <div class="content_space">
         <div class="video-container">
