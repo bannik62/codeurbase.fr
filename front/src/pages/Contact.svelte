@@ -6,13 +6,7 @@
   let message = '';
   let isSubmitted = false;
 
-  function handleSubmit() {
-    if (email && message) {
-      const mailtoLink = `mailto:contact@codeurbase.fr?subject=Contact&body=${encodeURIComponent(message)}`;
-      window.location.href = mailtoLink;
-      isSubmitted = true;
-    }
-  }
+
 </script>
 
 

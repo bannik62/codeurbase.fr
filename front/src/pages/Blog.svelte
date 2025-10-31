@@ -35,6 +35,9 @@
   });
 </script>
 
+<svelte:head>
+  <title>Blog - CodeurBase</title>
+</svelte:head>
 <div class="about">
   <Blog />
 </div>

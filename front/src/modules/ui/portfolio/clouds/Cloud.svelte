@@ -252,12 +252,13 @@
                 <div class="map-container">
                 </div>
 
+                <div class="hls-player-container">
                 <HlsPlayer 
                       src={import.meta.env.VITE_HLS_VIDEO_URL || "https://ds1-cache.quanteec.com/contents/encodings/live/d5e9f551-7435-4ea6-3532-3130-6d61-63-916e-ff1d72543cced/media_0.m3u8"}
                     autoplay={true}
                     muted={true}
                     controls={false}
-                />
+                /></div>
 
             </div>
 
@@ -272,6 +273,23 @@
 </div>
 
 <style>
+    .hls-player-container::before {
+
+        position: absolute;
+        top: 42%;
+        left: 50%;
+        transform: translateX(-50%);
+        content: 'Calais';
+        color: white;
+        font-size: 2rem;
+        font-weight: bold;
+        text-align: center;
+        z-index: 1000;
+        backdrop-filter: blur(15px);
+        padding: 10px;
+        border-radius: 8px;
+    }
+
     .map-container {
         position: relative;
         width: 100%;
