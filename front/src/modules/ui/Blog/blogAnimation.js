@@ -293,22 +293,22 @@ export function createLargeDesktopBlogAnimations(currentSize) {
     const blogTitleAnimation = gsap.timeline({
         scrollTrigger: {
             trigger: "#blog-section",
-            start: "top 60%",
-            end: "bottom 40%",
+            start: "top 35%",
+            end: "bottom 45%",
             scrub: 0.7,
             toggleActions: "play none none reverse",
         },
     })
     .fromTo(".blog-title", {  
         opacity: 0,
-        y: 150,
+        y: 90,
         scale: 0.4,
         rotationX: -150,
         rotationY: 20,
         z: -200,
     }, {
         opacity: 1,
-        y: 0,
+        y: 50,
         scale: 1,
         rotationX: 0,
         rotationY: 0,
@@ -324,7 +324,7 @@ export function createLargeDesktopBlogAnimations(currentSize) {
         z: -100,
     }, {
         opacity: 1,
-        y: 0,
+        y: -60,
         rotationX: 0,
         rotationY: 0,
         z: 0,

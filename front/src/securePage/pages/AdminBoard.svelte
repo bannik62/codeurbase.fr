@@ -612,7 +612,7 @@
   
   /* Header */
   .board-header {
-    margin-top: 10%;
+    margin-top: 6%;
     background: rgba(51, 51, 51, 0.95);
     border-bottom: 1px solid #ff1f1f;
     padding: clamp(1rem, 3vw, 1.5rem);
