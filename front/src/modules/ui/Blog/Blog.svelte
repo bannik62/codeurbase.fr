@@ -117,7 +117,7 @@
 
 <div class="blog-container" bind:this={container}>
   <section id="blog-section">
-    <h2 class="blog-title">Blog</h2>
+    <!-- <h2 class="blog-title">Blog</h2> -->
     <p class="blog-description">Découvrez mes articles et tutoriels sur le développement web</p>
 
     <!-- Filtres et recherche -->
