@@ -80,8 +80,8 @@
         canvas {
             display: absolute;
         margin: 0 auto;
-        width: 300px;
-        height: 300px;
+        width: clamp(100px, 30%, 500px);
+        height: clamp(100px, 30%, 500px);
         background-color: #003300;
         border-radius: 50%;
         margin-top: 20px;

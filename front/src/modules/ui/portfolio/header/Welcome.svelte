@@ -102,7 +102,7 @@
             et bienvenue dans mon univers digital. <br /><span class="span-globe">🌐</span><br />
         </p>
         <h3 class="h3-en-cours-de-construction" style="font-size: clamp(1rem, 6.5vw, 4rem);color: crimson;" bind:this={h3EnCoursDeConstruction}>
-            en cours de construction responsive :'|        </h3>
+            en cours de construction         </h3>
         </div>
 </div>
 
