@@ -3,6 +3,7 @@
     import HlsPlayer from './HlsPlayer.svelte';
     import map from '../../../../assets/background/map.svg';
     import Cockpit from '../cockpit/Cockpit.svelte';
+    import Seat from '../../../../assets/seat.png';
     // Importez vos composants Svelte ici
     // import MonComposant from './MonComposant.svelte';
     // import AutreComposant from '../AutreComposant.svelte';
@@ -273,8 +274,16 @@
     {/if}
     <Cockpit />
 </div>
+<img src={Seat} alt="seat" class="seat" />
 
 <style>
+    .seat {
+        position: absolute;
+        bottom: 0;
+        left: 45%;
+        width: 10%;
+        height: 10%;
+    }
     .hls-player-container::before {
         font-family: "Orbitron", sans-serif;
         position: absolute;
