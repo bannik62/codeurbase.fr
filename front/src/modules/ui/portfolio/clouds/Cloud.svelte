@@ -274,20 +274,27 @@
 
 <style>
     .hls-player-container::before {
-
+        font-family: "Orbitron", sans-serif;
         position: absolute;
-        top: 42%;
+        top: 40%;
         left: 50%;
         transform: translateX(-50%);
         content: 'Calais';
-        color: white;
-        font-size: 2rem;
+        color: #217E1D;
+        font-size: clamp(15px, 2vw, 3rem);
         font-weight: bold;
         text-align: center;
         z-index: 1000;
-        backdrop-filter: blur(15px);
-        padding: 10px;
-        border-radius: 8px;
+        backdrop-filter: blur(5px);
+        padding: 5px 20%;
+        border-radius: 18px;
+        text-decoration: underline;
+        text-decoration-color: #217E1D;
+        text-decoration-thickness: 5px;
+        text-decoration-color: #3a6a52;
+        text-decoration-style: wavy;
+        text-decoration-skip-ink: auto;
+    
     }
 
     .map-container {
@@ -642,13 +649,31 @@
     }
     /* Très petits écrans (jusqu'à 475px) */
     @media (max-width: 475px) {
+        h2 {
+            font-size: clamp(15px, 2vw, 3rem);
+            text-align: center;
+            color: #217E1D;
+        }
          .intro-cloud-container {
             height: clamp(50%, 100%, 100%);
         }
 
         .child-div {
-            height: clamp(65%, 70%, 90%);
+            height: clamp(60%, 755%, 90%);
         } 
+        .loading-container {
+            left: -10%;
+            width: 75%;
+            height: 55%;
+        }
+        .hls-player-container::before {
+            font-size: clamp(5px, 2vw, 3rem);
+            text-decoration: none;
+            top: 90%;        }
+            .dashboard-section-one {
+                width: clamp(110px, 30%, 500px);
+                height: clamp(110px, 40%, 500px);
+            }
     }
 
     /* Medium Mobile (476px à 767px) */
