@@ -5,20 +5,22 @@
 
 <div class="cockpit">
     <div class="cockpit-left"></div>
-    <div class="cockpit-center"></div>
+    <div class="cockpit-center">
     <img src={Seat} alt="seat" class="cockpit-seat" />
-    
+    </div>
     <div class="cockpit-right"></div>
 </div>
 
 <style>
     .cockpit-seat {
         position: absolute;
-        bottom: 0;
-        left: 41%;
-        width: 10%;
-        height: 250%;
+        bottom: -20px;
+        left: 47% ;
+        width: 7% !important;
+        height: 90% !important;
         z-index: 6000;
+        isolation: isolate;
+        filter:  hue-rotate(460deg);
     }
     .cockpit {
         display: flex;
@@ -29,10 +31,18 @@
         left: 0;
         width: 100%;
         height: 13%;
+        z-index: 3000;
+        overflow: visible;
+        border-top: 10px solid black;
+    }
+    .cockpit::before {
+        content: "";
+        position: absolute;
+        inset: 0;
         background: #bbb;
         clip-path: polygon(50% 0%, 100% 38%, 100% 100%, 0 100%, 0% 38%);
-        z-index: 3000;
         border: 25px solid #e81212;
+        z-index: -1;
     }
     .cockpit-left {
         width: 50%;
