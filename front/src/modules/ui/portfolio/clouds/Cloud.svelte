@@ -2,6 +2,7 @@
     import { onMount } from "svelte";
     import HlsPlayer from './HlsPlayer.svelte';
     import map from '../../../../assets/background/map.svg';
+    import Cockpit from '../cockpit/Cockpit.svelte';
     // Importez vos composants Svelte ici
     // import MonComposant from './MonComposant.svelte';
     // import AutreComposant from '../AutreComposant.svelte';
@@ -270,6 +271,7 @@
         </div>
         
     {/if}
+    <Cockpit />
 </div>
 
 <style>
@@ -290,9 +292,9 @@
         border-radius: 18px;
         text-decoration: underline;
         text-decoration-color: #217E1D;
-        text-decoration-thickness: 5px;
+        text-decoration-thickness: 2px;
         text-decoration-color: #3a6a52;
-        text-decoration-style: wavy;
+        text-decoration-style: double;
         text-decoration-skip-ink: auto;
     
     }
@@ -409,7 +411,7 @@
         bottom: 1px;
         left: 0;
         width: 100%;
-        height: 90%;
+        height: 50%;
         margin: 0 auto;
         /* background-color: rgba(67, 182, 54, 0.391); */
         border-radius: 8px;
@@ -495,7 +497,7 @@
         height: clamp(110px, 60%, 500px);
         margin: 20px 0;
         padding: 25px;
-        background-color: rgba(42, 40, 40, 0.76);
+        background-color: rgba(58, 65, 51, 0.226);
         border-top: 4px solid green;
         border-bottom: 3px solid green;
         border-left: 8px solid green;
@@ -538,14 +540,14 @@
     }
 
     .separator {
-        position: relative;
-        width: 1%;
-        height: 100%;
-        left: -0.6%;
-        background-color: rgba(96, 94, 94, 0.166);
-        outline: 1px solid rgba(96, 94, 94, 0.497);
-        border-radius: 0px;
-        overflow: hidden;
+        position: absolute;
+    width: 1%;
+    height: 280%;
+    top: 10%;
+    left: 49.4%;
+    background-color: rgba(62, 102, 27, 0.273);
+    outline: 1px solid rgba(96, 94, 94, 0.497);
+    overflow: hidden;
     }
 
     .dashboard-section-two {
@@ -553,7 +555,6 @@
         height: auto;
         margin: 20px 0;
         padding: 15px;
-        background-color: rgba(42, 40, 40, 0.877);
         border-top: 4px solid green;
         border-bottom: 3px solid green;
         border-left: 3px solid green;
@@ -662,7 +663,7 @@
             height: clamp(60%, 755%, 90%);
         } 
         .loading-container {
-            left: -10%;
+            left: -15%;
             width: 75%;
             height: 55%;
         }
@@ -671,7 +672,8 @@
             text-decoration: none;
             top: 90%;        }
             .dashboard-section-one {
-                width: clamp(110px, 30%, 500px);
+                top: 0%;
+                width: clamp(90px, 25%, 500px);
                 height: clamp(110px, 40%, 500px);
             }
     }
