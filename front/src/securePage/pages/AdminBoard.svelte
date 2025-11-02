@@ -189,7 +189,7 @@
     articleValidationSuccess = null;
 
     try {
-      const BACKEND_URL = import.meta.env.BACKEND_URL || 'https://backend.codeurbase.fr';
+      const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
       const response = await fetch(`${BACKEND_URL}/auth/validateArticle`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

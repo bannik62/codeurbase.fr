@@ -47,7 +47,8 @@ export class BlogManager {
         try {
             const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
             const response = await axios.get(`${BACKEND_URL}/api/articles`);
-            
+
+            console.log(response.data);
             if (response.data.success && response.data.articles) {
                 this.articles = response.data.articles.map(article => ({
                     id: article.id,
