@@ -663,7 +663,7 @@
             height: clamp(60%, 755%, 90%);
         } 
         .loading-container {
-            left: -10%;
+            left: -15%;
             width: 75%;
             height: 55%;
         }
@@ -672,7 +672,8 @@
             text-decoration: none;
             top: 90%;        }
             .dashboard-section-one {
-                width: clamp(110px, 30%, 500px);
+                top: 0%;
+                width: clamp(90px, 25%, 500px);
                 height: clamp(110px, 40%, 500px);
             }
     }
