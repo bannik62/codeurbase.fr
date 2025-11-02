@@ -1,13 +1,25 @@
 <script>
+    import Seat from '../../../../assets/seat.png';
+
 </script>
 
 <div class="cockpit">
     <div class="cockpit-left"></div>
     <div class="cockpit-center"></div>
+    <img src={Seat} alt="seat" class="cockpit-seat" />
+    
     <div class="cockpit-right"></div>
 </div>
 
 <style>
+    .cockpit-seat {
+        position: absolute;
+        bottom: 0;
+        left: 41%;
+        width: 10%;
+        height: 250%;
+        z-index: 6000;
+    }
     .cockpit {
         display: flex;
         flex-direction: row;
@@ -16,7 +28,7 @@
         bottom: 0;
         left: 0;
         width: 100%;
-        height: 10%;
+        height: 13%;
         background: #bbb;
         clip-path: polygon(50% 0%, 100% 38%, 100% 100%, 0 100%, 0% 38%);
         z-index: 3000;
