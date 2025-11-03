@@ -719,4 +719,14 @@
             height: clamp(65%, 70%, 90%);
         } 
     }
+    
+    /* ===== MEDIA QUERIES PLACEHOLDERS (no overrides as requested) ===== */
+    @media (max-width: 475px) {
+
+    }
+    @media (min-width: 476px) and (max-width: 767px) {}
+    @media (min-width: 768px) and (max-width: 1023px) {}
+    @media (min-width: 1024px) and (max-width: 1399px) {}
+    @media (min-width: 1400px) and (max-width: 1799px) {}
+    @media (min-width: 1800px) {}
 </style>
