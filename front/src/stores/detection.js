@@ -56,17 +56,14 @@ export const detectionActions = {
     // Déclencher l'animation
     startSequence: () => {
         const currentState = get(detectionStore);
-        
+
         if (currentState.hasTriggered) {
-            console.log('🚫 Animation already triggered - ignoring');
             return;
         }
-        
-        console.log('🎬 Starting detection sequence');
-        
+
         // Bloquer le scroll simplement
         document.body.style.overflow = 'hidden';
-        
+
         // Phase 1: Message
         detectionStore.update(state => ({
             ...state,
@@ -83,8 +80,6 @@ export const detectionActions = {
 
     // Démarrer la barre de loading
     startLoading: () => {
-        console.log('⏳ Starting loading bar');
-        
         detectionStore.update(state => ({
             ...state,
             showMessage: false,
@@ -124,14 +119,12 @@ export const detectionActions = {
 
     // Terminer la barre de loading
     finishLoading: () => {
-        console.log('✅ Loading bar finished');
-        
         // Nettoyer l'intervalle
         const currentState = get(detectionStore);
         if (currentState.loadingInterval) {
             clearInterval(currentState.loadingInterval);
         }
-        
+
         detectionStore.update(state => ({
             ...state,
             showLoading: false,
@@ -143,17 +136,15 @@ export const detectionActions = {
 
     // Terminer l'animation
     finishSequence: () => {
-        console.log('🏁 Finishing detection sequence');
-        
         // Nettoyer l'intervalle de loading s'il existe
         const currentState = get(detectionStore);
         if (currentState.loadingInterval) {
             clearInterval(currentState.loadingInterval);
         }
-        
+
         // Débloquer le scroll
         document.body.style.overflow = '';
-        
+
         detectionStore.update(state => ({
             ...state,
             phase: 'finished',
@@ -166,17 +157,15 @@ export const detectionActions = {
 
     // Reset (seulement si l'utilisateur sort de la section)
     reset: () => {
-        console.log('🔄 Reset - ready for new animation');
-        
         // Nettoyer l'intervalle de loading s'il existe
         const currentState = get(detectionStore);
         if (currentState.loadingInterval) {
             clearInterval(currentState.loadingInterval);
         }
-        
+
         // Débloquer le scroll au cas où
         document.body.style.overflow = '';
-        
+
         detectionStore.update(state => ({
             ...state,
             phase: 'waiting',
@@ -217,16 +206,12 @@ export const checkDetection = (percentage) => {
     
     // Reset si l'utilisateur sort de la section
     if (percentage < CONFIG.RESET_THRESHOLD && phase !== 'waiting') {
-        console.log('🔄 User left section - resetting');
         detectionActions.reset();
         return;
     }
     
     // Déclencher SEULEMENT si l'utilisateur descend ET arrive dans la section
     if (percentage >= CONFIG.TRIGGER_THRESHOLD && phase === 'waiting' && !hasTriggered && isScrollingDown) {
-        console.log('🎬 User scrolling down and entered section - starting sequence');
         detectionActions.startSequence();
-    } else if (percentage >= CONFIG.TRIGGER_THRESHOLD && phase === 'waiting' && !hasTriggered && !isScrollingDown) {
-        console.log('🚫 User scrolling up - animation blocked');
-    }
+    } else if (percentage >= CONFIG.TRIGGER_THRESHOLD && phase === 'waiting' && !hasTriggered && !isScrollingDown) {}
 };

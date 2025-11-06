@@ -37,17 +37,15 @@ export class ChatManager {
     generateSessionId() {
         // Essayer de récupérer un sessionId existant
         const existingSessionId = localStorage.getItem('chatSessionId');
-        
+
         if (existingSessionId) {
-            console.log('Session existante récupérée:', existingSessionId);
             return existingSessionId;
         }
-        
+
         // Créer un nouveau sessionId
         const newSessionId = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
         localStorage.setItem('chatSessionId', newSessionId);
-        console.log('Nouvelle session créée:', newSessionId);
-        
+
         return newSessionId;
     }
 
@@ -58,7 +56,6 @@ export class ChatManager {
         localStorage.removeItem('chatSessionId');
         this.sessionId = this.generateSessionId();
         this.clearConversation();
-        console.log('Session réinitialisée:', this.sessionId);
     }
 
     /**
@@ -130,23 +127,19 @@ export class ChatManager {
                 content: 'Je réfléchis...',
                 isLoading: true
             });
-            console.log("API Endpoint:", this.apiEndpoint);
             // Appel à l'API
             const payload = {
                 message: userMessage.trim(),
                 timestamp: new Date().toISOString(),
                 sessionId: this.sessionId 
             };
-            console.log("Payload envoyé au backend:", payload);
-            
+
             const response = await axios.post(this.apiEndpoint, payload, {
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 timeout: 30000 // 30 secondes de timeout
             });
-
-            console.log("Réponse reçue du backend:", response.data);
 
             // Modifier le message de chargement avec la réponse via le store
             this.messages.update(currentMessages => {
@@ -164,7 +157,6 @@ export class ChatManager {
 
             this.isLoading.set(false);
             return loadingMsg;
-
         } catch (error) {
             this.isLoading.set(false);
             

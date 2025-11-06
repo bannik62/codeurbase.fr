@@ -9,7 +9,6 @@
    * Callback quand la session est valide
    */
   function handleValidSession(user) {
-    console.log('[UserDashboard] Session valide pour:', user);
   }
   
   /**

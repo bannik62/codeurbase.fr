@@ -45,9 +45,7 @@ export class LoginManager {
         try {
             isLoadingCsrf.set(true);
             csrfError.set(null);
-            
-            console.log('[Login] Récupération du token CSRF...');
-            
+
             const response = await fetch(`${API_BASE_URL}/security/csrf-token`, {
                 method: 'GET',
                 headers: {
@@ -55,32 +53,25 @@ export class LoginManager {
                 },
                 credentials: 'include'
             });
-            
+
             if (!response.ok) {
                 throw new Error(`Erreur HTTP: ${response.status}`);
             }
-            
+
             const data = await response.json();
-            
+
             if (data.success && data.csrfToken) {
                 this.csrfToken = data.csrfToken;
                 this.csrfExpiresAt = data.expiresAt;
-                
+
                 csrfToken.set(data.csrfToken);
                 csrfExpiresAt.set(data.expiresAt);
-                
-                console.log('[Login] Token CSRF reçu:', {
-                    token: data.csrfToken.substring(0, 10) + '...',
-                    expiresIn: data.expiresIn + 's'
-                });
-                
+
                 // Programmer le rafraîchissement du token avant expiration
                 this.scheduleTokenRefresh(data.expiresIn);
-                
             } else {
                 throw new Error('Token CSRF non reçu');
             }
-            
         } catch (error) {
             console.error('[Login] Erreur lors de la récupération du token CSRF:', error);
             csrfError.set(error.message);
@@ -99,7 +90,6 @@ export class LoginManager {
         
         if (refreshDelay > 0) {
             setTimeout(() => {
-                console.log('[Login] Rafraîchissement automatique du token CSRF');
                 this.fetchCsrfToken();
             }, refreshDelay);
         }
@@ -116,14 +106,12 @@ export class LoginManager {
             isLoggingIn.set(true);
             loginError.set(null);
             loginSuccess.set(false);
-            
+
             // Vérifier qu'on a un token CSRF
             if (!this.csrfToken) {
                 throw new Error('Token CSRF non disponible. Veuillez rafraîchir la page.');
             }
-            
-            console.log('[Login] Tentative de connexion pour:', username);
-            
+
             const response = await fetch(`${API_BASE_URL}/auth/login`, {
                 method: 'POST',
                 headers: {
@@ -136,25 +124,21 @@ export class LoginManager {
                     csrfToken: this.csrfToken
                 })
             });
-            
+
             const data = await response.json();
-            
+
             if (!response.ok) {
                 throw new Error(data.message || data.error || 'Erreur de connexion');
             }
-            
+
             if (data.success) {
-                console.log('[Login] Connexion réussie:', data.user);
-                console.log('[Login] Cookie httpOnly créé par le serveur');
-                
                 currentUser.set(data.user);
                 loginSuccess.set(true);
-                
+
                 return data.user;
             } else {
                 throw new Error(data.message || 'Connexion échouée');
             }
-            
         } catch (error) {
             console.error('[Login] Erreur lors de la connexion:', error);
             loginError.set(error.message);
@@ -170,8 +154,6 @@ export class LoginManager {
      */
     async logout() {
         try {
-            console.log('[Login] Déconnexion...');
-            
             const response = await fetch(`${API_BASE_URL}/auth/logout`, {
                 method: 'POST',
                 headers: {
@@ -179,13 +161,10 @@ export class LoginManager {
                 },
                 credentials: 'include'
             });
-            
+
             const data = await response.json();
-            
-            if (data.success) {
-                console.log('[Login] Déconnexion réussie, cookie supprimé par le serveur');
-            }
-            
+
+            if (data.success) {}
         } catch (error) {
             console.error('[Login] Erreur lors de la déconnexion:', error);
         } finally {
@@ -202,8 +181,6 @@ export class LoginManager {
      */
     async checkAuthentication() {
         try {
-            console.log('[Login] Vérification de l\'authentification via cookie...');
-            
             const response = await fetch(`${API_BASE_URL}/auth/me`, {
                 method: 'GET',
                 headers: {
@@ -211,21 +188,19 @@ export class LoginManager {
                 },
                 credentials: 'include' // Important : envoie le cookie
             });
-            
+
             if (!response.ok) {
-                console.log('[Login] Pas d\'utilisateur connecté');
                 return null;
             }
-            
+
             const data = await response.json();
-            
+
             if (data.success && data.user) {
                 currentUser.set(data.user);
                 loginSuccess.set(true);
-                console.log('[Login] Utilisateur déjà connecté:', data.user);
                 return data.user;
             }
-            
+
             return null;
         } catch (error) {
             console.error('[Login] Erreur lors de la vérification de l\'authentification:', error);

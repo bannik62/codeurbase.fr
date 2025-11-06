@@ -19,14 +19,11 @@
   
   // Log quand la page change
   $: {
-    // console.log('App: currentPage changed to:', $currentPage);
-    // console.log('App: will try to render:', $currentPage === 'acceuilPortfolioBis' ? 'AcceuilPortfolioBis' : $currentPage === 'acceuil' ? 'Acceuil' : 'other');
     
     // Reset scroll en haut lors du changement de page (pas au rechargement)
     if (previousPage && previousPage !== $currentPage) {
       const lenisInstance = getLenis();
       if (lenisInstance) {
-        console.log(`[App] Changement de page: ${previousPage} → ${$currentPage}, reset scroll en haut`);
         lenisInstance.scrollTo(0, { immediate: true });
       }
     }
@@ -87,7 +84,6 @@
     window.addEventListener('keydown', DetectEchap);
     
     // Initialiser Lenis une seule fois pour toute l'app
-    console.log('[App] Initialisation de Lenis');
     const lenisInstance = initLenis();
     
     if (lenisInstance) {
@@ -97,7 +93,6 @@
       
       // S'assurer que la page commence en haut
       lenisInstance.scrollTo(0, { immediate: true });
-      console.log('[App] Reset scroll initial en haut');
     }
     
     // S'abonne aux événements de scroll via Lenis

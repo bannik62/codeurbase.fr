@@ -29,7 +29,6 @@
 
     function drawStars() {
         if (!ctx) {
-            console.log("🌟 Stars - Pas de contexte canvas, arrêt de l'animation");
             return;
         }
         
@@ -94,11 +93,8 @@
     }
 
     onMount(() => {
-        console.log("🌟 Stars - onMount démarré");
-        console.log("🌟 Stars - Canvas reçu:", canvas);
         
         if (canvas) {
-            console.log("🌟 Stars - Canvas trouvé:", canvas);
             canvasWidth = window.innerWidth;
             canvasHeight = window.innerHeight;
             canvas.width = canvasWidth;
@@ -107,17 +103,12 @@
             halfHeight = canvasHeight * 0.5;
             ctx = canvas.getContext("2d");
             
-            console.log("🌟 Stars - Contexte canvas:", ctx);
             initStars();
-            console.log("🌟 Stars - Étoiles initialisées:", stars.length);
             drawStars();
-            console.log("🌟 Stars - Animation démarrée");
         } else {
-            console.log("🌟 Stars - Canvas non trouvé, attente...");
             // Attendre que le canvas soit disponible
             const checkCanvas = () => {
                 if (canvas) {
-                    console.log("🌟 Stars - Canvas trouvé après attente:", canvas);
                     canvasWidth = window.innerWidth;
                     canvasHeight = window.innerHeight;
                     canvas.width = canvasWidth;

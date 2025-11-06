@@ -33,7 +33,6 @@
       hls.attachMedia(videoElement);
       
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        console.log('HLS: Manifest chargé avec succès');
         isLoading = false;
         if (autoplay) {
           videoElement.play().catch(e => {
@@ -67,7 +66,6 @@
       // Support natif pour Safari
       videoElement.src = src;
       videoElement.addEventListener('loadedmetadata', () => {
-        console.log('HLS: Support natif détecté (Safari)');
         isLoading = false;
         if (autoplay) {
           videoElement.play().catch(e => {

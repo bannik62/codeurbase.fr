@@ -9,12 +9,10 @@
     
     // Souscrire aux changements du store
     const unsubscribe = currentPage.subscribe(value => {
-        console.log('Navbar: page changed to:', value);
         activePage = value;
     });
 
     function handleNavClick(page) {
-        console.log('Navbar: clicking to navigate to:', page);
         currentPage.set(page);
     }
 

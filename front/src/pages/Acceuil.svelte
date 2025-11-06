@@ -6,7 +6,6 @@
   import Welcome from "../modules/ui/site_acceuil/Welcometo.svelte";
   import { getLenis, stopLenis, destroyLenis } from "../stores/lenis.js";
   import ciruit from "../assets/background/circuit.svg";
-  console.log("Acceuil: component instantiated");
 
   // Store pour gérer l'état de la page d'accueil
   const welcomeMessage = writable(" 🛡️ Bienvenue 👨‍💻");
@@ -17,13 +16,11 @@
   let lenisInstance = null;
 
   onMount(() => {
-    console.log("Acceuil: onMount - Récupération de Lenis");
     
     // Récupérer l'instance Lenis existante
     lenisInstance = getLenis();
     
     if (lenisInstance) {
-      console.log("Acceuil: Instance Lenis récupérée avec succès");
       // Lenis est déjà configuré dans App.svelte
     } else {
       console.warn("Acceuil: Aucune instance Lenis trouvée");
@@ -33,7 +30,6 @@
   });
 
   onDestroy(() => {
-    console.log("Acceuil: onDestroy - Lenis géré globalement");
     
     // Pas besoin de nettoyer Lenis, il est géré globalement
     // Lenis continue de fonctionner pour les autres pages

@@ -51,7 +51,6 @@
     const lenisInstance = getLenis();
     
     if (lenisInstance) {
-      console.log('[Blog] Utilisation de l\'instance Lenis existante');
       // Lenis est déjà configuré dans App.svelte
     } else {
       console.warn('[Blog] Aucune instance Lenis trouvée');

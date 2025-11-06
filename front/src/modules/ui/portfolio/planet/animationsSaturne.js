@@ -52,11 +52,7 @@ export function createMediumMobileSaturneAnimation() {
             end: "bottom 25%",
             scrub: 1.2,
             onUpdate: (self) => {
-                if (self.progress < 0.3 && !self.isActive) {
-                    console.log("🪐 Étape 1 - Saturne apparaît en haut à gauche");
-                } else if (self.progress >= 0.3 && !self.isActive) {
-                    console.log("🪐 Étape 2 - Saturne traverse en diagonal vers bas à droite !");
-                }
+                if (self.progress < 0.3 && !self.isActive) {} else if (self.progress >= 0.3 && !self.isActive) {}
             }
         }
     })
@@ -98,11 +94,7 @@ export function createMobileSaturneAnimation() {
             end: "bottom 30%",
             scrub: 1.5,
             onUpdate: (self) => {
-                if (self.progress < 0.3 && !self.isActive) {
-                    console.log("🪐 Étape 1 - Saturne apparaît en haut à gauche");
-                } else if (self.progress >= 0.3 && !self.isActive) {
-                    console.log("🪐 Étape 2 - Saturne traverse en diagonal vers bas à droite !");
-                }
+                if (self.progress < 0.3 && !self.isActive) {} else if (self.progress >= 0.3 && !self.isActive) {}
             }
         }
     })
@@ -144,11 +136,7 @@ export function createTabletSaturneAnimation() {
             end: "bottom 35%",
             scrub: 1.8,
             onUpdate: (self) => {
-                if (self.progress < 0.3 && !self.isActive) {
-                    console.log("🪐 Étape 1 - Saturne apparaît en haut à gauche");
-                } else if (self.progress >= 0.3 && !self.isActive) {
-                    console.log("🪐 Étape 2 - Saturne traverse en diagonal vers bas à droite !");
-                }
+                if (self.progress < 0.3 && !self.isActive) {} else if (self.progress >= 0.3 && !self.isActive) {}
             }
         }
     })

@@ -57,7 +57,6 @@
 
 
         // Animation de la bordure selon la taille d'écran
-        console.log("🎯 Taille d'écran détectée:", currentSize);
         let bordureAnimation = initBordureAnimation(currentSize);
 
         let bienvenuElement;

@@ -56,15 +56,11 @@ export class AdminBoardManager {
     try {
       isLoading.set(true);
       dashboardError.set(null);
-      
-      console.log('[AdminBoard] Initialisation du tableau de bord...');
-      
+
       // Charger les vraies données depuis l'API
       await this.loadDashboardData();
-      
+
       this.initialized = true;
-      console.log('[AdminBoard] Tableau de bord initialisé');
-      
     } catch (error) {
       console.error('[AdminBoard] Erreur lors de l\'initialisation:', error);
       dashboardError.set(error.message);
@@ -79,32 +75,31 @@ export class AdminBoardManager {
   async loadDashboardData() {
     try {
       const BACKEND_URL = import.meta.env.VITE_BACKEND_URL ;
-      console.log('BACKEND_URL', BACKEND_URL);
-      
+
       // Récupérer les statistiques générales
       const generalResponse = await fetch(`${BACKEND_URL}/auth/admin/stats/general`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include'
       });
-      
+
       if (!generalResponse.ok) {
         throw new Error(`Erreur API: ${generalResponse.status}`);
       }
-      
+
       const generalData = await generalResponse.json();
-      
+
       if (!generalData.success) {
         throw new Error(generalData.message || 'Erreur lors de la récupération des données');
       }
-      
+
       // Récupérer les statistiques des utilisateurs
       const usersResponse = await fetch(`${BACKEND_URL}/auth/admin/stats/users`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include'
       });
-      
+
       let usersData = { data: { total: 0, active: 0, inactive: 0, byRole: [] } };
       if (usersResponse.ok) {
         const usersResult = await usersResponse.json();
@@ -112,7 +107,7 @@ export class AdminBoardManager {
           usersData = usersResult;
         }
       }
-      
+
       // Construire les données du dashboard
       const dashboardStats = {
         totalUsers: generalData.data.users.total,
@@ -120,7 +115,7 @@ export class AdminBoardManager {
         totalSessions: generalData.data.sessions.active,
         totalRequests: generalData.data.requests.articles
       };
-      
+
       // Données d'activité récente (simulées pour l'instant)
       const recentActivity = [
         {
@@ -145,16 +140,14 @@ export class AdminBoardManager {
           message: `Sessions actives: ${generalData.data.sessions.active}`
         }
       ];
-      
+
       const realData = {
         stats: dashboardStats,
         recentActivity: recentActivity,
         systemStatus: 'ok'
       };
-      
+
       dashboardData.set(realData);
-      console.log('[AdminBoard] Données réelles du tableau de bord chargées:', realData);
-      
     } catch (error) {
       console.error('[AdminBoard] Erreur lors du chargement des données:', error);
       throw error;
@@ -165,7 +158,6 @@ export class AdminBoardManager {
    * Rafraîchit les données du tableau de bord
    */
   async refresh() {
-    console.log('[AdminBoard] Rafraîchissement des données...');
     await this.loadDashboardData();
   }
   
@@ -173,7 +165,6 @@ export class AdminBoardManager {
    * Déconnecte l'utilisateur
    */
   async logout() {
-    console.log('[AdminBoard] Déconnexion depuis le dashboard...');
     await loginManager.logout();
   }
   

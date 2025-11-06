@@ -3,7 +3,6 @@
     import axios from "axios";
 
     // ⚡ Variables d'environnement Vite
-    console.log("Toutes les variables d'env:", import.meta.env);
 
     const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -21,19 +20,9 @@
     // Fonction pour vérifier le backend
     async function checkBackend() {
         try {
-            console.log("Attempting health check...");
             const response = await axios.get(BACKEND_URL);
             itsOkBackend = response.data;
-            console.log("Health check success backend:", {
-                timestamp: new Date().toISOString(),
-                status: itsOkBackend,
-            });
         } catch (error) {
-            console.log("Health check failed backend:", {
-                timestamp: new Date().toISOString(),
-                error: error.message,
-                config: error.config?.url,
-            });
             itsOkBackend = false;
         }
     }
@@ -51,23 +40,10 @@
                 const message = n8nResponse.message;
                 itsOkN8n = message === "true";
 
-                console.log("response.data 1", response.data);
-                console.log("response.data route", response.data.route);
-                console.log("Health check success n8n:", {
-                    timestamp: new Date().toISOString(),
-                    status: itsOkN8n,
-                    message: message,
-                });
             } else {
-                console.log("Invalid response structure:", response.data);
                 itsOkN8n = false;
             }
         } catch (error) {
-            console.log("Health check failed n8n:", {
-                timestamp: new Date().toISOString(),
-                error: error.message,
-                config: error.config?.url,
-            });
             itsOkN8n = false;
         }
     }
@@ -80,18 +56,7 @@
                 `${BACKEND_URL}/health/phpmyadmin`
             );
             itsOkPhpMyAdmin = response.data.phpmyadmin === true;
-            console.log("Health check success phpMyAdmin:", {
-                timestamp: new Date().toISOString(),
-                status: itsOkPhpMyAdmin,
-                response: response.data,
-            });
         } catch (error) {
-            console.log("Health check failed phpMyAdmin:", {
-                timestamp: new Date().toISOString(),
-                error: error.message,
-                errorCode: error.code,
-                errorResponse: error.response?.data,
-            });
             itsOkPhpMyAdmin = false;
         }
     }
@@ -103,18 +68,7 @@
             // "true" ou "false" textuel
             itsOkUmami = response.data.umami === "true";
 
-            console.log("Health check success Umami:", {
-                timestamp: new Date().toISOString(),
-                status: itsOkUmami,
-                response: response.data,
-            });
         } catch (error) {
-            console.log("Health check failed Umami:", {
-                timestamp: new Date().toISOString(),
-                error: error.message,
-                errorCode: error.code,
-                errorResponse: error.response?.data,
-            });
             itsOkUmami = false;
         }
     }

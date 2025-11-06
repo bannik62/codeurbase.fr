@@ -46,7 +46,6 @@
       
       if (response.ok && data.success) {
         articlesStats = data.data;
-        console.log('[AdminBoard] Stats articles récupérées:', articlesStats);
       } else {
         articlesStatsError = data.message || 'Erreur lors de la récupération des stats articles';
       }
@@ -62,7 +61,6 @@
    * Callback quand la session est valide
    */
   function handleValidSession(user) {
-    console.log('[AdminBoard] Session valide, initialisation du dashboard...');
     currentUser.set(user);
     adminBoardManager.initialize();
     // Récupérer les stats d'articles
@@ -90,7 +88,6 @@
   function handleLogout() {
     if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
       adminBoardManager.logout();
-      console.log('[AdminBoard UI] Déconnexion, redirection vers /login...');
       setTimeout(() => {
         currentPage.set('login');
       }, 300);
@@ -149,7 +146,6 @@
 
       const data = await response.json();
       
-      console.log('[AdminBoard] Réponse backend:', data);
 
       if (response.ok && data.success && data.data) {
         articleCreationSuccess = data.message || "Article généré avec succès";
@@ -157,7 +153,6 @@
         // N8N retourne { output: { validated: true, article: {...} } }
         generatedArticle = data.data.output?.article || data.data.article || data.data;
         
-        console.log('[AdminBoard] Article généré:', generatedArticle);
         
         articlePrompt = "";
       } else {
@@ -201,7 +196,6 @@
 
       if (response.ok && data.success) {
         articleValidationSuccess = data.message || "Article validé et sauvegardé avec succès";
-        console.log('[AdminBoard] Article validé:', data.data);
         // Rafraîchir les statistiques après validation
         fetchArticlesStats();
         // Rafraîchir aussi les stats générales
@@ -232,7 +226,6 @@
       articleValidationError = null;
       articlePrompt = '';
       
-      console.log('[AdminBoard] Article invalidé - Vue réinitialisée');
     }
   }
 </script>
