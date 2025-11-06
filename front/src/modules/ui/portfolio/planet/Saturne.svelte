@@ -18,7 +18,6 @@
     const isBienvenuReady = isModuleReady('elementOfBienvenu');
 
     onMount(() => {
-        console.log("chargé saturne.svelte");
         gsap.registerPlugin(ScrollTrigger);
 
         // Initialiser le store media query
@@ -41,8 +40,6 @@
         
         // Fonction pour initialiser l'animation quand les éléments sont prêts
         const initAnimation = () => {
-            console.log("Elements disponibles:", elements);
-            console.log("contentTextBienvenue:", elements?.elementOfBienvenu?.contentTextBienvenue);
             
             if (elements?.elementOfBienvenu?.contentTextBienvenue && !saturneAnimation) {
                 saturneAnimation = initSaturneAnimation(currentSize);

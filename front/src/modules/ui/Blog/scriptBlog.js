@@ -48,7 +48,6 @@ export class BlogManager {
             const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
             const response = await axios.get(`${BACKEND_URL}/api/articles`);
 
-            console.log(response.data);
             if (response.data.success && response.data.articles) {
                 this.articles = response.data.articles.map(article => ({
                     id: article.id,
@@ -61,17 +60,14 @@ export class BlogManager {
                     image: article.image,
                     tags: article.tags || []
                 }));
-                
+
                 // Extraire les catégories uniques
                 this.categories = ['all', ...new Set(this.articles.map(a => a.category))];
-                
-                console.log(`[Blog] ${this.articles.length} articles chargés depuis la BDD`);
             } else {
                 this.articles = [];
                 this.categories = ['all'];
                 console.warn('[Blog] Aucun article trouvé ou réponse invalide');
             }
-            
         } catch (error) {
             console.error('Erreur lors du chargement des articles:', error);
             this.error = error.message;

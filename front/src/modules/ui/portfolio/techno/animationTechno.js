@@ -248,7 +248,6 @@ export function createLargeDesktopTechnoAnimation(elements) {
     })
     .fromTo(".box", 
         {
-            onStart: () => console.log("Animation large desktop techno start"),
             opacity: 0,
             y: 300,
             scale: 0.02,
@@ -277,7 +276,6 @@ export function createLargeDesktopTechnoAnimation(elements) {
         duration: 0.25,
         stagger: 0.15,
         ease: "bounce.out",
-        onComplete: () => console.log("Animation large desktop techno end"),
     });
 }
 

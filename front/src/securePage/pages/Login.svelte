@@ -59,7 +59,6 @@
       
       // Redirection après connexion réussie
       if ($loginSuccess) {
-        console.log('[Login UI] Connexion réussie, redirection vers /admin...');
         setTimeout(() => {
           currentPage.set('admin');
         }, 800);
@@ -77,7 +76,6 @@
   }
   
   onMount(() => {
-    console.log('[Login UI] Composant monté');
   });
 </script>
 

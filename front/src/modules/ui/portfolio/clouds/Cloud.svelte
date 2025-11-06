@@ -7,7 +7,6 @@
     // import MonComposant from './MonComposant.svelte';
     // import AutreComposant from '../AutreComposant.svelte';
 
-    console.log("chargé cloud.svelte");
 
     // Variables réactives Svelte
     let introContainer;

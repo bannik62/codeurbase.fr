@@ -33,21 +33,16 @@
   let unsubMessages, unsubLoading, unsubConnected, unsubError;
   
   onMount(() => {
-    console.log('Initialisation des souscriptions aux stores');
     unsubMessages = chat.messages.subscribe(value => {
-      console.log('Messages mis à jour:', value);
       messages = value;
     });
     unsubLoading = chat.isLoading.subscribe(value => {
-      console.log('isLoading mis à jour:', value);
       isLoading = value;
     });
     unsubConnected = chat.isConnected.subscribe(value => {
-      console.log('isConnected mis à jour:', value);
       isConnected = value;
     });
     unsubError = chat.error.subscribe(value => {
-      console.log('error mis à jour:', value);
       error = value;
     });
   });
@@ -65,7 +60,6 @@
     const lenisInstance = getLenis();
     
     if (lenisInstance) {
-      console.log('[ChatMvp] Utilisation de l\'instance Lenis existante');
       // Lenis est déjà configuré dans App.svelte
     } else {
       console.warn('[ChatMvp] Aucune instance Lenis trouvée');

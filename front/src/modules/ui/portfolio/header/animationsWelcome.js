@@ -186,7 +186,6 @@ export function createDesktopTitleAnimation(elements) {
         ease: "linear.inOut",
         willChange: "transform",
         scale: 1,
-        onStart: () => console.log("Animation desktop titre démarrée"),
     })
     .to(".container-global-text-bienvenue h2", {
         y: 200,
@@ -389,7 +388,6 @@ export function createLargeDesktopInMyWorldAnimation(elements) {
          y: -200,
          duration:1.5,
          ease: "linear.inOut",
-         onComplete: () => console.log("Animation large desktop in my world end"),
     })
     // .to(".h3-in-my-world", {
     //     opacity: 1,

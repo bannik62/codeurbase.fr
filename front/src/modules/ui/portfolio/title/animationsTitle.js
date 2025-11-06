@@ -46,7 +46,6 @@ export function createMediumMobileBordureAnimation() {
             // markers: true,
         },
         ease: "power2.inOut",
-        onStart: () => console.log("Animation medium mobile bordure démarrée"),
     });
 }
 
@@ -70,7 +69,6 @@ export function createMobileBordureAnimation() {
             // markers: true,
         },
         ease: "power2.inOut",
-        onStart: () => console.log("Animation mobile bordure démarrée"),
     });
 }
 
@@ -92,7 +90,6 @@ export function createTabletBordureAnimation() {
             // markers: true,
         },
         ease: "power2.inOut",
-        onStart: () => console.log("Animation tablette bordure démarrée"),
     });
 }
 
@@ -114,7 +111,6 @@ export function createDesktopBordureAnimation() {
             // markers: true,
         },
         ease: "power2.inOut",
-        onStart: () => console.log("Animation desktop bordure démarrée"),
     });
 }
 
@@ -130,7 +126,6 @@ export function createLargeDesktopBordureAnimation() {
         z: -1000,
         scale: 0,
         duration: 0.4,
-        onStart: () => console.log("Animation large title"),
         scrollTrigger: {
             trigger: ".container",
             start: "top 0%",
@@ -141,7 +136,6 @@ export function createLargeDesktopBordureAnimation() {
         },
 
         ease: "power2.inOut",
-        onComplete: () => console.log("Animation large desktop bordure démarrée"),
     });
 }
 
@@ -163,7 +157,6 @@ export function createXlDesktopBordureAnimation() {
             // markers: true,
         },
         ease: "power2.inOut",
-        onStart: () => console.log("Animation xl desktop bordure démarrée"),
     });
 }
 

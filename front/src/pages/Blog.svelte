@@ -18,7 +18,6 @@
     lenisInstance = getLenis();
     
     if (lenisInstance) {
-      console.log('[Blog] Utilisation de l\'instance Lenis existante');
       // Lenis est déjà configuré dans App.svelte
     } else {
       console.warn('[Blog] Aucune instance Lenis trouvée');
@@ -27,7 +26,6 @@
 
   onDestroy(() => {
     // Pas besoin de nettoyer Lenis, il est géré globalement
-    console.log('[Blog] onDestroy - Lenis géré globalement');
     
     // Nettoyer ScrollTrigger
     ScrollTrigger.getAll().forEach(trigger => trigger.kill());

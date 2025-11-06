@@ -41,7 +41,6 @@
     }
 
     onDestroy(() => {
-        console.log('AcceuilPortfolioBis: onDestroy START');
         // Forcer le nettoyage de tout
         if (typeof window !== 'undefined') {
             document.body.style.overflow = 'auto';
@@ -49,11 +48,9 @@
             ScrollTrigger.clearMatchMedia();
             // Pas besoin de stopLenis(), il est géré globalement
         }
-        console.log('AcceuilPortfolioBis: onDestroy END');
     });
 
     onMount(() => {
-        console.log('AcceuilPortfolioBis: onMount START');
         // Initialiser l'opacité du texte à 0
         if (pStatus) {
             pStatus.style.opacity = 0;
@@ -82,7 +79,6 @@
         const lenisInstance = getLenis();
         
         if (lenisInstance) {
-            console.log('[AcceuilPortfolioBis] Utilisation de l\'instance Lenis existante');
             // Lenis est déjà configuré dans App.svelte
         } else {
             console.warn('[AcceuilPortfolioBis] Aucune instance Lenis trouvée');
@@ -411,17 +407,14 @@
                 break;
         }
 
-        console.log('AcceuilPortfolioBis: onMount END');
         
         return () => {
-            console.log('AcceuilPortfolioBis: cleanup START');
             
             // Nettoyer les abonnements aux stores media query
             cleanupMediaQueryStores();
             cleanupMediaQuery();
 
             // Pas besoin de nettoyer Lenis, il est géré globalement
-            console.log('[AcceuilPortfolioBis] onDestroy - Lenis géré globalement');
 
             // Tuer toutes les animations GSAP
             if (cloudAnimation) cloudAnimation.kill();
@@ -435,7 +428,6 @@
             // Réactiver le scroll
             document.body.style.overflow = 'auto';
             
-            console.log('AcceuilPortfolioBis: cleanup END');
         };
     });
 </script>

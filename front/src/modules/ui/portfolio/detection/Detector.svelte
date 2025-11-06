@@ -10,7 +10,6 @@
     let cleanupFunction;
 
     onMount(() => {
-        console.log("Detector component mounted - blocking scroll");
         
         // Initialiser les media queries
         const cleanupMediaQuery = initMediaQuery();
@@ -36,7 +35,6 @@
             const timer = setTimeout(() => {
                 showLoader = false;
                 showCustomContent = true;
-                console.log("Detector component - loader finished, custom content shown");
                 
                 // Scroll smooth vers le bas après 3 secondes d'affichage du custom content
                 setTimeout(() => {
@@ -78,7 +76,6 @@
     });
 
     onDestroy(() => {
-        console.log("Detector component destroyed");
         if (cleanupFunction) {
             cleanupFunction();
         }

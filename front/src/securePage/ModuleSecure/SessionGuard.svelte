@@ -30,7 +30,6 @@
   export async function verifySession() {
     try {
       isCheckingSession.set(true);
-      console.log('[SessionGuard] Vérification de la session...');
       
       const response = await fetch(`${API_BASE_URL}/auth/me`, {
         method: 'GET',
@@ -42,13 +41,11 @@
       
       const data = await response.json();
       
-      console.log('[SessionGuard] Réponse:', data);
       
       if (data.success === true && data.user) {
         // Session valide ✅
         sessionValid.set(true);
         sessionUser.set(data.user);
-        console.log('[SessionGuard] Session valide ✅', data.user);
         if (onValidSession) {
           onValidSession(data.user);
         }
@@ -57,7 +54,6 @@
         // Session invalide ❌
         sessionValid.set(false);
         sessionUser.set(null);
-        console.log('[SessionGuard] Session invalide ❌');
         if (onInvalidSession) {
           onInvalidSession();
         }
